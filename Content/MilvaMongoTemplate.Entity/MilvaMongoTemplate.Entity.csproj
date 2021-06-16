@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>..\MilvaMongoTemplate.Entity\MilvaMongoTemplate.Entity.xml</DocumentationFile>
+  </PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="AspNetCore.Identity.Mongo" Version="8.1.0" />
+		<PackageReference Include="Milvasoft.Helpers" Version="6.3.1" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Update="MilvaMongoTemplate.Entity.xml">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
+	
+</Project>

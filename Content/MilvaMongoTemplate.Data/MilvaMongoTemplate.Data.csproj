@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>..\MilvaMongoTemplate.Data\MilvaMongoTemplate.Data.xml</DocumentationFile>
+  </PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Milvasoft.Helpers" Version="6.3.1" />
+		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.11.1" />
+	</ItemGroup>
+
+
+
+	
+	
+	
+
+	<ItemGroup>
+		<ProjectReference Include="..\MilvaMongoTemplate.Entity\MilvaMongoTemplate.Entity.csproj" />
+	</ItemGroup>
+<ItemGroup>
+		<ProjectReference Include="..\MilvaMongoTemplate.Entity\MilvaMongoTemplate.Entity.csproj" />
+	</ItemGroup>
+
+
+</Project>

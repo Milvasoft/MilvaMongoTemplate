@@ -1,0 +1,43 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31402.337
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MilvaMongoTemplate.API", "Content\MilvaMongoTemplate.API\MilvaMongoTemplate.API.csproj", "{784E989C-DA3D-4F62-B2C3-7820113A7A44}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MilvaMongoTemplate.Data", "Content\MilvaMongoTemplate.Data\MilvaMongoTemplate.Data.csproj", "{DCD227E3-E7A9-4FCE-AAE7-BD18BA0F18CD}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MilvaMongoTemplate.Entity", "Content\MilvaMongoTemplate.Entity\MilvaMongoTemplate.Entity.csproj", "{79FE93E2-5ED6-474B-8C5C-6833B63FE534}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MilvaMongoTemplate.Localization", "Content\MilvaMongoTemplate.Localization\MilvaMongoTemplate.Localization.csproj", "{66FE38B2-60C2-47C3-AAAF-6FD11247B146}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{784E989C-DA3D-4F62-B2C3-7820113A7A44}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{784E989C-DA3D-4F62-B2C3-7820113A7A44}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{784E989C-DA3D-4F62-B2C3-7820113A7A44}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{784E989C-DA3D-4F62-B2C3-7820113A7A44}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DCD227E3-E7A9-4FCE-AAE7-BD18BA0F18CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DCD227E3-E7A9-4FCE-AAE7-BD18BA0F18CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DCD227E3-E7A9-4FCE-AAE7-BD18BA0F18CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DCD227E3-E7A9-4FCE-AAE7-BD18BA0F18CD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{79FE93E2-5ED6-474B-8C5C-6833B63FE534}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{79FE93E2-5ED6-474B-8C5C-6833B63FE534}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{79FE93E2-5ED6-474B-8C5C-6833B63FE534}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{79FE93E2-5ED6-474B-8C5C-6833B63FE534}.Release|Any CPU.Build.0 = Release|Any CPU
+		{66FE38B2-60C2-47C3-AAAF-6FD11247B146}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{66FE38B2-60C2-47C3-AAAF-6FD11247B146}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{66FE38B2-60C2-47C3-AAAF-6FD11247B146}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{66FE38B2-60C2-47C3-AAAF-6FD11247B146}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B2D18B47-691C-4910-9F1C-FF0F99202775}
+	EndGlobalSection
+EndGlobal

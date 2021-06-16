@@ -1,0 +1,88 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>MilvaMongoTemplate.Entity</name>
+    </assembly>
+    <members>
+        <member name="T:MilvaMongoTemplate.Entity.Collections.MilvaMongoTemplateRole">
+            <summary>
+            Roles of app.
+            </summary>
+        </member>
+        <member name="P:MilvaMongoTemplate.Entity.Collections.MilvaMongoTemplateRole.LastModificationDate">
+            <summary>
+            Last modification date of entity.
+            </summary>
+        </member>
+        <member name="P:MilvaMongoTemplate.Entity.Collections.MilvaMongoTemplateRole.CreationDate">
+            <summary>
+            Creation date of entity.
+            </summary>
+        </member>
+        <member name="T:MilvaMongoTemplate.Entity.Collections.MilvaMongoTemplateUser">
+            <summary>
+            App user.
+            </summary>
+        </member>
+        <member name="P:MilvaMongoTemplate.Entity.Collections.MilvaMongoTemplateUser.LastModificationDate">
+            <summary>
+            Last modification date of entity.
+            </summary>
+        </member>
+        <member name="P:MilvaMongoTemplate.Entity.Collections.MilvaMongoTemplateUser.CreationDate">
+            <summary>
+            Creation date of entity.
+            </summary>
+        </member>
+        <member name="P:MilvaMongoTemplate.Entity.Collections.MilvaMongoTemplateUser.Name">
+            <summary>
+            Name of app user.
+            </summary>
+        </member>
+        <member name="P:MilvaMongoTemplate.Entity.Collections.MilvaMongoTemplateUser.Surname">
+            <summary>
+            Surname of app user.
+            </summary>
+        </member>
+        <member name="P:MilvaMongoTemplate.Entity.Collections.MilvaMongoTemplateUser.IsDeleted">
+            <summary>
+            Determines whether the account has been deleted.
+            </summary>
+        </member>
+        <member name="P:MilvaMongoTemplate.Entity.Collections.MilvaMongoTemplateUser.AppUser">
+            <summary>
+            If this user is not mobile application user, this embedded document will be empty.
+            </summary>
+        </member>
+        <member name="T:MilvaMongoTemplate.Entity.EmbeddedDocuments.AppUser">
+            <summary>
+            App user embedded document for sample.
+            </summary>
+        </member>
+        <member name="P:MilvaMongoTemplate.Entity.EmbeddedDocuments.AppUser.LastModificationDate">
+            <summary>
+            Last modification date of entity.
+            </summary>
+        </member>
+        <member name="P:MilvaMongoTemplate.Entity.EmbeddedDocuments.AppUser.CreationDate">
+            <summary>
+            Creation date of entity.
+            </summary>
+        </member>
+        <member name="P:MilvaMongoTemplate.Entity.EmbeddedDocuments.AppUser.Id">
+            <summary>
+            Unique key of entity.
+            </summary>
+        </member>
+        <member name="P:MilvaMongoTemplate.Entity.EmbeddedDocuments.AppUser.IdentityNumber">
+            <summary>
+            User's identity number. (e.g. TC number)
+            </summary>
+        </member>
+        <member name="T:MilvaMongoTemplate.Entity.Utils.CollectionNames">
+            <summary>
+            Constants of database collections.
+            </summary>
+        </member>
+    </members>
+</doc>

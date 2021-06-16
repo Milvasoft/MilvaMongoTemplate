@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>MilvaMongoTemplate.Data</name>
+    </assembly>
+    <members>
+        <member name="T:MilvaMongoTemplate.Data.Utils.DataSeed">
+            <summary>
+            Class that performs database reset process.
+            </summary>
+        </member>
+        <member name="M:MilvaMongoTemplate.Data.Utils.DataSeed.ResetDataAsync(Microsoft.AspNetCore.Builder.IApplicationBuilder)">
+            <summary>
+            Resets all data in the database.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MilvaMongoTemplate.Data.Utils.DataSeed.GetMongoCollection``1">
+            <summary>
+            Returns <see cref="T:MongoDB.Driver.IMongoCollection`1"/>.
+            </summary>
+            <typeparam name="TEntity"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:MilvaMongoTemplate.Data.Utils.DataSeed.InitializeDataAsync``1(System.Collections.Generic.List{``0})">
+            <summary>
+            Initializes <paramref name="entities"/> to database.
+            </summary>
+            <typeparam name="TEntity"></typeparam>
+            <param name="entities"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MilvaMongoTemplate.Data.Utils.DataSeed.InitializeRolesAsync(Microsoft.AspNetCore.Identity.RoleManager{MilvaMongoTemplate.Entity.Collections.MilvaMongoTemplateRole})">
+            <summary>
+            Initializes <see cref="T:MilvaMongoTemplate.Entity.Collections.MilvaMongoTemplateRole"/> to database.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MilvaMongoTemplate.Data.Utils.DataSeed.InitializeUsersAsync(MilvaMongoTemplate.Data.Utils.MilvaMongoTemplateUserManager)">
+            <summary>
+            Initializes <see cref="T:MilvaMongoTemplate.Entity.Collections.MilvaMongoTemplateUser"/> to database.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MilvaMongoTemplate.Data.Utils.DataSeed.ConfigureIndexes">
+            <summary>
+            Configured indexes.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MilvaMongoTemplate.Data.Utils.DataSeed.ToObjectId(System.Int32)">
+            <summary>
+            Converts <paramref name="value"/>'s type to <see cref="T:MongoDB.Bson.ObjectId"/>
+            </summary>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="T:MilvaMongoTemplate.Data.Utils.MilvaMongoTemplateUserManager">
+            <summary>
+            MilvaMongoTemplate user manager.
+            </summary>
+        </member>
+        <member name="M:MilvaMongoTemplate.Data.Utils.MilvaMongoTemplateUserManager.#ctor(Microsoft.AspNetCore.Identity.IUserStore{MilvaMongoTemplate.Entity.Collections.MilvaMongoTemplateUser},Microsoft.Extensions.Options.IOptions{Microsoft.AspNetCore.Identity.IdentityOptions},Microsoft.AspNetCore.Identity.IPasswordHasher{MilvaMongoTemplate.Entity.Collections.MilvaMongoTemplateUser},System.Collections.Generic.IEnumerable{Microsoft.AspNetCore.Identity.IUserValidator{MilvaMongoTemplate.Entity.Collections.MilvaMongoTemplateUser}},System.Collections.Generic.IEnumerable{Microsoft.AspNetCore.Identity.IPasswordValidator{MilvaMongoTemplate.Entity.Collections.MilvaMongoTemplateUser}},Microsoft.AspNetCore.Identity.ILookupNormalizer,Microsoft.AspNetCore.Identity.IdentityErrorDescriber,System.IServiceProvider,Microsoft.Extensions.Logging.ILogger{Microsoft.AspNetCore.Identity.UserManager{MilvaMongoTemplate.Entity.Collections.MilvaMongoTemplateUser}})">
+            <summary>
+            Initializes new instance of <see cref="T:MilvaMongoTemplate.Data.Utils.MilvaMongoTemplateUserManager"/>.
+            </summary>
+            <param name="store"></param>
+            <param name="optionsAccessor"></param>
+            <param name="passwordHasher"></param>
+            <param name="userValidators"></param>
+            <param name="passwordValidators"></param>
+            <param name="keyNormalizer"></param>
+            <param name="errors"></param>
+            <param name="services"></param>
+            <param name="logger"></param>
+        </member>
+    </members>
+</doc>
