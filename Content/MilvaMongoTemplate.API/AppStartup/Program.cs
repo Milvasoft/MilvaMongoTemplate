@@ -55,7 +55,7 @@ namespace MilvaMongoTemplate.API.AppStartup
                   Host.CreateDefaultBuilder(args)
                   .ConfigureWebHostDefaults(webBuilder =>
                   {
-                      webBuilder.UseUrls(/*"https://0.0.0.0:5001",*/"http://0.0.0.0:5000")
+                      webBuilder.UseUrls(/*"https://0.0.0.0:xhttpsportxx",*/"http://0.0.0.0:xhttpportxx")
                                 .UseWebRoot("wwwroot")
                                 .UseStartup<Startup>()
                                 .UseDefaultServiceProvider(options => options.ValidateScopes = false)

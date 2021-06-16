@@ -14,7 +14,7 @@ namespace MilvaMongoTemplate.API.Helpers
         /// <summary>
         /// Route prefix of api.
         /// </summary>
-        public const string RoutePrefix = "api";
+        public const string RoutePrefix = "xrouteprefixx";
 
         /// <summary>
         /// Base route path of api.
