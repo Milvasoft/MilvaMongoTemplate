@@ -213,6 +213,18 @@
             <param name="jsonOperations"></param>
             <returns></returns>
         </member>
+        <member name="T:MilvaMongoTemplate.API.Controllers.AccountController">
+            <summary>
+            Provides account operations like login logout.
+            </summary>
+        </member>
+        <member name="M:MilvaMongoTemplate.API.Controllers.AccountController.#ctor(MilvaMongoTemplate.API.Services.Common.Abstract.IAccountService,Microsoft.Extensions.Localization.IStringLocalizer{MilvaMongoTemplate.Localization.SharedResource})">
+            <summary>
+            Initializes new instances of <see cref="T:MilvaMongoTemplate.API.Controllers.AccountController"/>.
+            </summary>
+            <param name="accountService"></param>
+            <param name="sharedLocalizer"></param>
+        </member>
         <member name="M:MilvaMongoTemplate.API.Controllers.AccountController.LoginAsync(MilvaMongoTemplate.API.DTOs.AccountDTOs.LoginDTO)">
             <summary>
             Provides sign in operation.

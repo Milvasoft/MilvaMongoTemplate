@@ -20,6 +20,9 @@ using System.Threading.Tasks;
 
 namespace MilvaMongoTemplate.API.Controllers
 {
+    /// <summary>
+    /// Provides account operations like login logout.
+    /// </summary>
     [Route(GlobalConstants.FullRoute)]
     [ApiController]
     [ApiVersion("1.0")]
@@ -34,6 +37,11 @@ namespace MilvaMongoTemplate.API.Controllers
 
         #endregion
 
+        /// <summary>
+        /// Initializes new instances of <see cref="AccountController"/>.
+        /// </summary>
+        /// <param name="accountService"></param>
+        /// <param name="sharedLocalizer"></param>
         public AccountController(IAccountService accountService, IStringLocalizer<SharedResource> sharedLocalizer)
         {
             _accountService = accountService;
