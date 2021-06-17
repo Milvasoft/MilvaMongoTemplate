@@ -1,5 +1,7 @@
 ﻿using Fody;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -10,6 +12,8 @@ using Milvasoft.Helpers.Exceptions;
 using Milvasoft.Helpers.Extensions;
 using Milvasoft.Helpers.FileOperations.Concrete;
 using Milvasoft.Helpers.FileOperations.Enums;
+using Milvasoft.Helpers.Models.Response;
+using Milvasoft.Helpers.Utils;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using System;
@@ -20,6 +24,7 @@ using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
 namespace MilvaMongoTemplate.API.Helpers.Extensions
@@ -261,7 +266,6 @@ namespace MilvaMongoTemplate.API.Helpers.Extensions
 
         #endregion
 
-
         #region Reflection Helpers
 
         /// <summary>
@@ -444,7 +448,6 @@ namespace MilvaMongoTemplate.API.Helpers.Extensions
 
         #endregion
 
-
         #region Exception Helpers
 
         /// <summary>
@@ -569,6 +572,7 @@ namespace MilvaMongoTemplate.API.Helpers.Extensions
         }
 
         #endregion
+
         #region DateTime Helpers
 
         /// <summary>
@@ -641,6 +645,58 @@ namespace MilvaMongoTemplate.API.Helpers.Extensions
             var factory = new ResourceManagerStringLocalizerFactory(options, new LoggerFactory());
 
             return new StringLocalizer<SharedResource>(factory);
+        }
+
+        /// <summary>
+        /// Gets identity result as object response.
+        /// </summary>
+        /// <param name="asyncTask"></param>
+        /// <param name="successMessage"></param>
+        /// <param name="errorMessage"></param>
+        /// <returns></returns>
+        public static async Task<IActionResult> GetActivityResponseAsync(this ConfiguredTaskAwaitable<IdentityResult> asyncTask, string successMessage, string errorMessage)
+        {
+            ObjectResponse<IdentityResult> response = new()
+            {
+                Result = await asyncTask
+            };
+
+            if (!response.Result.Succeeded)
+            {
+                response.Message = errorMessage;
+                response.StatusCode = MilvaStatusCodes.Status600Exception;
+                response.Success = false;
+            }
+            else
+            {
+                response.Message = successMessage;
+                response.StatusCode = MilvaStatusCodes.Status200OK;
+                response.Success = true;
+            }
+            return new OkObjectResult(response);
+        }
+
+        /// <summary>
+        /// Converts <paramref name="value"/>'s type to <see cref="ObjectId"/>
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static ObjectId ToObjectId(this int value)
+        {
+            var totalObjectIdLenth = ObjectId.GenerateNewId().ToString().Length;
+
+            var valueConverted = value.ToString();
+
+            if (totalObjectIdLenth <= valueConverted.Length) return new ObjectId("");
+
+            string objectId = "";
+
+            for (int i = 0; i < totalObjectIdLenth - valueConverted.Length; i++)
+            {
+                objectId += "0";
+            }
+
+            return new ObjectId(objectId + valueConverted);
         }
     }
 }
