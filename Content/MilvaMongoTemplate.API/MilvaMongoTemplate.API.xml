@@ -73,8 +73,7 @@
         </member>
         <member name="M:MilvaMongoTemplate.API.AppStartup.ServiceCollectionExtensions.AddControllers(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
             <summary>
-            <para><b>EN: </b>Adds MVC services to the specified Microsoft.Extensions.DependencyInjection.IServiceCollection.</para>
-            <para><b>TR: </b>Belirtilen Microsoft.Extensions.DependencyInjection.IServiceCollection.IServiceCollection öğesine MVC hizmetleri ekler.</para>
+            Adds MVC services to the specified Microsoft.Extensions.DependencyInjection.IServiceCollection.
             </summary>
             <param name="services"></param>
         </member>
@@ -127,13 +126,6 @@
             Configures Swagger documentation.
             </summary>
             <param name="services"></param>
-        </member>
-        <member name="M:MilvaMongoTemplate.API.AppStartup.ServiceCollectionExtensions.CustomErrorResponse(Microsoft.AspNetCore.Mvc.ActionContext)">
-            <summary>
-            Prepares custom validation model for response.
-            </summary>
-            <param name="actionContext"></param>
-            <returns></returns>
         </member>
         <member name="T:MilvaMongoTemplate.API.AppStartup.Startup">
             <summary>
@@ -269,7 +261,6 @@
             Provides the registration process of mobile application users.
             </summary>
             <param name="signUpDTO"></param>
-            <param name="language"></param>
             <returns></returns>
         </member>
         <member name="M:MilvaMongoTemplate.API.Controllers.AccountController.UpdateMyAccountAsync(MilvaMongoTemplate.API.DTOs.AccountDTOs.AppUserUpdateDTO)">

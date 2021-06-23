@@ -17,6 +17,7 @@ using MilvaMongoTemplate.Data.Utils;
 using MilvaMongoTemplate.Entity.Collections;
 using MilvaMongoTemplate.Entity.Utils;
 using MilvaMongoTemplate.Localization;
+using Milvasoft.Helpers;
 using Milvasoft.Helpers.Caching;
 using Milvasoft.Helpers.DataAccess.MongoDB.Abstract;
 using Milvasoft.Helpers.DataAccess.MongoDB.Concrete;
@@ -31,11 +32,9 @@ using Milvasoft.Helpers.Utils;
 using MongoDB.Bson;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.IdentityModel.Tokens.Jwt;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Text;
@@ -49,8 +48,7 @@ namespace MilvaMongoTemplate.API.AppStartup
     public static class ServiceCollectionExtensions
     {
         /// <summary>
-        /// <para><b>EN: </b>Adds MVC services to the specified Microsoft.Extensions.DependencyInjection.IServiceCollection.</para>
-        /// <para><b>TR: </b>Belirtilen Microsoft.Extensions.DependencyInjection.IServiceCollection.IServiceCollection öğesine MVC hizmetleri ekler.</para>
+        /// Adds MVC services to the specified Microsoft.Extensions.DependencyInjection.IServiceCollection.
         /// </summary>
         /// <param name="services"></param>
         public static void AddControllers(this IServiceCollection services)
@@ -71,7 +69,7 @@ namespace MilvaMongoTemplate.API.AppStartup
               {
                   options.InvalidModelStateResponseFactory = actionContext =>
                   {
-                      return CustomErrorResponse(actionContext);
+                      return CommonHelper.CustomErrorResponse(actionContext);
                   };
               }).AddDataAnnotationsLocalization();
         }
@@ -373,46 +371,6 @@ namespace MilvaMongoTemplate.API.AppStartup
                 options.OperationFilter<RequestHeaderFilter>();
                 options.DocumentFilter<ReplaceVersionWithExactValueInPathFilter>();
             });
-            //services.AddSwaggerGenNewtonsoftSupport();
         }
-
-
-
-        #region Private Methods 
-
-        /// <summary>
-        /// Prepares custom validation model for response.
-        /// </summary>
-        /// <param name="actionContext"></param>
-        /// <returns></returns>
-        private static ObjectResult CustomErrorResponse(ActionContext actionContext)
-        {
-            var validationErrors = actionContext.ModelState
-             .Where(modelError => modelError.Value.Errors.Count > 0)
-             .Select(modelError => new ValidationError
-             {
-                 ValidationFieldName = modelError.Key,
-                 ErrorMessageList = modelError.Value.Errors.Select(i => i.ErrorMessage).ToList()
-             }).ToList();
-
-            var stringBuilder = new StringBuilder();
-            List<string> errorMessageList = new();
-            validationErrors.ForEach(e => e.ErrorMessageList.ForEach(emg => errorMessageList.Add(emg)));
-            stringBuilder.AppendJoin('~', errorMessageList);
-            var validationResponse = new ExceptionResponse
-            {
-                Success = false,
-                Message = stringBuilder.ToString(),
-                StatusCode = MilvaStatusCodes.Status600Exception,
-                Result = new object(),
-                ErrorCodes = new List<int>()
-            };
-            actionContext.HttpContext.Items.Add(new KeyValuePair<object, object>("StatusCode", MilvaStatusCodes.Status600Exception));
-
-            return new OkObjectResult(validationResponse);
-        }
-
-        #endregion
-
     }
 }

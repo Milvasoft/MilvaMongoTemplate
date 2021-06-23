@@ -143,7 +143,6 @@ namespace MilvaMongoTemplate.API.Controllers
         /// Provides the registration process of mobile application users.
         /// </summary>
         /// <param name="signUpDTO"></param>
-        /// <param name="language"></param>
         /// <returns></returns>
         [HttpPost("Register/{language}")]
         [AllowAnonymous]
