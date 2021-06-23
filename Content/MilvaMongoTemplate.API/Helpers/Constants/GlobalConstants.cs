@@ -86,14 +86,29 @@ namespace MilvaMongoTemplate.API.Helpers
         /// </summary>
         public const int Zero = 0;
 
-        public const string MilvaMongoTemplateKey = "5u8x/A?D(G+KaPdS";
-
-        public const string ApplicationSiteUrl = "https://www.milvasoft.com";
-
-        public const string DeveloperSiteUrl = "https://www.milvasoft.com";
-
+        /// <summary>
+        /// Name of application.
+        /// </summary>
         public const string ApplicationName = "MilvaMongoTemplate";
 
+        /// <summary>
+        /// Mail of application.
+        /// </summary>
         public const string AppMail = "app@milvasoft.com";
+
+        /// <summary>
+        /// Site url of application.
+        /// </summary>
+        public const string ApplicationSiteUrl = "https://www.milvasoft.com";
+
+        /// <summary>
+        /// Developer site url.
+        /// </summary>
+        public const string DeveloperSiteUrl = "https://www.milvasoft.com";
+
+        /// <summary>
+        /// Key of project.
+        /// </summary>
+        public const string MilvaMongoTemplateKey = "5u8x/A?D(G+KaPdS";
     }
 }
