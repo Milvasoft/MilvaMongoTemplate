@@ -99,6 +99,48 @@ namespace MilvaMongoTemplate.API.Controllers
         }
 
         /// <summary>
+        /// Refresh token login for all users.
+        /// </summary>
+        /// <param name="refreshLogin"></param>
+        /// <returns></returns>
+        [HttpPost("Login/{*refreshLogin}")]
+        [AllowAnonymous]
+        [MValidateStringParameter(10, 1000)]
+        public async Task<IActionResult> RefreshTokenLogin(string refreshLogin)
+        {
+            ObjectResponse<LoginResultDTO> response = new()
+            {
+                Result = await _accountService.RefreshTokenLogin(refreshLogin)
+            };
+
+            if (!response.Result.ErrorMessages.IsNullOrEmpty())
+            {
+                var stringBuilder = new StringBuilder();
+
+                stringBuilder.AppendJoin(',', response.Result.ErrorMessages.Select(i => i.Description));
+
+                response.Message = stringBuilder.ToString();
+
+                response.StatusCode = MilvaStatusCodes.Status401Unauthorized;
+                response.Success = false;
+            }
+            else if (response.Result.Token == null)
+            {
+                response.Message = _sharedLocalizer["UnknownLoginProblemMessage"];
+                response.StatusCode = MilvaStatusCodes.Status400BadRequest;
+                response.Success = false;
+            }
+            else
+            {
+                response.Message = _sharedLocalizer["SuccessfullyLoginMessage"];
+                response.StatusCode = MilvaStatusCodes.Status200OK;
+                response.Success = true;
+            }
+
+            return Ok(response);
+        }
+
+        /// <summary>
         /// Provides user sign out operation.
         /// </summary>
         /// 
@@ -110,10 +152,8 @@ namespace MilvaMongoTemplate.API.Controllers
         /// <returns></returns>
         [HttpPut("Logout")]
         [Authorize(Roles = RoleNames.All)]
-        public async Task<IActionResult> LogoutAsync()
-        {
-            return await _accountService.LogoutAsync().ConfigureAwait(false).GetObjectResponseAsync<object>(_sharedLocalizer["SuccessfullyLoguotMessage"]);
-        }
+        public async Task<IActionResult> LogoutAsync() 
+            => await _accountService.LogoutAsync().ConfigureAwait(false).GetObjectResponseAsync<object>(_sharedLocalizer["SuccessfullyLoguotMessage"]);
 
         /// <summary>
         /// Returns logged-in user's account information.

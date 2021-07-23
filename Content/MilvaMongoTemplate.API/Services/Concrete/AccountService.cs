@@ -59,7 +59,6 @@ namespace MilvaMongoTemplate.API.Services.Common.Concrete
         private readonly IMilvaMailSender _milvaMailSender;
         private readonly IRedisCacheService _redisCacheService;
         private readonly IMilvaLogger _milvaLogger;
-        private readonly DateTime _tokenExpireDate = DateTime.Now.AddDays(1);
         private readonly MilvaEncryptionProvider _milvaEncryptionProvider;
 
         /// <summary>
@@ -135,7 +134,7 @@ namespace MilvaMongoTemplate.API.Services.Common.Concrete
             {
                 var isAppUser = user.AppUser != null;
 
-                loginResult.Token = await GenerateTokenWithRoleAsync(user: user, isAppUser).ConfigureAwait(false);
+                loginResult.Token = (MilvaToken)await GenerateTokenWithRoleAsync(user: user, isAppUser).ConfigureAwait(false);
 
                 return loginResult;
             }
@@ -155,6 +154,35 @@ namespace MilvaMongoTemplate.API.Services.Common.Concrete
 
             return loginResult;
         }
+
+        /// <summary>
+        /// Refresh token login for all users.
+        /// </summary>
+        /// <param name="refreshToken"></param>
+        /// <returns></returns>
+        public async Task<LoginResultDTO> RefreshTokenLogin(string refreshToken)
+        {
+            var user = await _userRepository.GetFirstOrDefaultAsync(u => u.RefreshToken == refreshToken);
+
+            if (user != null)
+            {
+                var token = (MilvaToken)await GenerateTokenWithRoleAsync(user: user, user.AppUser != null);
+
+                user.RefreshToken = token.RefreshToken;
+
+                await _userManager.UpdateAsync(user);
+
+                return new LoginResultDTO
+                {
+                    Token = token,
+                };
+            }
+            return new LoginResultDTO
+            {
+                ErrorMessages = new List<IdentityError>() { new IdentityError { Code = "TokenExpired", Description = _localizer["TokenExpired"] } }
+            };
+        }
+
 
         /// <summary>
         /// Signs out from database. Returns null if already signed out.
@@ -468,8 +496,8 @@ namespace MilvaMongoTemplate.API.Services.Common.Concrete
 
             await _redisCacheService.SetAsync($"pvc_{_userName}", verificationCode, TimeSpan.FromMinutes(3)).ConfigureAwait(false);
 
-            //Doğrulama kodunu mesaj olarak gönderme entegrasyonu buraya eklenecek.
-            //O yüzden şimdilik geriye dönüyoruz bu kodu.
+            //Integration of sending verification code as a message can be added here..
+            //So for now returns the verification code.
 
             return verificationCode;
         }
@@ -612,8 +640,7 @@ namespace MilvaMongoTemplate.API.Services.Common.Concrete
 
             var (entities, pageCount, totalDataCount) = await _userRepository.GetAsPaginatedAsync(paginationParams.PageIndex,
                                                                                                   paginationParams.RequestedItemCount,
-                                                                                                  paginationParams.OrderByProperty,
-                                                                                                  paginationParams.OrderByAscending,
+                                                                                                  paginationParams.OrderByProps,
                                                                                                   filterDefinition: Builders<MilvaMongoTemplateUser>.Filter.And(appUserFilter, isDeletedFilter)).ConfigureAwait(false);
 
             var allRoles = await _roleRepository.GetAllAsync().ConfigureAwait(false);
@@ -979,18 +1006,18 @@ namespace MilvaMongoTemplate.API.Services.Common.Concrete
         /// <param name="user"></param>
         /// <param name="isAppUser"></param>
         /// <returns></returns>
-        public async Task<string> GenerateTokenWithRoleAsync(MilvaMongoTemplateUser user, bool isAppUser)
+        public async Task<IToken> GenerateTokenWithRoleAsync(MilvaMongoTemplateUser user, bool isAppUser)
         {
-            var roles = await _userManager.GetRolesAsync(user).ConfigureAwait(false);
+            var roles = await _userManager.GetRolesAsync(user);
 
-            string newToken = GenerateToken(username: user.UserName, roles: roles, isAppUser);
+            var newToken = GenerateToken(username: user.UserName, roles: roles, isAppUser);
 
-            await _userManager.RemoveAuthenticationTokenAsync(user, _loginProvider, _tokenName).ConfigureAwait(false);
+            await _userManager.RemoveAuthenticationTokenAsync(user, _loginProvider, _tokenName);
 
             IdentityResult identityResult = await _userManager.SetAuthenticationTokenAsync(user: user,
                                                                                            loginProvider: _loginProvider,//Token nerede kullanılcak
                                                                                            tokenName: _tokenName,//Token tipi
-                                                                                           tokenValue: newToken).ConfigureAwait(false);
+                                                                                           tokenValue: newToken.AccessToken);
 
             if (!identityResult.Succeeded)
                 throw new MilvaUserFriendlyException();
@@ -1004,7 +1031,7 @@ namespace MilvaMongoTemplate.API.Services.Common.Concrete
         /// <param name="username"></param>
         /// <param name="roles"></param>
         /// <param name="isAppUser"></param>
-        public string GenerateToken(string username, IList<string> roles, bool isAppUser)
+        public IToken GenerateToken(string username, IList<string> roles, bool isAppUser)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
 
@@ -1012,23 +1039,31 @@ namespace MilvaMongoTemplate.API.Services.Common.Concrete
 
             claimsIdentityList.AddClaim(new Claim(ClaimTypes.Name, username));
 
-            if (!isAppUser)
-                claimsIdentityList.AddClaim(new Claim(ClaimTypes.Expired, value: _tokenExpireDate.ToString()));
+            var tokenExpiredDate = isAppUser ? DateTime.Now.AddHours(3) : DateTime.Now.AddDays(1);
+
+            //if (!isAppUser)
+            //    claimsIdentityList.AddClaim(new Claim(ClaimTypes.Expired, value: tokenExpiredDate.ToString()));
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = claimsIdentityList,
                 Issuer = _tokenManagement.Issuer,
                 Audience = _tokenManagement.Audience,
+                Expires = tokenExpiredDate,
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_tokenManagement.Secret)), SecurityAlgorithms.HmacSha256Signature)
             };
 
-            if (!isAppUser)
-                tokenDescriptor.Expires = _tokenExpireDate;
+            //if (!isAppUser)
+            //    tokenDescriptor.Expires = tokenExpiredDate;
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
 
-            return tokenHandler.WriteToken(token);
+            return new MilvaToken
+            {
+                AccessToken = tokenHandler.WriteToken(token),
+                Expiration = tokenExpiredDate,
+                RefreshToken = IdentityHelpers.CreateRefreshToken()
+            };
         }
 
         /// <summary>

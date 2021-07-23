@@ -49,6 +49,11 @@
             Determines whether the account has been deleted.
             </summary>
         </member>
+        <member name="P:MilvaMongoTemplate.Entity.Collections.MilvaMongoTemplateUser.RefreshToken">
+            <summary>
+            Refresh token of user.
+            </summary>
+        </member>
         <member name="P:MilvaMongoTemplate.Entity.Collections.MilvaMongoTemplateUser.AppUser">
             <summary>
             If this user is not mobile application user, this embedded document will be empty.

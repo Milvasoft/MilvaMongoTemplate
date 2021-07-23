@@ -1,4 +1,7 @@
 ﻿using MilvaMongoTemplate.API.Helpers.Attributes.ValidationAttributes;
+using Milvasoft.Helpers.Models;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace MilvaMongoTemplate.API.DTOs
 {
@@ -20,14 +23,16 @@ namespace MilvaMongoTemplate.API.DTOs
         public int RequestedItemCount { get; set; } = 20;
 
         /// <summary>
-        /// If order by column requested then Property name of entity.
+        /// Order by properties for multiple ordey by operation in same time.
         /// </summary>
-        [MValidateString(0, 200)]
-        public string OrderByProperty { get; set; } = "CreationDate";
+        public List<OrderByProp> OrderByProps { get; set; }
 
         /// <summary>
-        /// If order by column requested then ascending or descending.
+        /// Sorts by ascending priority prop.
         /// </summary>
-        public bool OrderByAscending { get; set; } = false;
+        public void SortByPriority()
+        {
+            OrderByProps = OrderByProps?.OrderBy(i => i.Priority)?.ToList();
+        }
     }
 }

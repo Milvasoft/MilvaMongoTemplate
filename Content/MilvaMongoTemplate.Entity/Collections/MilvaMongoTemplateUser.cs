@@ -41,6 +41,11 @@ namespace MilvaMongoTemplate.Entity.Collections
         public bool IsDeleted { get; set; } = false;
 
         /// <summary>
+        /// Refresh token of user.
+        /// </summary>
+        public string RefreshToken { get; set; }
+
+        /// <summary>
         /// If this user is not mobile application user, this embedded document will be empty.
         /// </summary>
         public AppUser AppUser { get; set; }

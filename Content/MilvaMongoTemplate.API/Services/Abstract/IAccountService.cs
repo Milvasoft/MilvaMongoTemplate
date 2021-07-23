@@ -22,6 +22,13 @@ namespace MilvaMongoTemplate.API.Services.Common.Abstract
         Task<LoginResultDTO> LoginAsync(LoginDTO loginDTO);
 
         /// <summary>
+        /// Refresh token login for all users.
+        /// </summary>
+        /// <param name="refreshToken"></param>
+        /// <returns></returns>
+        Task<LoginResultDTO> RefreshTokenLogin(string refreshToken);
+
+        /// <summary>
         /// Signs out from database. Returns null if already signed out.
         /// </summary>
         /// <returns></returns>

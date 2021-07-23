@@ -231,6 +231,13 @@
             <param name="loginDTO"></param>
             <returns></returns>
         </member>
+        <member name="M:MilvaMongoTemplate.API.Controllers.AccountController.RefreshTokenLogin(System.String)">
+            <summary>
+            Refresh token login for all users.
+            </summary>
+            <param name="refreshLogin"></param>
+            <returns></returns>
+        </member>
         <member name="M:MilvaMongoTemplate.API.Controllers.AccountController.LogoutAsync">
             <summary>
             Provides user sign out operation.
@@ -837,14 +844,14 @@
             Requested item count in requested page.
             </summary>
         </member>
-        <member name="P:MilvaMongoTemplate.API.DTOs.PaginationParams.OrderByProperty">
+        <member name="P:MilvaMongoTemplate.API.DTOs.PaginationParams.OrderByProps">
             <summary>
-            If order by column requested then Property name of entity.
+            Order by properties for multiple ordey by operation in same time.
             </summary>
         </member>
-        <member name="P:MilvaMongoTemplate.API.DTOs.PaginationParams.OrderByAscending">
+        <member name="M:MilvaMongoTemplate.API.DTOs.PaginationParams.SortByPriority">
             <summary>
-            If order by column requested then ascending or descending.
+            Sorts by ascending priority prop.
             </summary>
         </member>
         <member name="T:MilvaMongoTemplate.API.DTOs.PaginationParamsWithSpec`1">
@@ -1504,6 +1511,13 @@
             <param name="loginDTO"></param>
             <returns></returns>
         </member>
+        <member name="M:MilvaMongoTemplate.API.Services.Common.Abstract.IAccountService.RefreshTokenLogin(System.String)">
+            <summary>
+            Refresh token login for all users.
+            </summary>
+            <param name="refreshToken"></param>
+            <returns></returns>
+        </member>
         <member name="M:MilvaMongoTemplate.API.Services.Common.Abstract.IAccountService.LogoutAsync">
             <summary>
             Signs out from database. Returns null if already signed out.
@@ -1697,6 +1711,13 @@
             Signs in for incoming user. Returns a token if login informations are valid or the user is not lockedout. Otherwise returns the error list.
             </summary>
             <param name="loginDTO"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MilvaMongoTemplate.API.Services.Common.Concrete.AccountService.RefreshTokenLogin(System.String)">
+            <summary>
+            Refresh token login for all users.
+            </summary>
+            <param name="refreshToken"></param>
             <returns></returns>
         </member>
         <member name="M:MilvaMongoTemplate.API.Services.Common.Concrete.AccountService.LogoutAsync">
