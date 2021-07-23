@@ -1282,7 +1282,7 @@
             <param name="cultureInfo"></param>
             <returns></returns>
         </member>
-        <member name="M:MilvaMongoTemplate.API.Helpers.Extensions.HelperExtensions.GetActivityResponseAsync(System.Runtime.CompilerServices.ConfiguredTaskAwaitable{Microsoft.AspNetCore.Identity.IdentityResult},System.String,System.String)">
+        <member name="M:MilvaMongoTemplate.API.Helpers.Extensions.HelperExtensions.GetActivityResponseAsync(System.Threading.Tasks.Task{Microsoft.AspNetCore.Identity.IdentityResult},System.String,System.String)">
             <summary>
             Gets identity result as object response.
             </summary>

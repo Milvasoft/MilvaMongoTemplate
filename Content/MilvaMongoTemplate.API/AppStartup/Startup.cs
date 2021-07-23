@@ -151,7 +151,7 @@ namespace MilvaMongoTemplate.API.AppStartup
         /// <returns></returns>
         public async Task ConfigureAppStartupAsync(IApplicationBuilder app)
         {
-            await app.ResetDataAsync().ConfigureAwait(false);
+            await app.ResetDataAsync();
 
             await StartupConfiguration.FillAllowedFileExtensionsAsync(_jsonOperations);
 

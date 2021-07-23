@@ -24,7 +24,6 @@ using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
 namespace MilvaMongoTemplate.API.Helpers.Extensions
@@ -405,7 +404,7 @@ namespace MilvaMongoTemplate.API.Helpers.Extensions
                 var result = returnFunc.Invoke(toBeCheckedList).ToList();
 
                 foreach (var item in result)
-                    tDTOs.Add(await item.ConfigureAwait(false));
+                    tDTOs.Add(await item);
 
                 return tDTOs;
             }
@@ -440,7 +439,7 @@ namespace MilvaMongoTemplate.API.Helpers.Extensions
             {
                 var result = returnFunc.Invoke(toBeCheckedObject);
 
-                return await result.ConfigureAwait(false);
+                return await result;
             }
             else
                 return default;
@@ -654,7 +653,7 @@ namespace MilvaMongoTemplate.API.Helpers.Extensions
         /// <param name="successMessage"></param>
         /// <param name="errorMessage"></param>
         /// <returns></returns>
-        public static async Task<IActionResult> GetActivityResponseAsync(this ConfiguredTaskAwaitable<IdentityResult> asyncTask, string successMessage, string errorMessage)
+        public static async Task<IActionResult> GetActivityResponseAsync(this Task<IdentityResult> asyncTask, string successMessage, string errorMessage)
         {
             ObjectResponse<IdentityResult> response = new()
             {
