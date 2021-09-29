@@ -6,13 +6,10 @@
 
 </div>
 
-![](https://i.hizliresim.com/12q7jh2.gif)
-<br></br>
 <h3 align="center">Create ready made project with <a href="https://github.com/Milvasoft/Milvasoft" rel="nofollow" target="_blank" >Milvasoft.Helpers</a></h3>
 
 ***
 
-<br></br>
 # How can I create project with CLI?
 
 <ol> 
