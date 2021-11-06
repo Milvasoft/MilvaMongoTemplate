@@ -8,11 +8,6 @@
     <DocumentationFile>..\MilvaMongoTemplate.Data\MilvaMongoTemplate.Data.xml</DocumentationFile>
   </PropertyGroup>
 
-	<ItemGroup>
-		<PackageReference Include="Milvasoft.Helpers" Version="6.4.25" />
-		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.12.0" />
-	</ItemGroup>
-
 
 
 	

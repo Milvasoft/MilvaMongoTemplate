@@ -1,9 +1,9 @@
 ﻿using MilvaMongoTemplate.API.Helpers.Attributes.ValidationAttributes;
-using Milvasoft.Helpers.Identity.Concrete;
+using Milvasoft.Helpers.Identity.Abstract;
 using Newtonsoft.Json;
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-namespace MilvaMongoTemplate.API.Helpers.Identity
+namespace MilvaMongoTemplate.API.Helpers.Models
 {
     [JsonObject("tokenManagement")]
     public class TokenManagement : ITokenManagement

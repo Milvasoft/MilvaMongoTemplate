@@ -16,7 +16,7 @@ namespace MilvaMongoTemplate.API.Helpers.Attributes.ValidationAttributes
         /// <param name="maximumLength">The maximum length, inclusive.  It may not be negative.</param>
         public MValidateStringAttribute(int maximumLength) : base(maximumLength)
         {
-            base.MailContent = GlobalConstants.MailContent;
+            base.MailContent = GlobalConstant.MailContent;
             base.ResourceType = typeof(SharedResource);
         }
 
@@ -27,7 +27,7 @@ namespace MilvaMongoTemplate.API.Helpers.Attributes.ValidationAttributes
         /// <param name="maximumLength">The maximum length, inclusive.  It may not be negative.</param>
         public MValidateStringAttribute(int minimumLength, int maximumLength) : base(minimumLength, maximumLength)
         {
-            base.MailContent = GlobalConstants.MailContent;
+            base.MailContent = GlobalConstant.MailContent;
             base.ResourceType = typeof(SharedResource);
         }
     }

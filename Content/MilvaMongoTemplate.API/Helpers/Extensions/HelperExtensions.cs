@@ -45,7 +45,7 @@ namespace MilvaMongoTemplate.API.Helpers.Extensions
         {
             int maxFileLength = 14000000;
 
-            var allowedFileExtensions = GlobalConstants.AllowedFileExtensions.Find(i => i.FileType == fileType.ToString()).AllowedExtensions;
+            var allowedFileExtensions = GlobalConstant.AllowedFileExtensions.Find(i => i.FileType == fileType.ToString()).AllowedExtensions;
 
             var validationResult = file.ValidateFile(maxFileLength, allowedFileExtensions, fileType);
 
@@ -78,7 +78,7 @@ namespace MilvaMongoTemplate.API.Helpers.Extensions
         /// <returns></returns>
         public static async Task<string> SaveVideoToServerAsync<TEntity, TKey>(this IFormFile file, TEntity entity)
         {
-            string basePath = GlobalConstants.VideoLibraryPath;
+            string basePath = GlobalConstant.VideoLibraryPath;
 
             FormFileOperations.FilesFolderNameCreator imagesFolderNameCreator = CreateVideoFolderNameFromDTO;
 
@@ -86,7 +86,7 @@ namespace MilvaMongoTemplate.API.Helpers.Extensions
 
             int maxFileLength = 140000000;
 
-            var allowedFileExtensions = GlobalConstants.AllowedFileExtensions.Find(i => i.FileType == FileType.Video.ToString()).AllowedExtensions;
+            var allowedFileExtensions = GlobalConstant.AllowedFileExtensions.Find(i => i.FileType == FileType.Video.ToString()).AllowedExtensions;
 
             var validationResult = file.ValidateFile(maxFileLength, allowedFileExtensions, FileType.Video);
 
@@ -126,19 +126,19 @@ namespace MilvaMongoTemplate.API.Helpers.Extensions
             switch (fileType)
             {
                 case FileType.Image:
-                    libraryType = $"{GlobalConstants.RoutePrefix}/ImageLibrary";
+                    libraryType = $"{GlobalConstant.RoutePrefix}/ImageLibrary";
                     break;
                 case FileType.Video:
-                    libraryType = $"{GlobalConstants.RoutePrefix}/VideoLibrary";
+                    libraryType = $"{GlobalConstant.RoutePrefix}/VideoLibrary";
                     break;
                 case FileType.ARModel:
-                    libraryType = $"{GlobalConstants.RoutePrefix}/ARModelLibrary";
+                    libraryType = $"{GlobalConstant.RoutePrefix}/ARModelLibrary";
                     break;
                 case FileType.Audio:
-                    libraryType = $"{GlobalConstants.RoutePrefix}/AudioLibrary";
+                    libraryType = $"{GlobalConstant.RoutePrefix}/AudioLibrary";
                     break;
                 case FileType.Document:
-                    libraryType = $"{GlobalConstants.RoutePrefix}/DocumentLibrary";
+                    libraryType = $"{GlobalConstant.RoutePrefix}/DocumentLibrary";
                     break;
                 default:
                     break;
@@ -207,7 +207,7 @@ namespace MilvaMongoTemplate.API.Helpers.Extensions
         /// <returns></returns>
         public static string GetLang<TEntity>(this IEnumerable<TEntity> langs, Expression<Func<TEntity, string>> propertyName)
         {
-            var requestedLangId = GetLanguageId(GlobalConstants.DefaultLanguageId);
+            var requestedLangId = GetLanguageId(GlobalConstant.DefaultLanguageId);
 
             if (langs.IsNullOrEmpty()) return "";
 
@@ -215,10 +215,10 @@ namespace MilvaMongoTemplate.API.Helpers.Extensions
 
             TEntity requestedLang;
 
-            if (requestedLangId != GlobalConstants.DefaultLanguageId) requestedLang = langs.FirstOrDefault(lang => (int)lang.GetType().GetProperty(SystemLanguageIdString).GetValue(lang) == requestedLangId)
-                                                                                        ?? langs.FirstOrDefault(lang => (int)lang.GetType().GetProperty(SystemLanguageIdString).GetValue(lang) == GlobalConstants.DefaultLanguageId);
+            if (requestedLangId != GlobalConstant.DefaultLanguageId) requestedLang = langs.FirstOrDefault(lang => (int)lang.GetType().GetProperty(SystemLanguageIdString).GetValue(lang) == requestedLangId)
+                                                                                        ?? langs.FirstOrDefault(lang => (int)lang.GetType().GetProperty(SystemLanguageIdString).GetValue(lang) == GlobalConstant.DefaultLanguageId);
 
-            else requestedLang = langs.FirstOrDefault(lang => (int)lang.GetType().GetProperty(SystemLanguageIdString).GetValue(lang) == GlobalConstants.DefaultLanguageId);
+            else requestedLang = langs.FirstOrDefault(lang => (int)lang.GetType().GetProperty(SystemLanguageIdString).GetValue(lang) == GlobalConstant.DefaultLanguageId);
 
             requestedLang ??= langs.FirstOrDefault();
 
@@ -295,16 +295,16 @@ namespace MilvaMongoTemplate.API.Helpers.Extensions
         /// <returns></returns>
         private static string GetLang<TEntity>(this HashSet<TEntity> langs, string propName)
         {
-            var requestedLangId = GetLanguageId(GlobalConstants.DefaultLanguageId);
+            var requestedLangId = GetLanguageId(GlobalConstant.DefaultLanguageId);
 
             if (langs.IsNullOrEmpty()) return "";
 
             TEntity requestedLang;
 
-            if (requestedLangId != GlobalConstants.DefaultLanguageId) requestedLang = langs.FirstOrDefault(lang => (int)lang.GetType().GetProperty(SystemLanguageIdString).GetValue(lang) == requestedLangId)
-                                                                                        ?? langs.FirstOrDefault(lang => (int)lang.GetType().GetProperty(SystemLanguageIdString).GetValue(lang) == GlobalConstants.DefaultLanguageId);
+            if (requestedLangId != GlobalConstant.DefaultLanguageId) requestedLang = langs.FirstOrDefault(lang => (int)lang.GetType().GetProperty(SystemLanguageIdString).GetValue(lang) == requestedLangId)
+                                                                                        ?? langs.FirstOrDefault(lang => (int)lang.GetType().GetProperty(SystemLanguageIdString).GetValue(lang) == GlobalConstant.DefaultLanguageId);
 
-            else requestedLang = langs.FirstOrDefault(lang => (int)lang.GetType().GetProperty(SystemLanguageIdString).GetValue(lang) == GlobalConstants.DefaultLanguageId);
+            else requestedLang = langs.FirstOrDefault(lang => (int)lang.GetType().GetProperty(SystemLanguageIdString).GetValue(lang) == GlobalConstant.DefaultLanguageId);
 
             requestedLang ??= langs.FirstOrDefault();
 
@@ -335,7 +335,7 @@ namespace MilvaMongoTemplate.API.Helpers.Extensions
 
                     for (int i = 0; i < count; i++)
                     {
-                        if (i == GlobalConstants.Zero) enumerator.GetType().GetMethod("MoveNext").Invoke(enumerator, null);
+                        if (i == GlobalConstant.Zero) enumerator.GetType().GetMethod("MoveNext").Invoke(enumerator, null);
 
                         var currentValue = enumerator.GetType().GetProperty("Current").GetValue(enumerator, null);
 
@@ -344,7 +344,7 @@ namespace MilvaMongoTemplate.API.Helpers.Extensions
                         {
                             var langId = (int)currentValue.GetType().GetProperty("SystemLanguageId").GetValue(currentValue, null);
 
-                            if (langId == GetLanguageId(GlobalConstants.DefaultLanguageId))
+                            if (langId == GetLanguageId(GlobalConstant.DefaultLanguageId))
                             {
                                 obj = currentValue.GetType().GetProperty(propName).GetValue(currentValue, null);
                                 break;
@@ -696,6 +696,40 @@ namespace MilvaMongoTemplate.API.Helpers.Extensions
             }
 
             return new ObjectId(objectId + valueConverted);
+        }
+
+        /// <summary>
+        /// Creates phone numver verification cache key.
+        /// </summary>
+        /// <param name="phoneNumber"></param>
+        /// <returns></returns>
+        public static string CreatePhoneNumberCacheKey(string phoneNumber) => $"mpvc_{phoneNumber}";
+
+        /// <summary>
+        /// Writes app start information to console.
+        /// </summary>
+        /// <param name="textWriter"></param>
+        /// <param name="message"></param>
+        public static void WriteAppInfo(this TextWriter textWriter, string message)
+        {
+            Console.ForegroundColor = ConsoleColor.Green;
+            textWriter.Write("\n\n info: ");
+            Console.ForegroundColor = ConsoleColor.Gray;
+            textWriter.Write($"{message}");
+        }
+
+        /// <summary>
+        /// Writes app start information to console.
+        /// </summary>
+        /// <param name="textWriter"></param>
+        /// <param name="message"></param>
+        /// <returns></returns>
+        public static async Task WriteAppInfoAsync(this TextWriter textWriter, string message)
+        {
+            Console.ForegroundColor = ConsoleColor.Green;
+            await textWriter.WriteAsync("\n\n info: ");
+            Console.ForegroundColor = ConsoleColor.Gray;
+            await textWriter.WriteAsync($"{message}");
         }
     }
 }

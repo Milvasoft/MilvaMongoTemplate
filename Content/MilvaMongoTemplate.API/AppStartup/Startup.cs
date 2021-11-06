@@ -5,13 +5,11 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Localization;
-using MilvaMongoTemplate.API.Helpers;
+using MilvaMongoTemplate.API.Helpers.Extensions;
 using MilvaMongoTemplate.API.Middlewares;
-using MilvaMongoTemplate.Data.Utils;
 using MilvaMongoTemplate.Localization;
-using Milvasoft.Helpers.FileOperations.Abstract;
-using Milvasoft.Helpers.FileOperations.Concrete;
-using System.Threading.Tasks;
+using Milvasoft.Helpers.Middlewares;
+using System;
 #endregion
 
 namespace MilvaMongoTemplate.API.AppStartup
@@ -40,8 +38,7 @@ namespace MilvaMongoTemplate.API.AppStartup
     {
         #region Fields
 
-        /// <summary> Configuration value. </summary>
-        private readonly IJsonOperations _jsonOperations;
+        private static IServiceCollection _serviceCollection;
 
         #endregion
 
@@ -64,7 +61,6 @@ namespace MilvaMongoTemplate.API.AppStartup
         public Startup(IWebHostEnvironment env)
         {
             WebHostEnvironment = env;
-            _jsonOperations = new JsonOperations();
         }
 
         /// <summary>
@@ -76,6 +72,10 @@ namespace MilvaMongoTemplate.API.AppStartup
             //Will be remove production.
             //StartupConfiguration.EncryptFile().Wait();
             //StartupConfiguration.DecryptFile().Wait();
+
+            _serviceCollection = services;
+
+            Console.Out.WriteAppInfo("Service collection registration starting...");
 
             StartupConfiguration.CheckPublicFiles();
 
@@ -91,17 +91,17 @@ namespace MilvaMongoTemplate.API.AppStartup
 
             services.ConfigureDependencyInjection();
 
-            services.ConfigureDatabase(_jsonOperations);
+            var jsonOperations = services.AddJsonOperations();
+
+            services.ConfigureDatabase(jsonOperations);
 
             services.AddIdentity();
 
-            services.AddJwtBearer(_jsonOperations);
+            services.AddJwtBearer(jsonOperations);
 
             services.AddSwagger();
 
-            StartupConfiguration.FillStringBlacklistAsync(_jsonOperations).Wait();
-
-            services.AddSingleton(GlobalConstants.StringBlacklist);
+            Console.Out.WriteAppInfo("All services registered to service collection.");
         }
 
         /// <summary>
@@ -117,6 +117,8 @@ namespace MilvaMongoTemplate.API.AppStartup
             if (WebHostEnvironment.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+
+                app.UseMilvaResponseTimeCalculator();
             }
 
             app.UseRequestLocalization();
@@ -140,23 +142,10 @@ namespace MilvaMongoTemplate.API.AppStartup
 
             app.UseSwagger();
 
-            ConfigureAppStartupAsync(app).Wait();
+            app.ConfigureAppStartupAsync(_serviceCollection).Wait();
+
+            Console.Out.WriteAppInfo($"Hosting environment : {WebHostEnvironment.EnvironmentName}");
+            Console.Out.WriteAppInfo($"Application started. Press Ctrl+C to shut down.");
         }
-
-
-        /// <summary>
-        /// This method provides async configure process which configure() called by the runtime.
-        /// </summary>
-        /// <param name="app"></param>
-        /// <returns></returns>
-        public async Task ConfigureAppStartupAsync(IApplicationBuilder app)
-        {
-            await app.ResetDataAsync();
-
-            await StartupConfiguration.FillAllowedFileExtensionsAsync(_jsonOperations);
-
-            await StartupConfiguration.FillStringBlacklistAsync(_jsonOperations);
-        }
-
     }
 }

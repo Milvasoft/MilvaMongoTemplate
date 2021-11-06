@@ -36,6 +36,8 @@ namespace MilvaMongoTemplate.Data.Utils
 
             _mongoDatabase = new MongoClient(mongoDbSettings.ConnectionString).GetDatabase(mongoDbSettings.DatabaseName);
 
+            NoSqlRelationHelper.DbName = mongoDbSettings.DatabaseName;
+
             await InitializeRolesAsync(app.ApplicationServices.GetRequiredService<RoleManager<MilvaMongoTemplateRole>>()).ConfigureAwait(false);
             await InitializeUsersAsync(app.ApplicationServices.GetRequiredService<MilvaMongoTemplateUserManager>()).ConfigureAwait(false);
 

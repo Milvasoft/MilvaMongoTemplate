@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace MilvaMongoTemplate.API.Helpers
+namespace MilvaMongoTemplate.API.Helpers.Models
 {
     /// <summary>
     /// Allowed file extensions for media files.

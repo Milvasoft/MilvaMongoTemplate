@@ -5,7 +5,7 @@ namespace MilvaMongoTemplate.API.Helpers
     /// <summary>
     /// Constants of MilvaMongoTemplate roles.
     /// </summary>
-    public static class RoleNames
+    public static class RoleName
     {
         public const string All = "Administrator";
         public const string Administrator = "Administrator";

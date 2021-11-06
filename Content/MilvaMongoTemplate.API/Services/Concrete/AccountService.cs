@@ -7,7 +7,6 @@ using MilvaMongoTemplate.API.DTOs;
 using MilvaMongoTemplate.API.DTOs.AccountDTOs;
 using MilvaMongoTemplate.API.Helpers;
 using MilvaMongoTemplate.API.Helpers.Extensions;
-using MilvaMongoTemplate.API.Helpers.Identity;
 using MilvaMongoTemplate.API.Services.Common.Abstract;
 using MilvaMongoTemplate.Entity.Collections;
 using MilvaMongoTemplate.Localization;
@@ -19,6 +18,7 @@ using Milvasoft.Helpers.Encryption.Concrete;
 using Milvasoft.Helpers.Enums;
 using Milvasoft.Helpers.Exceptions;
 using Milvasoft.Helpers.Extensions;
+using Milvasoft.Helpers.Identity.Abstract;
 using Milvasoft.Helpers.Identity.Concrete;
 using Milvasoft.Helpers.Mail;
 using Milvasoft.Helpers.Models;
@@ -32,6 +32,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using ResourceKey = MilvaMongoTemplate.Localization.Resources.SharedResource;
 
 namespace MilvaMongoTemplate.API.Services.Common.Concrete
 {
@@ -51,17 +52,17 @@ namespace MilvaMongoTemplate.API.Services.Common.Concrete
 
         #region Fields
 
-        private readonly IBaseRepository<MilvaMongoTemplateUser> _userRepository;
-        private readonly IBaseRepository<MilvaMongoTemplateRole> _roleRepository;
-        private readonly UserManager<MilvaMongoTemplateUser> _userManager;
-        private readonly SignInManager<MilvaMongoTemplateUser> _signInManager;
+        private readonly Lazy<IBaseRepository<MilvaMongoTemplateUser>> _lazyUserRepository;
+        private readonly Lazy<IBaseRepository<MilvaMongoTemplateRole>> _lazyRoleRepository;
+        private readonly Lazy<UserManager<MilvaMongoTemplateUser>> _lazyUserManager;
+        private readonly Lazy<SignInManager<MilvaMongoTemplateUser>> _lazySignInManager;
+        private readonly Lazy<IMilvaMailSender> _lazyMilvaMailSender;
+        private readonly Lazy<IRedisCacheService> _lazyRedisCacheService;
+        private readonly Lazy<IMilvaLogger> _lazyMilvaLogger;
+        private readonly Lazy<MilvaEncryptionProvider> _lazyMilvaEncryptionProvider;
         private readonly ITokenManagement _tokenManagement;
         private readonly IStringLocalizer<SharedResource> _localizer;
         private readonly string _userName;
-        private readonly IMilvaMailSender _milvaMailSender;
-        private readonly IRedisCacheService _redisCacheService;
-        private readonly IMilvaLogger _milvaLogger;
-        private readonly MilvaEncryptionProvider _milvaEncryptionProvider;
 
         /// <summary>
         /// The authentication scheme for the provider the token is associated with.
@@ -78,42 +79,42 @@ namespace MilvaMongoTemplate.API.Services.Common.Concrete
         /// <summary>
         /// Performs constructor injection for repository interfaces used in this service.
         /// </summary>
-        /// <param name="userRepository"></param>
-        /// <param name="roleRepository"></param>
-        /// <param name="userManager"></param>
-        /// <param name="signInManager"></param>
+        /// <param name="lazyUserRepository"></param>
+        /// <param name="lazyRoleRepository"></param>
+        /// <param name="lazyUserManager"></param>
+        /// <param name="lazySignInManager"></param>
         /// <param name="tokenManagement"></param>
         /// <param name="localizer"></param>
         /// <param name="httpContextAccessor"></param>
-        /// <param name="milvaMailSender"></param>
-        /// <param name="redisCacheService"></param>
-        /// <param name="milvaLogger"></param>
-        /// <param name="milvaEncryptionProvider"></param>
-        public AccountService(IBaseRepository<MilvaMongoTemplateUser> userRepository,
-                              IBaseRepository<MilvaMongoTemplateRole> roleRepository,
-                              UserManager<MilvaMongoTemplateUser> userManager,
-                              SignInManager<MilvaMongoTemplateUser> signInManager,
-                              TokenManagement tokenManagement,
-                              IStringLocalizer<SharedResource> localizer,
-                              IHttpContextAccessor httpContextAccessor,
-                              IMilvaMailSender milvaMailSender,
-                              IRedisCacheService redisCacheService,
-                              IMilvaLogger milvaLogger,
-                              MilvaEncryptionProvider milvaEncryptionProvider)
+        /// <param name="lazyMilvaMailSender"></param>
+        /// <param name="lazyRedisCacheService"></param>
+        /// <param name="lazyMilvaLogger"></param>
+        /// <param name="lazyMilvaEncryptionProvider"></param>
+        public AccountService(Lazy<IBaseRepository<MilvaMongoTemplateUser>> lazyUserRepository,
+                              Lazy<IBaseRepository<MilvaMongoTemplateRole>> lazyRoleRepository,
+                              Lazy<UserManager<MilvaMongoTemplateUser>> lazyUserManager,
+                              Lazy<SignInManager<MilvaMongoTemplateUser>> lazySignInManager,
+                              Lazy<IMilvaMailSender> lazyMilvaMailSender,
+                              Lazy<IRedisCacheService> lazyRedisCacheService,
+                              Lazy<IMilvaLogger> lazyMilvaLogger,
+                              Lazy<MilvaEncryptionProvider> lazyMilvaEncryptionProvider,
+                              HttpContextAccessor httpContextAccessor,
+                              ITokenManagement tokenManagement,
+                              IStringLocalizer<SharedResource> localizer)
         {
-            _userRepository = userRepository;
-            _roleRepository = roleRepository;
-            _userManager = userManager;
-            _signInManager = signInManager;
+            _lazyUserRepository = lazyUserRepository;
+            _lazyRoleRepository = lazyRoleRepository;
+            _lazyUserManager = lazyUserManager;
+            _lazySignInManager = lazySignInManager;
             _tokenManagement = tokenManagement;
             _localizer = localizer;
-            _milvaMailSender = milvaMailSender;
-            _redisCacheService = redisCacheService;
-            _milvaLogger = milvaLogger;
+            _lazyMilvaMailSender = lazyMilvaMailSender;
+            _lazyRedisCacheService = lazyRedisCacheService;
+            _lazyMilvaLogger = lazyMilvaLogger;
             _userName = httpContextAccessor.HttpContext.User.Identity.Name;
             _loginProvider = tokenManagement.LoginProvider;
             _tokenName = tokenManagement.TokenName;
-            _milvaEncryptionProvider = milvaEncryptionProvider;
+            _lazyMilvaEncryptionProvider = lazyMilvaEncryptionProvider;
         }
 
 
@@ -129,7 +130,7 @@ namespace MilvaMongoTemplate.API.Services.Common.Concrete
             if (loginResult.ErrorMessages.Count > 0)
                 return loginResult;
 
-            SignInResult signInResult = await _signInManager.PasswordSignInAsync(user, loginDTO.Password, true, lockoutOnFailure: true);
+            SignInResult signInResult = await _lazySignInManager.Value.PasswordSignInAsync(user, loginDTO.Password, true, lockoutOnFailure: true);
 
             //Kimlik doğrulama başarılı ise
             if (signInResult.Succeeded)
@@ -144,7 +145,7 @@ namespace MilvaMongoTemplate.API.Services.Common.Concrete
             #region Error Handling
 
             //Eğer ki başarısız bir account girişi söz konusu ise AccessFailedCount kolonundaki değer +1 arttırılacaktır. 
-            await _userManager.AccessFailedAsync(user);
+            await _lazyUserManager.Value.AccessFailedAsync(user);
 
             if (signInResult.RequiresTwoFactor)
                 loginResult.ErrorMessages.Add(new IdentityError { Code = "RequiresTwoFactor", Description = _localizer["RequiresTwoFactor"] });
@@ -164,7 +165,7 @@ namespace MilvaMongoTemplate.API.Services.Common.Concrete
         /// <returns></returns>
         public async Task<LoginResultDTO> RefreshTokenLogin(string refreshToken)
         {
-            var user = await _userRepository.GetFirstOrDefaultAsync(u => u.RefreshToken == refreshToken);
+            var user = await _lazyUserRepository.Value.GetFirstOrDefaultAsync(u => u.RefreshToken == refreshToken);
 
             if (user != null)
             {
@@ -172,7 +173,7 @@ namespace MilvaMongoTemplate.API.Services.Common.Concrete
 
                 user.RefreshToken = token.RefreshToken;
 
-                await _userManager.UpdateAsync(user);
+                await _lazyUserManager.Value.UpdateAsync(user);
 
                 return new LoginResultDTO
                 {
@@ -196,17 +197,17 @@ namespace MilvaMongoTemplate.API.Services.Common.Concrete
 
             var userNameFilter = Builders<MilvaMongoTemplateUser>.Filter.Eq(a => a.UserName, _userName);
 
-            var user = await _userRepository.GetFirstOrDefaultAsync(userNameFilter.AddIsDeletedFilter())
+            var user = await _lazyUserRepository.Value.GetFirstOrDefaultAsync(userNameFilter.AddIsDeletedFilter())
                 ?? throw new MilvaUserFriendlyException(MilvaException.CannotFindEntity);
 
-            if (await _userManager.GetAuthenticationTokenAsync(user, _loginProvider, _tokenName) == null)
+            if (await _lazyUserManager.Value.GetAuthenticationTokenAsync(user, _loginProvider, _tokenName) == null)
                 throw new MilvaUserFriendlyException("AlreadyLoggedOutMessage");
 
-            var identityResult = await _userManager.RemoveAuthenticationTokenAsync(user, _loginProvider, _tokenName);
+            var identityResult = await _lazyUserManager.Value.RemoveAuthenticationTokenAsync(user, _loginProvider, _tokenName);
 
             identityResult.ThrowErrorMessagesIfNotSuccess();
 
-            await _signInManager.SignOutAsync();
+            await _lazySignInManager.Value.SignOutAsync();
         }
 
         /// <summary>
@@ -219,25 +220,25 @@ namespace MilvaMongoTemplate.API.Services.Common.Concrete
 
             var userNameFilter = Builders<MilvaMongoTemplateUser>.Filter.Eq(a => a.UserName, _userName);
 
-            var user = await _userRepository.GetFirstOrDefaultAsync(userNameFilter.AddIsDeletedFilter());
+            var user = await _lazyUserRepository.Value.GetFirstOrDefaultAsync(userNameFilter.AddIsDeletedFilter());
 
             user.ThrowIfNullObject("CannotGetSignedInUserInfo");
 
             List<string> userRoleNames = new();
 
             if (!user.Roles.IsNullOrEmpty())
-                userRoleNames = (await _roleRepository.GetAllAsync()).Where(r => user.Roles.Contains(r.Id.ToString())).Select(r => r.Name).ToList();
+                userRoleNames = (await _lazyRoleRepository.Value.GetAllAsync()).Where(r => user.Roles.Contains(r.Id.ToString())).Select(r => r.Name).ToList();
 
             return new MilvaMongoTemplateUserDTO
             {
                 Id = user.Id,
                 UserName = user.UserName,
-                Name = user.Name != null ? await _milvaEncryptionProvider.DecryptAsync(user.Name) : null,
-                Surname = user.Surname != null ? await _milvaEncryptionProvider.DecryptAsync(user.Surname) : null,
+                Name = user.Name != null ? await _lazyMilvaEncryptionProvider.Value.DecryptAsync(user.Name) : null,
+                Surname = user.Surname != null ? await _lazyMilvaEncryptionProvider.Value.DecryptAsync(user.Surname) : null,
                 Email = user.Email,
                 EmailConfirmed = user.EmailConfirmed,
-                IdentityNumber = user.AppUser != null ? (user.AppUser.IdentityNumber != null ? await _milvaEncryptionProvider.DecryptAsync(user.AppUser.IdentityNumber) : null) : null,
-                PhoneNumber = user.PhoneNumber != null ? await _milvaEncryptionProvider.DecryptAsync(user.PhoneNumber) : null,
+                IdentityNumber = user.AppUser != null ? (user.AppUser.IdentityNumber != null ? await _lazyMilvaEncryptionProvider.Value.DecryptAsync(user.AppUser.IdentityNumber) : null) : null,
+                PhoneNumber = user.PhoneNumber != null ? await _lazyMilvaEncryptionProvider.Value.DecryptAsync(user.PhoneNumber) : null,
                 PhoneNumberConfirmed = user.PhoneNumberConfirmed,
                 RoleNames = userRoleNames,
             };
@@ -266,7 +267,7 @@ namespace MilvaMongoTemplate.API.Services.Common.Concrete
 
             LoginResultDTO loginResult = new();
 
-            var createResult = await _userManager.CreateAsync(userToBeSignUp, registerDTO.Password);
+            var createResult = await _lazyUserManager.Value.CreateAsync(userToBeSignUp, registerDTO.Password);
 
             if (createResult.Succeeded)
             {
@@ -295,31 +296,31 @@ namespace MilvaMongoTemplate.API.Services.Common.Concrete
 
             var userNameFilter = Builders<MilvaMongoTemplateUser>.Filter.Eq(a => a.UserName, _userName);
 
-            var toBeUpdatedUser = await _userRepository.GetFirstOrDefaultAsync(userNameFilter.AddIsDeletedFilter());
+            var toBeUpdatedUser = await _lazyUserRepository.Value.GetFirstOrDefaultAsync(userNameFilter.AddIsDeletedFilter());
 
             bool initializeUpdate = false;
 
             if (!string.IsNullOrEmpty(userDTO.IdentityNumber))
-                toBeUpdatedUser.AppUser.IdentityNumber = await _milvaEncryptionProvider.EncryptAsync(userDTO.IdentityNumber);
+                toBeUpdatedUser.AppUser.IdentityNumber = await _lazyMilvaEncryptionProvider.Value.EncryptAsync(userDTO.IdentityNumber);
             else
                 if (userDTO.FirsUpdate)
                 throw new MilvaUserFriendlyException("");
 
             if (!string.IsNullOrEmpty(userDTO.NewName))
             {
-                toBeUpdatedUser.Name = await _milvaEncryptionProvider.EncryptAsync(userDTO.NewName);
+                toBeUpdatedUser.Name = await _lazyMilvaEncryptionProvider.Value.EncryptAsync(userDTO.NewName);
                 initializeUpdate = true;
             }
 
             if (!string.IsNullOrEmpty(userDTO.NewSurname))
             {
-                toBeUpdatedUser.Surname = await _milvaEncryptionProvider.EncryptAsync(userDTO.NewSurname);
+                toBeUpdatedUser.Surname = await _lazyMilvaEncryptionProvider.Value.EncryptAsync(userDTO.NewSurname);
                 initializeUpdate = true;
             }
 
             if (!string.IsNullOrEmpty(userDTO.PhoneNumber))
             {
-                toBeUpdatedUser.PhoneNumber = await _milvaEncryptionProvider.EncryptAsync(userDTO.PhoneNumber);
+                toBeUpdatedUser.PhoneNumber = await _lazyMilvaEncryptionProvider.Value.EncryptAsync(userDTO.PhoneNumber);
                 toBeUpdatedUser.PhoneNumberConfirmed = false;
                 initializeUpdate = true;
             }
@@ -328,7 +329,7 @@ namespace MilvaMongoTemplate.API.Services.Common.Concrete
             {
                 toBeUpdatedUser.LastModificationDate = DateTime.Now;
 
-                var updateResult = await _userManager.UpdateAsync(toBeUpdatedUser);
+                var updateResult = await _lazyUserManager.Value.UpdateAsync(toBeUpdatedUser);
 
                 ThrowErrorMessagesIfNotSuccess(updateResult);
             }
@@ -344,10 +345,10 @@ namespace MilvaMongoTemplate.API.Services.Common.Concrete
 
             var userNameFilter = Builders<MilvaMongoTemplateUser>.Filter.Eq(a => a.UserName, _userName);
 
-            var user = await _userRepository.GetFirstOrDefaultAsync(userNameFilter.AddIsDeletedFilter())
+            var user = await _lazyUserRepository.Value.GetFirstOrDefaultAsync(userNameFilter.AddIsDeletedFilter())
                             ?? throw new MilvaUserFriendlyException(MilvaException.CannotFindEntity);
 
-            var deleteResult = await _userManager.DeleteAsync(user);
+            var deleteResult = await _lazyUserManager.Value.DeleteAsync(user);
 
             if (!deleteResult.Succeeded)
                 ThrowErrorMessagesIfNotSuccess(deleteResult);
@@ -362,15 +363,15 @@ namespace MilvaMongoTemplate.API.Services.Common.Concrete
         /// Sends email verification mail to logged-in user.
         /// </summary>
         /// <returns></returns>
-        public async Task SendEmailVerificationMailAsync()
+        public async Task SendEmailVerificationMailAsync(string userName = "")
         {
-            CheckLoginStatus();
+            CheckLoginStatus(userName);
 
             var mailBodyKeyContentPair = PrepareMailBodyDictionary(_localizer["VerificationMailTitle"],
                                                                    _localizer["VerificationMailBodyTitle"],
-                                                                   _localizer["VerificationMailBodyDescription", GlobalConstants.ApplicationSiteUrl],
+                                                                   _localizer["VerificationMailBodyDescription", GlobalConstant.ApplicationSiteUrl],
                                                                    _localizer["VerificationMailBodyButtonText"],
-                                                                   _localizer["VerificationMailBodyResendText", GlobalConstants.DeveloperSiteUrl],
+                                                                   _localizer["VerificationMailBodyResendText", GlobalConstant.DeveloperSiteUrl],
                                                                    _localizer["VerificationMailBodyWelcomeText"]);
 
             await SendActivityMailAsync(mailBodyKeyContentPair, urlPath: "verify", AccountActivity.EmailVerification);
@@ -390,7 +391,7 @@ namespace MilvaMongoTemplate.API.Services.Common.Concrete
                                                                    _localizer["GSMChangeMailBodyTitle"],
                                                                    _localizer["GSMChangeMailBodyDesciption"],
                                                                    _localizer["GSMChangeMailBodyButtonText"],
-                                                                   _localizer["GSMChangeMailBodyResendText", GlobalConstants.DeveloperSiteUrl],
+                                                                   _localizer["GSMChangeMailBodyResendText", GlobalConstant.DeveloperSiteUrl],
                                                                    _localizer["GSMChangeMailBodyWelcomeText"]);
 
             await SendActivityMailAsync(mailBodyKeyContentPair, urlPath: "change/phoneNumber", AccountActivity.PhoneNumberChange, newPhoneNumber);
@@ -408,7 +409,7 @@ namespace MilvaMongoTemplate.API.Services.Common.Concrete
 
             var emailFilter = Builders<MilvaMongoTemplateUser>.Filter.Eq(a => a.Email, newEmail);
 
-            var user = await _userRepository.GetFirstOrDefaultAsync(emailFilter.AddIsDeletedFilter());
+            var user = await _lazyUserRepository.Value.GetFirstOrDefaultAsync(emailFilter.AddIsDeletedFilter());
 
             //Is there another user with the same email?
             bool mailExist = user != null;
@@ -420,7 +421,7 @@ namespace MilvaMongoTemplate.API.Services.Common.Concrete
                                                                    _localizer["EmailChangeMailBodyTitle"],
                                                                    _localizer["EmailChangeMailBodyDesciption"],
                                                                    _localizer["EmailChangeMailBodyButtonText"],
-                                                                   _localizer["EmailChangeMailBodyResendText", GlobalConstants.DeveloperSiteUrl],
+                                                                   _localizer["EmailChangeMailBodyResendText", GlobalConstant.DeveloperSiteUrl],
                                                                    _localizer["EmailChangeMailBodyWelcomeText"]);
 
             await SendActivityMailAsync(mailBodyKeyContentPair, urlPath: "change/email", AccountActivity.EmailChange, newEmail);
@@ -436,7 +437,7 @@ namespace MilvaMongoTemplate.API.Services.Common.Concrete
                                                                    _localizer["PasswordResetMailBodyTitle"],
                                                                    _localizer["PasswordResetMailBodyDesciption"],
                                                                    _localizer["PasswordResetMailBodyButtonText"],
-                                                                   _localizer["PasswordResetMailBodyResendText", GlobalConstants.DeveloperSiteUrl],
+                                                                   _localizer["PasswordResetMailBodyResendText", GlobalConstant.DeveloperSiteUrl],
                                                                    _localizer["PasswordResetMailBodyWelcomeText"]);
 
             await SendActivityMailAsync(mailBodyKeyContentPair, urlPath: "reset/password", AccountActivity.PasswordReset);
@@ -452,12 +453,12 @@ namespace MilvaMongoTemplate.API.Services.Common.Concrete
                                                                    _localizer["PasswordResetMailBodyTitle"],
                                                                    _localizer["PasswordResetMailBodyDesciption"],
                                                                    _localizer["PasswordResetMailBodyButtonText"],
-                                                                   _localizer["PasswordResetMailBodyResendText", GlobalConstants.DeveloperSiteUrl],
+                                                                   _localizer["PasswordResetMailBodyResendText", GlobalConstant.DeveloperSiteUrl],
                                                                    _localizer["PasswordResetMailBodyWelcomeText"]);
 
             var emailFilter = Builders<MilvaMongoTemplateUser>.Filter.Eq(a => a.Email, email);
 
-            var user = await _userRepository.GetFirstOrDefaultAsync(emailFilter.AddIsDeletedFilter())
+            var user = await _lazyUserRepository.Value.GetFirstOrDefaultAsync(emailFilter.AddIsDeletedFilter())
                                             ?? throw new MilvaUserFriendlyException(MilvaException.CannotFindEntity);
 
             await SendActivityMailAsync(mailBodyKeyContentPair, urlPath: "reset/password", AccountActivity.PasswordReset, username: user.UserName);
@@ -476,27 +477,27 @@ namespace MilvaMongoTemplate.API.Services.Common.Concrete
 
             var userNameFilter = Builders<MilvaMongoTemplateUser>.Filter.Eq(a => a.UserName, _userName);
 
-            var user = await _userRepository.GetFirstOrDefaultAsync(userNameFilter.AddIsDeletedFilter());
+            var user = await _lazyUserRepository.Value.GetFirstOrDefaultAsync(userNameFilter.AddIsDeletedFilter());
 
             if (string.IsNullOrEmpty(user?.PhoneNumber))
                 throw new MilvaUserFriendlyException("IdentityInvalidPhoneNumber");
 
             var verificationCode = GenerateVerificationCode();
 
-            if (!_redisCacheService.IsConnected())
+            if (!_lazyRedisCacheService.Value.IsConnected())
             {
                 try
                 {
-                    await _redisCacheService.ConnectAsync();
+                    await _lazyRedisCacheService.Value.ConnectAsync();
                 }
                 catch (Exception)
                 {
-                    _ = _milvaLogger.LogFatalAsync("Redis is not available!!", MailSubject.ShutDown);
+                    _ = _lazyMilvaLogger.Value.LogFatalAsync("Redis is not available!!", MailSubject.ShutDown);
                     throw new MilvaUserFriendlyException("CannotSendMessageNow");
                 }
             }
 
-            await _redisCacheService.SetAsync($"pvc_{_userName}", verificationCode, TimeSpan.FromMinutes(3));
+            await _lazyRedisCacheService.Value.SetAsync($"pvc_{_userName}", verificationCode, TimeSpan.FromMinutes(3));
 
             //Integration of sending verification code as a message can be added here..
             //So for now returns the verification code.
@@ -515,24 +516,24 @@ namespace MilvaMongoTemplate.API.Services.Common.Concrete
 
             var userNameFilter = Builders<MilvaMongoTemplateUser>.Filter.Eq(a => a.UserName, _userName);
 
-            var user = await _userRepository.GetFirstOrDefaultAsync(userNameFilter.AddIsDeletedFilter());
+            var user = await _lazyUserRepository.Value.GetFirstOrDefaultAsync(userNameFilter.AddIsDeletedFilter());
 
             user.ThrowIfParameterIsNull("IdentityInvalidUserName");
 
-            await _redisCacheService.ConnectAsync();
+            await _lazyRedisCacheService.Value.ConnectAsync();
 
             var cacheKey = $"pvc_{user.UserName}";
 
-            if (!(await _redisCacheService.KeyExistsAsync(cacheKey)))
+            if (!(await _lazyRedisCacheService.Value.KeyExistsAsync(cacheKey)))
                 throw new MilvaUserFriendlyException("ThereIsNoSavedVerificationCode");
 
-            var verificationCodeInCache = await _redisCacheService.GetAsync(cacheKey);
+            var verificationCodeInCache = await _lazyRedisCacheService.Value.GetAsync(cacheKey);
 
             if (verificationCode == verificationCodeInCache)
             {
                 user.PhoneNumberConfirmed = true;
 
-                return await _userManager.UpdateAsync(user);
+                return await _lazyUserManager.Value.UpdateAsync(user);
             }
             else throw new MilvaUserFriendlyException("WrongPhoneNumberVerificationCode");
 
@@ -547,11 +548,11 @@ namespace MilvaMongoTemplate.API.Services.Common.Concrete
         {
             var userNameFilter = Builders<MilvaMongoTemplateUser>.Filter.Eq(a => a.UserName, emailVerificationDTO.UserName);
 
-            var user = await _userRepository.GetFirstOrDefaultAsync(userNameFilter.AddIsDeletedFilter());
+            var user = await _lazyUserRepository.Value.GetFirstOrDefaultAsync(userNameFilter.AddIsDeletedFilter());
 
             user.ThrowIfParameterIsNull("InvalidVerificationToken");
 
-            return await _userManager.ConfirmEmailAsync(user, emailVerificationDTO.TokenString);
+            return await _lazyUserManager.Value.ConfirmEmailAsync(user, emailVerificationDTO.TokenString);
         }
 
         /// <summary>
@@ -563,11 +564,11 @@ namespace MilvaMongoTemplate.API.Services.Common.Concrete
         {
             var userNameFilter = Builders<MilvaMongoTemplateUser>.Filter.Eq(a => a.UserName, emailChangeDTO.UserName);
 
-            var user = await _userRepository.GetFirstOrDefaultAsync(userNameFilter.AddIsDeletedFilter());
+            var user = await _lazyUserRepository.Value.GetFirstOrDefaultAsync(userNameFilter.AddIsDeletedFilter());
 
             user.ThrowIfParameterIsNull("InvalidVerificationToken");
 
-            return await _userManager.ChangeEmailAsync(user, emailChangeDTO.NewEmail, emailChangeDTO.TokenString);
+            return await _lazyUserManager.Value.ChangeEmailAsync(user, emailChangeDTO.NewEmail, emailChangeDTO.TokenString);
         }
 
         /// <summary>
@@ -575,20 +576,33 @@ namespace MilvaMongoTemplate.API.Services.Common.Concrete
         /// with <paramref name="phoneNumberChangeDTO"/>.NewPhoneNumber, if <paramref name="phoneNumberChangeDTO"/>.TokenString is valid.
         /// </summary>
         /// <param name="phoneNumberChangeDTO"></param>
-        /// <param name="isEncrypte"></param>
         /// <returns></returns>
-        public async Task<IdentityResult> ChangePhoneNumberAsync(PhoneNumberChangeDTO phoneNumberChangeDTO, bool isEncrypte = false)
+        public async Task<IdentityResult> ChangePhoneNumberAsync(PhoneNumberChangeDTO phoneNumberChangeDTO)
         {
-            var userNameFilter = Builders<MilvaMongoTemplateUser>.Filter.Eq(a => a.UserName, phoneNumberChangeDTO.UserName);
+            CheckLoginStatus();
 
-            var user = await _userRepository.GetFirstOrDefaultAsync(userNameFilter.AddIsDeletedFilter());
+            await VerifyPhoneNumberAsync(phoneNumberChangeDTO.VerificationCode, _userName);
 
-            user.ThrowIfParameterIsNull("InvalidVerificationToken");
+            var userNameFilter = Builders<MilvaMongoTemplateUser>.Filter.Eq(a => a.UserName, _userName);
 
-            if (isEncrypte)
-                return await _userManager.ChangePhoneNumberAsync(user, await _milvaEncryptionProvider.EncryptAsync(phoneNumberChangeDTO.NewPhoneNumber), phoneNumberChangeDTO.TokenString);
-            else
-                return await _userManager.ChangePhoneNumberAsync(user, phoneNumberChangeDTO.NewPhoneNumber, phoneNumberChangeDTO.TokenString);
+            var user = await _lazyUserRepository.Value.GetFirstOrDefaultAsync(userNameFilter.AddIsDeletedFilter());
+
+            user.ThrowIfParameterIsNull(nameof(ResourceKey.InvalidVerificationToken));
+
+            user.PhoneNumber = await _lazyMilvaEncryptionProvider.Value.EncryptAsync(phoneNumberChangeDTO.NewPhoneNumber);
+            user.PhoneNumberConfirmed = true;
+
+            var updateResult = await _lazyUserManager.Value.UpdateAsync(user);
+
+            updateResult.ThrowErrorMessagesIfNotSuccess();
+
+            await _lazyRedisCacheService.Value.PerformRedisActionAsync(async () =>
+            {
+                await _lazyRedisCacheService.Value.RemoveAsync(HelperExtensions.CreatePhoneNumberCacheKey(phoneNumberChangeDTO.NewPhoneNumber));
+
+            }, nameof(ResourceKey.UpdateSuccessBut), _lazyMilvaLogger.Value);
+
+            return updateResult;
         }
 
         /// <summary>
@@ -600,11 +614,11 @@ namespace MilvaMongoTemplate.API.Services.Common.Concrete
         {
             var userNameFilter = Builders<MilvaMongoTemplateUser>.Filter.Eq(a => a.UserName, passwordResetDTO.UserName);
 
-            var user = await _userRepository.GetFirstOrDefaultAsync(userNameFilter.AddIsDeletedFilter());
+            var user = await _lazyUserRepository.Value.GetFirstOrDefaultAsync(userNameFilter.AddIsDeletedFilter());
 
             user.ThrowIfParameterIsNull("IdentityInvalidUserName");
 
-            return await _userManager.ResetPasswordAsync(user, passwordResetDTO.TokenString, passwordResetDTO.NewPassword);
+            return await _lazyUserManager.Value.ResetPasswordAsync(user, passwordResetDTO.TokenString, passwordResetDTO.NewPassword);
         }
 
         /// <summary>
@@ -618,11 +632,11 @@ namespace MilvaMongoTemplate.API.Services.Common.Concrete
 
             var userNameFilter = Builders<MilvaMongoTemplateUser>.Filter.Eq(a => a.UserName, _userName);
 
-            var user = await _userRepository.GetFirstOrDefaultAsync(userNameFilter.AddIsDeletedFilter());
+            var user = await _lazyUserRepository.Value.GetFirstOrDefaultAsync(userNameFilter.AddIsDeletedFilter());
 
             user.ThrowIfParameterIsNull("IdentityInvalidUserName");
 
-            return await _userManager.ChangePasswordAsync(user, passwordChangeDTO.OldPassword, passwordChangeDTO.NewPassword);
+            return await _lazyUserManager.Value.ChangePasswordAsync(user, passwordChangeDTO.OldPassword, passwordChangeDTO.NewPassword);
         }
 
         #endregion
@@ -640,12 +654,12 @@ namespace MilvaMongoTemplate.API.Services.Common.Concrete
             var appUserFilter = Builders<MilvaMongoTemplateUser>.Filter.Eq(a => a.AppUser, null);
             var isDeletedFilter = Builders<MilvaMongoTemplateUser>.Filter.Eq(a => a.IsDeleted, false);
 
-            var (entities, pageCount, totalDataCount) = await _userRepository.GetAsPaginatedAsync(paginationParams.PageIndex,
+            var (entities, pageCount, totalDataCount) = await _lazyUserRepository.Value.GetAsPaginatedAsync(paginationParams.PageIndex,
                                                                                                   paginationParams.RequestedItemCount,
                                                                                                   paginationParams.OrderByProps,
                                                                                                   filterDefinition: Builders<MilvaMongoTemplateUser>.Filter.And(appUserFilter, isDeletedFilter));
 
-            var allRoles = await _roleRepository.GetAllAsync();
+            var allRoles = await _lazyRoleRepository.Value.GetAllAsync();
 
             return new PaginationDTO<MilvaMongoTemplateUserDTO>
             {
@@ -653,10 +667,10 @@ namespace MilvaMongoTemplate.API.Services.Common.Concrete
                 {
                     Id = user.Id,
                     UserName = user.UserName,
-                    Name = await _milvaEncryptionProvider.DecryptAsync(user.Name),
-                    Surname = await _milvaEncryptionProvider.DecryptAsync(user.Surname),
+                    Name = await _lazyMilvaEncryptionProvider.Value.DecryptAsync(user.Name),
+                    Surname = await _lazyMilvaEncryptionProvider.Value.DecryptAsync(user.Surname),
                     Email = user.Email,
-                    PhoneNumber = await _milvaEncryptionProvider.DecryptAsync(user.PhoneNumber),
+                    PhoneNumber = await _lazyMilvaEncryptionProvider.Value.DecryptAsync(user.PhoneNumber),
                     RoleNames = !user.Roles.IsNullOrEmpty()
                                ? allRoles.Where(r => user.Roles.Contains(r.Id.ToString())).Select(i => i.Name).ToList()
                                : null,
@@ -676,20 +690,20 @@ namespace MilvaMongoTemplate.API.Services.Common.Concrete
         {
             var userIdFilter = Builders<MilvaMongoTemplateUser>.Filter.Eq(a => a.Id, userId);
 
-            var user = await _userRepository.GetFirstOrDefaultAsync(userIdFilter.AddIsDeletedFilter());
+            var user = await _lazyUserRepository.Value.GetFirstOrDefaultAsync(userIdFilter.AddIsDeletedFilter());
 
             user.ThrowIfNullObject();
 
-            var roles = (await _roleRepository.GetAllAsync()).Where(r => user.Roles.Contains(r.Id.ToString()));
+            var roles = (await _lazyRoleRepository.Value.GetAllAsync()).Where(r => user.Roles.Contains(r.Id.ToString()));
 
             return await user.CheckObjectAsync(async f => new MilvaMongoTemplateUserDTO
             {
                 Id = user.Id,
                 UserName = user.UserName,
-                Name = await _milvaEncryptionProvider.DecryptAsync(user.Name),
-                Surname = await _milvaEncryptionProvider.DecryptAsync(user.Surname),
+                Name = await _lazyMilvaEncryptionProvider.Value.DecryptAsync(user.Name),
+                Surname = await _lazyMilvaEncryptionProvider.Value.DecryptAsync(user.Surname),
                 Email = user.Email,
-                PhoneNumber = await _milvaEncryptionProvider.DecryptAsync(user.PhoneNumber),
+                PhoneNumber = await _lazyMilvaEncryptionProvider.Value.DecryptAsync(user.PhoneNumber),
                 RoleNames = !user.Roles.IsNullOrEmpty()
                                 ? roles.Select(i => i.Name).ToList()
                                 : null,
@@ -716,15 +730,15 @@ namespace MilvaMongoTemplate.API.Services.Common.Concrete
                 PhoneNumber = userDTO.PhoneNumber
             };
 
-            var createResult = await _userManager.CreateAsync(user, userDTO.Password);
+            var createResult = await _lazyUserManager.Value.CreateAsync(user, userDTO.Password);
 
             if (createResult.Succeeded)
             {
                 var userNameFilter = Builders<MilvaMongoTemplateUser>.Filter.Eq(a => a.UserName, user.UserName);
 
-                user = await _userRepository.GetFirstOrDefaultAsync(userNameFilter.AddIsDeletedFilter());
+                user = await _lazyUserRepository.Value.GetFirstOrDefaultAsync(userNameFilter.AddIsDeletedFilter());
 
-                var allRoles = (await _roleRepository.GetAllAsync());
+                var allRoles = (await _lazyRoleRepository.Value.GetAllAsync());
 
                 var roles = allRoles.Where(r => userDTO.Roles.Contains(r.Id));
 
@@ -733,7 +747,7 @@ namespace MilvaMongoTemplate.API.Services.Common.Concrete
 
                 user.Roles = roles.Select(r => r.Id.ToString()).ToList();
 
-                var updateResult = await _userManager.AddToRolesAsync(user, roles.Select(i => i.Name));
+                var updateResult = await _lazyUserManager.Value.AddToRolesAsync(user, roles.Select(i => i.Name));
 
                 ThrowErrorMessagesIfNotSuccess(updateResult);
             }
@@ -751,7 +765,7 @@ namespace MilvaMongoTemplate.API.Services.Common.Concrete
         {
             var userIdFilter = Builders<MilvaMongoTemplateUser>.Filter.Eq(a => a.Id, userDTO.Id);
 
-            var toBeUpdatedUser = await _userRepository.GetFirstOrDefaultAsync(userIdFilter.AddIsDeletedFilter());
+            var toBeUpdatedUser = await _lazyUserRepository.Value.GetFirstOrDefaultAsync(userIdFilter.AddIsDeletedFilter());
 
             toBeUpdatedUser.ThrowIfNullObject();
 
@@ -759,32 +773,32 @@ namespace MilvaMongoTemplate.API.Services.Common.Concrete
 
             if (!string.IsNullOrEmpty(userDTO.NewName))
             {
-                toBeUpdatedUser.Name = await _milvaEncryptionProvider.EncryptAsync(userDTO.NewName);
+                toBeUpdatedUser.Name = await _lazyMilvaEncryptionProvider.Value.EncryptAsync(userDTO.NewName);
                 initializeUpdate = true;
             }
 
             if (!string.IsNullOrEmpty(userDTO.NewSurname))
             {
-                toBeUpdatedUser.Surname = await _milvaEncryptionProvider.EncryptAsync(userDTO.NewSurname);
+                toBeUpdatedUser.Surname = await _lazyMilvaEncryptionProvider.Value.EncryptAsync(userDTO.NewSurname);
                 initializeUpdate = true;
             }
 
             if (!userDTO.NewRoles.IsNullOrEmpty())
             {
-                var allRoles = await _roleRepository.GetAllAsync();
+                var allRoles = await _lazyRoleRepository.Value.GetAllAsync();
 
                 var newRoles = allRoles.Where(r => userDTO.NewRoles.Contains(r.Id)).Select(r => r.Name.ToString()).ToList();
 
                 if (newRoles.IsNullOrEmpty())
                     throw new MilvaUserFriendlyException("AtLeastSelectOneRole");
 
-                var currentRoles = await _userManager.GetRolesAsync(toBeUpdatedUser);
+                var currentRoles = await _lazyUserManager.Value.GetRolesAsync(toBeUpdatedUser);
 
-                var removeResult = await _userManager.RemoveFromRolesAsync(toBeUpdatedUser, currentRoles);
+                var removeResult = await _lazyUserManager.Value.RemoveFromRolesAsync(toBeUpdatedUser, currentRoles);
 
                 removeResult.ThrowErrorMessagesIfNotSuccess();
 
-                var addResult = await _userManager.AddToRolesAsync(toBeUpdatedUser, newRoles);
+                var addResult = await _lazyUserManager.Value.AddToRolesAsync(toBeUpdatedUser, newRoles);
 
                 addResult.ThrowErrorMessagesIfNotSuccess();
             }
@@ -793,23 +807,23 @@ namespace MilvaMongoTemplate.API.Services.Common.Concrete
             {
                 toBeUpdatedUser.LastModificationDate = DateTime.Now;
 
-                var updateResult = await _userManager.UpdateAsync(toBeUpdatedUser);
+                var updateResult = await _lazyUserManager.Value.UpdateAsync(toBeUpdatedUser);
 
                 ThrowErrorMessagesIfNotSuccess(updateResult);
             }
 
             if (!string.IsNullOrEmpty(userDTO.NewPassword))
             {
-                var token = await _userManager.GeneratePasswordResetTokenAsync(toBeUpdatedUser);
+                var token = await _lazyUserManager.Value.GeneratePasswordResetTokenAsync(toBeUpdatedUser);
 
-                var resetResult = await _userManager.ResetPasswordAsync(toBeUpdatedUser, token, userDTO.NewPassword);
+                var resetResult = await _lazyUserManager.Value.ResetPasswordAsync(toBeUpdatedUser, token, userDTO.NewPassword);
 
                 ThrowErrorMessagesIfNotSuccess(resetResult);
             }
 
             if (!string.IsNullOrEmpty(userDTO.NewEmail))
             {
-                var token = await _userManager.GenerateChangeEmailTokenAsync(toBeUpdatedUser, userDTO.NewPhoneNumber);
+                var token = await _lazyUserManager.Value.GenerateChangeEmailTokenAsync(toBeUpdatedUser, userDTO.NewPhoneNumber);
 
                 var changeResult = await ChangeEmailAsync(new EmailChangeDTO
                 {
@@ -823,16 +837,14 @@ namespace MilvaMongoTemplate.API.Services.Common.Concrete
 
             if (!string.IsNullOrEmpty(userDTO.NewPhoneNumber))
             {
-                var phoneNumber = await _milvaEncryptionProvider.EncryptAsync(userDTO.NewPhoneNumber);
+                var phoneNumber = await _lazyMilvaEncryptionProvider.Value.EncryptAsync(userDTO.NewPhoneNumber);
 
-                var token = await _userManager.GenerateChangePhoneNumberTokenAsync(toBeUpdatedUser, phoneNumber);
+                var token = await _lazyUserManager.Value.GenerateChangePhoneNumberTokenAsync(toBeUpdatedUser, phoneNumber);
 
                 var changeResult = await ChangePhoneNumberAsync(new PhoneNumberChangeDTO
                 {
                     UserName = toBeUpdatedUser.UserName,
                     NewPhoneNumber = phoneNumber,
-                    TokenString = token
-
                 });
 
                 ThrowErrorMessagesIfNotSuccess(changeResult);
@@ -849,7 +861,7 @@ namespace MilvaMongoTemplate.API.Services.Common.Concrete
         {
             var userIdFilter = Builders<MilvaMongoTemplateUser>.Filter.Eq(a => a.Id, userId);
 
-            var toBeDeletedUser = await _userRepository.GetFirstOrDefaultAsync(userIdFilter.AddIsDeletedFilter());
+            var toBeDeletedUser = await _lazyUserRepository.Value.GetFirstOrDefaultAsync(userIdFilter.AddIsDeletedFilter());
 
             toBeDeletedUser.ThrowIfNullObject();
 
@@ -859,7 +871,7 @@ namespace MilvaMongoTemplate.API.Services.Common.Concrete
             if (toBeDeletedUser.UserName == "admin")
                 throw new MilvaUserFriendlyException("CannotDeleteDefaultAdminUser");
 
-            var deleteResult = await _userManager.DeleteAsync(toBeDeletedUser);
+            var deleteResult = await _lazyUserManager.Value.DeleteAsync(toBeDeletedUser);
 
             ThrowErrorMessagesIfNotSuccess(deleteResult);
         }
@@ -870,7 +882,7 @@ namespace MilvaMongoTemplate.API.Services.Common.Concrete
         /// <returns></returns>
         public async Task<List<MilvaMongoTemplateRoleDTO>> GetRolesAsync()
         {
-            var roles = await _roleRepository.GetAllAsync();
+            var roles = await _lazyRoleRepository.Value.GetAllAsync();
 
             return roles.CheckList(f => roles.Select(r => new MilvaMongoTemplateRoleDTO
             {
@@ -937,7 +949,7 @@ namespace MilvaMongoTemplate.API.Services.Common.Concrete
             {
                 var userNameFilter = Builders<MilvaMongoTemplateUser>.Filter.Eq(a => a.UserName, loginDTO.UserName);
 
-                user = await _userRepository.GetFirstOrDefaultAsync(userNameFilter.AddIsDeletedFilter());
+                user = await _lazyUserRepository.Value.GetFirstOrDefaultAsync(userNameFilter.AddIsDeletedFilter());
 
                 userNotFound = user == null;
 
@@ -958,14 +970,14 @@ namespace MilvaMongoTemplate.API.Services.Common.Concrete
                 return (user, loginResult);
             }
 
-            var userLocked = await _userManager.IsLockedOutAsync(user);
+            var userLocked = await _lazyUserManager.Value.IsLockedOutAsync(user);
 
             if (userLocked && DateTime.Now > user.LockoutEnd.Value.DateTime)
             {
                 //Locklanmış kullanıcının süresini sıfırlıyoruz
-                await _userManager.SetLockoutEndDateAsync(user, null);
+                await _lazyUserManager.Value.SetLockoutEndDateAsync(user, null);
 
-                await _userManager.ResetAccessFailedCountAsync(user);
+                await _lazyUserManager.Value.ResetAccessFailedCountAsync(user);
 
                 userLocked = false;
             }
@@ -976,13 +988,13 @@ namespace MilvaMongoTemplate.API.Services.Common.Concrete
                 return (user, loginResult);
             }
 
-            var passIsTrue = await _userManager.CheckPasswordAsync(user, loginDTO.Password);
+            var passIsTrue = await _lazyUserManager.Value.CheckPasswordAsync(user, loginDTO.Password);
 
             if (!passIsTrue)
             {
-                _ = await _userManager.AccessFailedAsync(user);
+                _ = await _lazyUserManager.Value.AccessFailedAsync(user);
 
-                if (await _userManager.IsLockedOutAsync(user))
+                if (await _lazyUserManager.Value.IsLockedOutAsync(user))
                 {
                     loginResult.ErrorMessages.Add(GetLockedError(user.LockoutEnd.Value.DateTime));
                     return (user, loginResult);
@@ -1010,13 +1022,13 @@ namespace MilvaMongoTemplate.API.Services.Common.Concrete
         /// <returns></returns>
         public async Task<IToken> GenerateTokenWithRoleAsync(MilvaMongoTemplateUser user, bool isAppUser)
         {
-            var roles = await _userManager.GetRolesAsync(user);
+            var roles = await _lazyUserManager.Value.GetRolesAsync(user);
 
             var newToken = GenerateToken(username: user.UserName, roles: roles, isAppUser);
 
-            await _userManager.RemoveAuthenticationTokenAsync(user, _loginProvider, _tokenName);
+            await _lazyUserManager.Value.RemoveAuthenticationTokenAsync(user, _loginProvider, _tokenName);
 
-            IdentityResult identityResult = await _userManager.SetAuthenticationTokenAsync(user: user,
+            IdentityResult identityResult = await _lazyUserManager.Value.SetAuthenticationTokenAsync(user: user,
                                                                                            loginProvider: _loginProvider,//Token nerede kullanılcak
                                                                                            tokenName: _tokenName,//Token tipi
                                                                                            tokenValue: newToken.AccessToken);
@@ -1142,7 +1154,7 @@ namespace MilvaMongoTemplate.API.Services.Common.Concrete
 
             var userNameFilter = Builders<MilvaMongoTemplateUser>.Filter.Eq(a => a.UserName, uName);
 
-            var user = await _userRepository.GetFirstOrDefaultAsync(userNameFilter.AddIsDeletedFilter())
+            var user = await _lazyUserRepository.Value.GetFirstOrDefaultAsync(userNameFilter.AddIsDeletedFilter())
                                              ?? throw new MilvaUserFriendlyException(MilvaException.CannotFindEntity);
 
             if (string.IsNullOrEmpty(user?.Email))
@@ -1153,29 +1165,59 @@ namespace MilvaMongoTemplate.API.Services.Common.Concrete
             switch (accountActivity)
             {
                 case AccountActivity.EmailVerification:
-                    token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                    token = await _lazyUserManager.Value.GenerateEmailConfirmationTokenAsync(user);
                     break;
                 case AccountActivity.EmailChange:
-                    token = await _userManager.GenerateChangeEmailTokenAsync(user, newInfo);
+                    token = await _lazyUserManager.Value.GenerateChangeEmailTokenAsync(user, newInfo);
                     break;
                 case AccountActivity.PasswordReset:
-                    token = await _userManager.GeneratePasswordResetTokenAsync(user);
+                    token = await _lazyUserManager.Value.GeneratePasswordResetTokenAsync(user);
                     break;
                 case AccountActivity.PhoneNumberChange:
-                    token = await _userManager.GenerateChangePhoneNumberTokenAsync(user, await _milvaEncryptionProvider.EncryptAsync(newInfo));
+                    token = await _lazyUserManager.Value.GenerateChangePhoneNumberTokenAsync(user, await _lazyMilvaEncryptionProvider.Value.EncryptAsync(newInfo));
                     break;
             }
 
-            var confirmationUrl = $"{GlobalConstants.ApplicationSiteUrl}/{urlPath}?userName={username ?? _userName}&token={token}";
+            var confirmationUrl = $"{GlobalConstant.ApplicationSiteUrl}/{urlPath}?userName={username ?? _userName}&token={token}";
 
-            var htmlContent = await File.ReadAllTextAsync(Path.Combine(GlobalConstants.RootPath, "StaticFiles", "HTML", "mail_content.html"));
+            var htmlContent = await File.ReadAllTextAsync(Path.Combine(GlobalConstant.RootPath, "StaticFiles", "HTML", "mail_content.html"));
 
             foreach (var localizedMailBodyContent in localizedMailBodyContents)
                 htmlContent = htmlContent.Replace(localizedMailBodyContent.Key, localizedMailBodyContent.Value);
 
             htmlContent = htmlContent.Replace("~BodyButtonLink", confirmationUrl);
 
-            await _milvaMailSender.MilvaSendMailAsync(user.Email, localizedMailBodyContents["~MailTitle"], htmlContent, true);
+            await _lazyMilvaMailSender.Value.MilvaSendMailAsync(user.Email, localizedMailBodyContents["~MailTitle"], htmlContent, true);
+        }
+
+        /// <summary>
+        /// Verifies phonen number, if <paramref name="verificationCode"/> is correct.
+        /// </summary>
+        /// <param name="verificationCode"></param>
+        /// <param name="phoneNumber"></param>
+        /// <returns></returns>
+        private async Task VerifyPhoneNumberAsync(string verificationCode, string phoneNumber)
+        {
+            if (string.IsNullOrWhiteSpace(verificationCode))
+                throw new MilvaUserFriendlyException(ResourceKey.WrongPhoneNumberVerificationCode);
+
+            var cacheKey = HelperExtensions.CreatePhoneNumberCacheKey(phoneNumber);
+
+            var verificationCodeInCache = string.Empty;
+
+            await _lazyRedisCacheService.Value.PerformRedisActionAsync(async () =>
+            {
+                var keyExists = await _lazyRedisCacheService.Value.KeyExistsAsync(cacheKey);
+
+                if (!keyExists)
+                    throw new MilvaUserFriendlyException(nameof(ResourceKey.ThereIsNoSavedVerificationCode));
+
+                verificationCodeInCache = await _lazyRedisCacheService.Value.GetAsync(cacheKey);
+
+            }, nameof(ResourceKey.AnErrorOccured), _lazyMilvaLogger.Value);
+
+            if (verificationCode != verificationCodeInCache || string.IsNullOrWhiteSpace(verificationCodeInCache))
+                throw new MilvaUserFriendlyException(nameof(ResourceKey.WrongPhoneNumberVerificationCode));
         }
 
         /// <summary>
@@ -1197,10 +1239,12 @@ namespace MilvaMongoTemplate.API.Services.Common.Concrete
         /// <summary>
         /// Cheks <see cref="_userName"/>. If is null or empty throwns <see cref="MilvaUserFriendlyException"/>. Otherwise does nothing.
         /// </summary>
-        private void CheckLoginStatus()
+        private string CheckLoginStatus(string username = "")
         {
-            if (string.IsNullOrEmpty(_userName))
-                throw new MilvaUserFriendlyException("CannotGetSignedInUserInfo");
+            if (string.IsNullOrWhiteSpace(_userName) && string.IsNullOrWhiteSpace(username))
+                throw new MilvaUserFriendlyException(nameof(ResourceKey.CannotGetSignedInUserInfo));
+
+            return username ?? _userName;
         }
 
         #endregion

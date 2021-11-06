@@ -6,25 +6,23 @@ using MilvaMongoTemplate.API.DTOs;
 using MilvaMongoTemplate.API.DTOs.AccountDTOs;
 using MilvaMongoTemplate.API.Helpers;
 using MilvaMongoTemplate.API.Helpers.Attributes.ActionFilters;
+using MilvaMongoTemplate.API.Helpers.Constants;
 using MilvaMongoTemplate.API.Helpers.Extensions;
 using MilvaMongoTemplate.API.Services.Common.Abstract;
+using MilvaMongoTemplate.Entity.Utils;
 using MilvaMongoTemplate.Localization;
 using Milvasoft.Helpers;
 using Milvasoft.Helpers.Enums;
-using Milvasoft.Helpers.Extensions;
-using Milvasoft.Helpers.Models.Response;
-using Milvasoft.Helpers.Utils;
 using MongoDB.Bson;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using ResourceKey = MilvaMongoTemplate.Localization.Resources.SharedResource;
 
 namespace MilvaMongoTemplate.API.Controllers
 {
     /// <summary>
     /// Provides account operations like login logout.
     /// </summary>
-    [Route(GlobalConstants.FullRoute)]
+    [Route(GlobalConstant.FullRoute)]
     [ApiController]
     [ApiVersion("1.0")]
     [ApiExplorerSettings(GroupName = "v1.0")]
@@ -48,19 +46,13 @@ namespace MilvaMongoTemplate.API.Controllers
         {
             _accountService = accountService;
             _sharedLocalizer = sharedLocalizer;
-            _defaultSucccessMessage = _sharedLocalizer["SuccessfullyOperationMessage"];
+            _defaultSucccessMessage = _sharedLocalizer[nameof(ResourceKey.SuccessfullyOperationMessage)];
         }
 
         /// <summary>
-        /// Provides sign in operation.
+        /// Login method. This endpoint is accessible for anyone.
         /// </summary>
-        /// 
-        /// <remarks> 
-        /// 
-        /// <para> Both users(admin and mobile app user) should use this endpoint. </para>
-        /// 
-        /// </remarks>
-        /// 
+        /// <returns></returns>
         /// <param name="loginDTO"></param>
         /// <returns></returns>
         [HttpPost("Login")]
@@ -68,36 +60,9 @@ namespace MilvaMongoTemplate.API.Controllers
         [MValidationFilter]
         public async Task<IActionResult> LoginAsync([FromBody] LoginDTO loginDTO)
         {
-            ObjectResponse<LoginResultDTO> response = new()
-            {
-                Result = await _accountService.LoginAsync(loginDTO)
-            };
+            var loginResult = await _accountService.LoginAsync(loginDTO);
 
-            if (!response.Result.ErrorMessages.IsNullOrEmpty())
-            {
-                var stringBuilder = new StringBuilder();
-
-                stringBuilder.AppendJoin(',', response.Result.ErrorMessages.Select(i => i.Description));
-
-                response.Message = stringBuilder.ToString();
-
-                //response.Message = string.Join("\r\n", response.Result.ErrorMessages.Select(m => m.Description));
-                response.StatusCode = MilvaStatusCodes.Status400BadRequest; //status kod sonradan degistirlebilir.
-                response.Success = false;
-            } //Bu kontroller cogalabilir. orn her hata kodu icin kendine ozel status kod yazilabilir.
-            else if (response.Result.Token == null)
-            {
-                response.Message = _sharedLocalizer["UnknownLoginProblemMessage"];
-                response.StatusCode = MilvaStatusCodes.Status400BadRequest;
-                response.Success = false;
-            }
-            else
-            {
-                response.Message = _sharedLocalizer["SuccessfullyLoginMessage"];
-                response.StatusCode = MilvaStatusCodes.Status200OK;
-                response.Success = true;
-            }
-            return Ok(response);
+            return loginResult.GetObjectResponse(_sharedLocalizer[nameof(ResourceKey.SuccessfullyLoginMessage)]);
         }
 
         /// <summary>
@@ -110,36 +75,9 @@ namespace MilvaMongoTemplate.API.Controllers
         [MValidateStringParameter(10, 1000)]
         public async Task<IActionResult> RefreshTokenLogin(string refreshLogin)
         {
-            ObjectResponse<LoginResultDTO> response = new()
-            {
-                Result = await _accountService.RefreshTokenLogin(refreshLogin)
-            };
+            var loginResult = await _accountService.RefreshTokenLogin(refreshLogin);
 
-            if (!response.Result.ErrorMessages.IsNullOrEmpty())
-            {
-                var stringBuilder = new StringBuilder();
-
-                stringBuilder.AppendJoin(',', response.Result.ErrorMessages.Select(i => i.Description));
-
-                response.Message = stringBuilder.ToString();
-
-                response.StatusCode = MilvaStatusCodes.Status401Unauthorized;
-                response.Success = false;
-            }
-            else if (response.Result.Token == null)
-            {
-                response.Message = _sharedLocalizer["UnknownLoginProblemMessage"];
-                response.StatusCode = MilvaStatusCodes.Status400BadRequest;
-                response.Success = false;
-            }
-            else
-            {
-                response.Message = _sharedLocalizer["SuccessfullyLoginMessage"];
-                response.StatusCode = MilvaStatusCodes.Status200OK;
-                response.Success = true;
-            }
-
-            return Ok(response);
+            return loginResult.GetObjectResponse(_sharedLocalizer[nameof(ResourceKey.SuccessfullyLoginMessage)]);
         }
 
         /// <summary>
@@ -153,9 +91,9 @@ namespace MilvaMongoTemplate.API.Controllers
         /// </remarks>
         /// <returns></returns>
         [HttpPut("Logout")]
-        [Authorize(Roles = RoleNames.All)]
+        [Authorize(Roles = RoleName.All)]
         public async Task<IActionResult> LogoutAsync()
-            => await _accountService.LogoutAsync().GetObjectResponseAsync<object>(_sharedLocalizer["SuccessfullyLoguotMessage"]);
+            => await _accountService.LogoutAsync().GetObjectResponseAsync<object>(_sharedLocalizer[nameof(ResourceKey.SuccessfullyLoguotMessage)]);
 
         /// <summary>
         /// Returns logged-in user's account information.
@@ -169,7 +107,7 @@ namespace MilvaMongoTemplate.API.Controllers
         /// 
         /// <returns></returns>
         [HttpGet("LoggedIn/User/Info")]
-        [Authorize(Roles = RoleNames.All)]
+        [Authorize(Roles = RoleName.All)]
         public async Task<IActionResult> GetLoggedInInUserInformationAsync()
         {
             var errorMessage = _sharedLocalizer.GetErrorMessage("User", CrudOperation.GetById);
@@ -184,43 +122,16 @@ namespace MilvaMongoTemplate.API.Controllers
         /// <summary>
         /// Provides the registration process of mobile application users.
         /// </summary>
-        /// <param name="signUpDTO"></param>
+        /// <param name="registerDTO"></param>
         /// <returns></returns>
         [HttpPost("Register/{language}")]
         [AllowAnonymous]
         [MValidationFilter]
-        public async Task<IActionResult> RegisterAsync([FromBody] RegisterDTO signUpDTO)
+        public async Task<IActionResult> RegisterAsync([FromBody] RegisterDTO registerDTO)
         {
-            ObjectResponse<LoginResultDTO> response = new()
-            {
-                Result = await _accountService.RegisterAsync(signUpDTO)
-            };
+            var loginResult = await _accountService.RegisterAsync(registerDTO);
 
-            if (!response.Result.ErrorMessages.IsNullOrEmpty())
-            {
-                var stringBuilder = new StringBuilder();
-
-                stringBuilder.AppendJoin(',', response.Result.ErrorMessages.Select(i => i.Description));
-
-                response.Message = stringBuilder.ToString();
-
-                //response.Message = string.Join("\r\n", response.Result.ErrorMessages.Select(m => m.Description));
-                response.StatusCode = MilvaStatusCodes.Status400BadRequest; //status kod sonradan degistirlebilir.
-                response.Success = false;
-            } //Bu kontroller cogalabilir. orn her hata kodu icin kendine ozel status kod yazilabilir.
-            else if (response.Result.Token == null)
-            {
-                response.Message = _sharedLocalizer["UnknownLoginProblemMessage"];
-                response.StatusCode = MilvaStatusCodes.Status400BadRequest;
-                response.Success = false;
-            }
-            else
-            {
-                response.Message = _sharedLocalizer["SuccessfullyLoginMessage"];
-                response.StatusCode = MilvaStatusCodes.Status200OK;
-                response.Success = true;
-            }
-            return Ok(response);
+            return loginResult.GetObjectResponse(_sharedLocalizer[nameof(ResourceKey.SuccessfullyLoginMessage)]);
         }
 
         /// <summary>
@@ -229,10 +140,10 @@ namespace MilvaMongoTemplate.API.Controllers
         /// <param name="userDTO"></param>
         /// <returns></returns>
         [HttpPut]
-        [Authorize(Roles = RoleNames.AppUser)]
+        [Authorize(Roles = RoleName.AppUser)]
         public async Task<IActionResult> UpdateMyAccountAsync(AppUserUpdateDTO userDTO)
         {
-            var successMessage = _sharedLocalizer.GetSuccessMessage("Account", CrudOperation.Update);
+            var successMessage = _sharedLocalizer.GetSuccessMessage(MilvaMongoTemplateStringKey.Account, CrudOperation.Update);
 
             return await _accountService.UpdateAccountAsync(userDTO).GetObjectResponseAsync<object>(successMessage);
         }
@@ -242,10 +153,10 @@ namespace MilvaMongoTemplate.API.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpDelete]
-        [Authorize(Roles = RoleNames.AppUser)]
+        [Authorize(Roles = RoleName.AppUser)]
         public async Task<IActionResult> DeleteAccountAsync()
         {
-            var successMessage = _sharedLocalizer.GetSuccessMessage("Account", CrudOperation.Delete);
+            var successMessage = _sharedLocalizer.GetSuccessMessage(MilvaMongoTemplateStringKey.Account, CrudOperation.Delete);
 
             return await _accountService.DeleteAccountAsync().GetObjectResponseAsync<object>(successMessage);
         }
@@ -269,13 +180,10 @@ namespace MilvaMongoTemplate.API.Controllers
         /// 
         /// <returns></returns>
         [HttpGet("Activity/Send/Mail/EmailVerification")]
-        [Authorize(Roles = RoleNames.AppUser)]
+        [Authorize(Roles = RoleName.AppUser)]
         public async Task<IActionResult> SendEmailVerificationMailAsync()
-        {
-            var successMessage = _sharedLocalizer.GetSuccessMessage("EmailVerificationMailSent", CrudOperation.Specific);
-
-            return await _accountService.SendEmailVerificationMailAsync().GetObjectResponseAsync<object>(successMessage);
-        }
+            => await _accountService.SendEmailVerificationMailAsync()
+                                    .GetObjectResponseByEntityAsync<object>(HttpContext, nameof(ResourceKey.EmailVerificationMailSent), false);
 
         /// <summary>
         /// Sends phone number change mail to logged-in user's email address.
@@ -292,13 +200,10 @@ namespace MilvaMongoTemplate.API.Controllers
         /// <param name="newPhoneNumber"></param>
         /// <returns></returns>
         [HttpGet("Activity/Send/Mail/PhoneNumberChange/{newPhoneNumber}")]
-        [Authorize(Roles = RoleNames.AppUser)]
+        [Authorize(Roles = RoleName.AppUser)]
         public async Task<IActionResult> SendChangePhoneNumberMailAsync(string newPhoneNumber)
-        {
-            var successMessage = _sharedLocalizer.GetSuccessMessage("PhoneNumberChangeMailSent", CrudOperation.Specific);
-
-            return await _accountService.SendChangePhoneNumberMailAsync(newPhoneNumber).GetObjectResponseAsync<object>(successMessage);
-        }
+            => await _accountService.SendChangePhoneNumberMailAsync(newPhoneNumber)
+                                    .GetObjectResponseByEntityAsync<object>(HttpContext, nameof(ResourceKey.PhoneNumberChangeMailSent), false);
 
         /// <summary>
         /// Sends email change mail to logged-in user's email address.
@@ -315,13 +220,10 @@ namespace MilvaMongoTemplate.API.Controllers
         /// <param name="newEmail"></param>
         /// <returns></returns>
         [HttpGet("Activity/Send/Mail/EmailChange/{newEmail}")]
-        [Authorize(Roles = RoleNames.AppUser)]
+        [Authorize(Roles = RoleName.AppUser)]
         public async Task<IActionResult> SendChangeEmailMailAsync(string newEmail)
-        {
-            var successMessage = _sharedLocalizer.GetSuccessMessage("EmailChangeMailSent", CrudOperation.Specific);
-
-            return await _accountService.SendChangeEmailMailAsync(newEmail).GetObjectResponseAsync<object>(successMessage);
-        }
+            => await _accountService.SendChangeEmailMailAsync(newEmail)
+                                    .GetObjectResponseByEntityAsync<object>(HttpContext, nameof(ResourceKey.EmailChangeMailSent), false);
 
         /// <summary>
         /// Sends password reset mail to logged-in user's email address.
@@ -338,11 +240,8 @@ namespace MilvaMongoTemplate.API.Controllers
         [HttpGet("Activity/Send/Mail/PasswordReset")]
         [MValidateStringParameter(3, 30)]
         public async Task<IActionResult> SendResetPasswordMailAsync()
-        {
-            var successMessage = _sharedLocalizer.GetSuccessMessage("PasswordResetMailSent", CrudOperation.Specific);
-
-            return await _accountService.SendResetPasswordMailAsync().GetObjectResponseAsync<object>(successMessage);
-        }
+            => await _accountService.SendResetPasswordMailAsync()
+                                    .GetObjectResponseByEntityAsync<object>(HttpContext, nameof(ResourceKey.PasswordResetMailSent), false);
 
         /// <summary>
         /// Sends password reset mail to email address(<paramref name="email"/>).
@@ -361,14 +260,11 @@ namespace MilvaMongoTemplate.API.Controllers
         [HttpGet("Activity/Send/Mail/ForgotPassword/{email}")]
         [MValidateStringParameter(3, 30)]
         public async Task<IActionResult> SendForgotPasswordMailAsync(string email)
-        {
-            var successMessage = _sharedLocalizer.GetSuccessMessage("PasswordResetMailSent", CrudOperation.Specific);
-
-            return await _accountService.SendForgotPasswordMailAsync(email).GetObjectResponseAsync<object>(successMessage);
-        }
+            => await _accountService.SendForgotPasswordMailAsync(email)
+                                    .GetObjectResponseByEntityAsync<object>(HttpContext, nameof(ResourceKey.PasswordResetMailSent), false);
 
         /// <summary>
-        /// Sends verification code to logged-in user's phone number.
+        /// Sends verification code to phone number.
         /// </summary>
         /// <remarks>
         /// 
@@ -380,13 +276,10 @@ namespace MilvaMongoTemplate.API.Controllers
         /// 
         /// <returns></returns>
         [HttpGet("Activity/Send/Message/PhoneNumberVerification")]
-        [Authorize(Roles = RoleNames.AppUser)]
+        [Authorize(Roles = RoleName.AppUser)]
         public async Task<IActionResult> SendPhoneNumberVerificationMessageAsync()
-        {
-            var successMessage = _sharedLocalizer.GetSuccessMessage("PhoneNumberVerificationMessageSent", CrudOperation.Specific);
-
-            return await _accountService.SendPhoneNumberVerificationMessageAsync().GetObjectResponseAsync(successMessage);
-        }
+            => await _accountService.SendPhoneNumberVerificationMessageAsync()
+                                    .GetObjectResponseByEntityAsync<object>(HttpContext, nameof(ResourceKey.PhoneNumberVerificationMessageSent), false);
 
         /// <summary>
         /// Verifies logged-in user's phone number.
@@ -401,10 +294,10 @@ namespace MilvaMongoTemplate.API.Controllers
         /// <param name="verificationCode"></param>
         /// <returns></returns>
         [HttpGet("Activity/Verify/PhoneNumber/{verificationCode}")]
-        [Authorize(Roles = RoleNames.AppUser)]
+        [Authorize(Roles = RoleName.AppUser)]
         public async Task<IActionResult> VerifyPhoneNumberAsync(string verificationCode)
-            => await _accountService.VerifyPhoneNumberAsync(verificationCode).GetActivityResponseAsync(_sharedLocalizer["PhoneNumberVerificationSuccessfull"],
-                                                                                                       _sharedLocalizer["AccountActivityErrorMessage"]);
+            => await _accountService.VerifyPhoneNumberAsync(verificationCode).GetActivityResponseAsync(_sharedLocalizer[nameof(ResourceKey.PhoneNumberVerificationSuccessfull)],
+                                                                                                       _sharedLocalizer[nameof(ResourceKey.AccountActivityErrorMessage)]);
 
         /// <summary>
         /// Verifies <paramref name="emailVerificationDTO"/>.UserName's email.
@@ -420,8 +313,8 @@ namespace MilvaMongoTemplate.API.Controllers
         [HttpPut("Activity/Verify/Email")]
         [AllowAnonymous]
         public async Task<IActionResult> VerifyEmailAsync([FromBody] EmailVerificationDTO emailVerificationDTO)
-            => await _accountService.VerifyEmailAsync(emailVerificationDTO).GetActivityResponseAsync(_sharedLocalizer["EmailVerificationSuccessfull"],
-                                                                                                     _sharedLocalizer["AccountActivityErrorMessage"]);
+            => await _accountService.VerifyEmailAsync(emailVerificationDTO).GetActivityResponseAsync(_sharedLocalizer[nameof(ResourceKey.EmailVerificationSuccessfull)],
+                                                                                                     _sharedLocalizer[nameof(ResourceKey.AccountActivityErrorMessage)]);
 
         /// <summary>
         /// Changes <paramref name="emailChangeDTO"/>.UserName's email.
@@ -437,8 +330,8 @@ namespace MilvaMongoTemplate.API.Controllers
         [HttpPut("Activity/Change/Email")]
         [AllowAnonymous]
         public async Task<IActionResult> ChangeEmailAsync([FromBody] EmailChangeDTO emailChangeDTO)
-            => await _accountService.ChangeEmailAsync(emailChangeDTO).GetActivityResponseAsync(_sharedLocalizer["EmailChangeSuccessfull"],
-                                                                                               _sharedLocalizer["AccountActivityErrorMessage"]);
+            => await _accountService.ChangeEmailAsync(emailChangeDTO).GetActivityResponseAsync(_sharedLocalizer[nameof(ResourceKey.EmailChangeSuccessfull)],
+                                                                                               _sharedLocalizer[nameof(ResourceKey.AccountActivityErrorMessage)]);
 
         /// <summary>
         /// Changes <paramref name="phoneNumberChangeDTO"/>.UserName's phone number.
@@ -454,8 +347,8 @@ namespace MilvaMongoTemplate.API.Controllers
         [HttpPut("Activity/Change/PhoneNumber")]
         [AllowAnonymous]
         public async Task<IActionResult> ChangePhoneNumberAsync([FromBody] PhoneNumberChangeDTO phoneNumberChangeDTO)
-            => await _accountService.ChangePhoneNumberAsync(phoneNumberChangeDTO, true).GetActivityResponseAsync(_sharedLocalizer["PhoneNumberChangeSuccessfull"],
-                                                                                                                 _sharedLocalizer["AccountActivityErrorMessage"]);
+            => await _accountService.ChangePhoneNumberAsync(phoneNumberChangeDTO).GetActivityResponseAsync(_sharedLocalizer[nameof(ResourceKey.PhoneNumberChangeSuccessfull)],
+                                                                                                           _sharedLocalizer[nameof(ResourceKey.AccountActivityErrorMessage)]);
 
         /// <summary>
         /// Changes <paramref name="passwordChangeDTO"/>.UserName's password.
@@ -469,10 +362,10 @@ namespace MilvaMongoTemplate.API.Controllers
         /// <param name="passwordChangeDTO"></param>
         /// <returns></returns>
         [HttpPut("Activity/Change/Password")]
-        [Authorize(Roles = RoleNames.AppUser)]
+        [Authorize(Roles = RoleName.AppUser)]
         public async Task<IActionResult> ChangePasswordAsync([FromBody] PasswordChangeDTO passwordChangeDTO)
-            => await _accountService.ChangePasswordAsync(passwordChangeDTO).GetActivityResponseAsync(_sharedLocalizer["PasswordChangeSuccessfull"],
-                                                                                                     _sharedLocalizer["AccountActivityErrorMessage"]);
+            => await _accountService.ChangePasswordAsync(passwordChangeDTO).GetActivityResponseAsync(_sharedLocalizer[nameof(ResourceKey.PasswordChangeSuccessfull)],
+                                                                                                     _sharedLocalizer[nameof(ResourceKey.AccountActivityErrorMessage)]);
 
         /// <summary>
         /// Resets <paramref name="passwordResetDTO"/>.UserName's password.
@@ -488,8 +381,8 @@ namespace MilvaMongoTemplate.API.Controllers
         [HttpPut("Activity/Reset/Password")]
         [AllowAnonymous]
         public async Task<IActionResult> ResetPasswordAsync([FromBody] PasswordResetDTO passwordResetDTO)
-            => await _accountService.ResetPasswordAsync(passwordResetDTO).GetActivityResponseAsync(_sharedLocalizer["PasswordResetSuccessfull"],
-                                                                                                   _sharedLocalizer["AccountActivityErrorMessage"]);
+            => await _accountService.ResetPasswordAsync(passwordResetDTO).GetActivityResponseAsync(_sharedLocalizer[nameof(ResourceKey.PasswordResetSuccessfull)],
+                                                                                                   _sharedLocalizer[nameof(ResourceKey.AccountActivityErrorMessage)]);
 
         #endregion
 
@@ -502,10 +395,10 @@ namespace MilvaMongoTemplate.API.Controllers
         /// <param name="paginationParams"></param>
         /// <returns> Can be both Editors or Admins. </returns>
         [HttpPatch("Users")]
-        [Authorize(Roles = RoleNames.Administrator)]
+        [Authorize(Roles = RoleName.Administrator)]
         public async Task<IActionResult> GetAllUsersAsync([FromBody] PaginationParams paginationParams)
         {
-            var errorMessage = _sharedLocalizer.GetErrorMessage("User", CrudOperation.GetAll);
+            var errorMessage = _sharedLocalizer.GetErrorMessage(MilvaMongoTemplateStringKey.User, CrudOperation.GetAll);
 
             var users = await _accountService.GetAllUsersAsync(paginationParams);
 
@@ -518,10 +411,10 @@ namespace MilvaMongoTemplate.API.Controllers
         /// <param name="userId"></param>
         /// <returns> Can be both Editor or Admin. </returns>
         [HttpGet("Users/User/{userId}")]
-        [Authorize(Roles = RoleNames.Administrator)]
+        [Authorize(Roles = RoleName.Administrator)]
         public async Task<IActionResult> GetUserByIdAsync(ObjectId userId)
         {
-            var errorMessage = _sharedLocalizer.GetErrorMessage("User", CrudOperation.GetById);
+            var errorMessage = _sharedLocalizer.GetErrorMessage(MilvaMongoTemplateStringKey.User, CrudOperation.GetById);
 
             var user = await _accountService.GetUserByIdAsync(userId);
 
@@ -534,10 +427,10 @@ namespace MilvaMongoTemplate.API.Controllers
         /// <param name="userDTO"></param>
         /// <returns> Can be both Editors or Admins. </returns>
         [HttpPost("Users/User")]
-        [Authorize(Roles = RoleNames.Administrator)]
+        [Authorize(Roles = RoleName.Administrator)]
         public async Task<IActionResult> CreateUserAsync([FromBody] MilvaMongoTemplateUserCreateDTO userDTO)
         {
-            var successMessage = _sharedLocalizer.GetSuccessMessage("User", CrudOperation.Add);
+            var successMessage = _sharedLocalizer.GetSuccessMessage(MilvaMongoTemplateStringKey.User, CrudOperation.Add);
 
             return await _accountService.CreateUserAsync(userDTO).GetObjectResponseAsync(successMessage);
         }
@@ -548,10 +441,10 @@ namespace MilvaMongoTemplate.API.Controllers
         /// <param name="userDTO"></param>
         /// <returns> Created user id. </returns>
         [HttpPut("Users/User")]
-        [Authorize(Roles = RoleNames.Administrator)]
+        [Authorize(Roles = RoleName.Administrator)]
         public async Task<IActionResult> UpdateUserAsync([FromBody] MilvaMongoTemplateUserUpdateDTO userDTO)
         {
-            var successMessage = _sharedLocalizer.GetSuccessMessage("User", CrudOperation.Update);
+            var successMessage = _sharedLocalizer.GetSuccessMessage(MilvaMongoTemplateStringKey.User, CrudOperation.Update);
 
             return await _accountService.UpdateUserAsync(userDTO).GetObjectResponseAsync<object>(successMessage);
         }
@@ -562,10 +455,10 @@ namespace MilvaMongoTemplate.API.Controllers
         /// <param name="userId"></param>
         /// <returns> Created user id. </returns>
         [HttpDelete("Users/User/{userId}")]
-        [Authorize(Roles = RoleNames.Administrator)]
+        [Authorize(Roles = RoleName.Administrator)]
         public async Task<IActionResult> DeleteUserAsync(ObjectId userId)
         {
-            var successMessage = _sharedLocalizer.GetSuccessMessage("User", CrudOperation.Delete);
+            var successMessage = _sharedLocalizer.GetSuccessMessage(MilvaMongoTemplateStringKey.User, CrudOperation.Delete);
 
             return await _accountService.DeleteUserAsync(userId).GetObjectResponseAsync<object>(successMessage);
         }
@@ -575,14 +468,14 @@ namespace MilvaMongoTemplate.API.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("Roles")]
-        [Authorize(Roles = RoleNames.Administrator)]
+        [Authorize(Roles = RoleName.Administrator)]
         public async Task<IActionResult> GetRolesAsync()
         {
-            var errorMessage = _sharedLocalizer.GetErrorMessage("ObkRole", CrudOperation.GetAll);
+            var errorMessage = _sharedLocalizer.GetErrorMessage(CollectionNames.MilvaMongoTemplateRoles, CrudOperation.GetAll);
 
             var roles = await _accountService.GetRolesAsync();
 
-            roles.RemoveAll(i => i.Name == RoleNames.Developer || i.Name == RoleNames.AppUser);
+            roles.RemoveAll(i => i.Name == RoleName.Developer || i.Name == RoleName.AppUser);
 
             return roles.GetObjectResponse(_defaultSucccessMessage, errorMessage);
         }

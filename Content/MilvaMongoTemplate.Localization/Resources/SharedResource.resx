@@ -495,4 +495,58 @@
   <data name="RegexExampleAccountNo" xml:space="preserve">
     <value>7975-777666</value>
   </data>
+  <data name="AccountActivityErrorMessage" xml:space="preserve">
+    <value>İşlem sırasında bir hata oluştu lütfen tekrar deneyiniz. Sorun çözülmezse lütfen geliştirici ekip ile iletişime geçiniz.</value>
+  </data>
+  <data name="AnErrorOccured" xml:space="preserve">
+    <value>İşlem sırasında beklenmeyen bir hata oluştu lütfen tekrar deneyiniz. Sorun çözülmezse lütfen teknik ekip ile iletişime geçiniz.</value>
+  </data>
+  <data name="CannotFoundMessage" xml:space="preserve">
+    <value>{0} bulunamadı.</value>
+  </data>
+  <data name="EmailChangeMailSent" xml:space="preserve">
+    <value>E-posta adresi değişikliği maili başarıyla gönderildi.</value>
+  </data>
+  <data name="EmailChangeSuccessfull" xml:space="preserve">
+    <value>E-posta adresiniz başarıyla değiştirildi.</value>
+  </data>
+  <data name="EmailVerificationMailSent" xml:space="preserve">
+    <value>E-posta doğrulama maili başarıyla gönderildi.</value>
+  </data>
+  <data name="EmailVerificationSuccessfull" xml:space="preserve">
+    <value>Mail adresiniz başarıyla doğrulandı.</value>
+  </data>
+  <data name="InvalidVerificationToken" xml:space="preserve">
+    <value>Doğrulama linkiniz hatalı.</value>
+  </data>
+  <data name="PasswordChangeSuccessfull" xml:space="preserve">
+    <value>Şifreniz başarıyla değiştirildi.</value>
+  </data>
+  <data name="PasswordResetMailSent" xml:space="preserve">
+    <value>Şifre sıfırlama maili başarıyla gönderildi</value>
+  </data>
+  <data name="PasswordResetSuccessfull" xml:space="preserve">
+    <value>Şifreniz başarıyla sıfırlandı.</value>
+  </data>
+  <data name="PhoneNumberChangeMailSent" xml:space="preserve">
+    <value>Telefon numarası doğrulama maili başarıyla gönderildi</value>
+  </data>
+  <data name="PhoneNumberChangeSuccessfull" xml:space="preserve">
+    <value>Telefon numaranız başarıyla değiştirildi.</value>
+  </data>
+  <data name="PhoneNumberVerificationMessageSent" xml:space="preserve">
+    <value>Telefon numarası doğrulama mesajı başarıyla gönderildi.</value>
+  </data>
+  <data name="PhoneNumberVerificationSuccessfull" xml:space="preserve">
+    <value>Telefon numaranız başarıyla doğrulandı.</value>
+  </data>
+  <data name="ThereIsNoSavedVerificationCode" xml:space="preserve">
+    <value>Beklenmeyen bir hata oluştu. Lütfen doğrulama kodunu yeniden gönderin.</value>
+  </data>
+  <data name="UpdateSuccessBut" xml:space="preserve">
+    <value>Güncelleme işlemi başarılı fakat beklenmeyen farklı bir hata oluştu.</value>
+  </data>
+  <data name="WrongPhoneNumberVerificationCode" xml:space="preserve">
+    <value>Doğrulama kodunuz yanlış.</value>
+  </data>
 </root>

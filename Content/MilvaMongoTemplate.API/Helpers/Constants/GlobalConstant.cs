@@ -1,4 +1,5 @@
 ﻿using MilvaMongoTemplate.API.AppStartup;
+using MilvaMongoTemplate.API.Helpers.Models;
 using Milvasoft.Helpers.Models;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ namespace MilvaMongoTemplate.API.Helpers
     /// <summary>
     /// Global constants.
     /// </summary>
-    public static class GlobalConstants
+    public static class GlobalConstant
     {
         /// <summary>
         /// Route prefix of api.
@@ -30,6 +31,11 @@ namespace MilvaMongoTemplate.API.Helpers
         /// Base route with "/" at the beginning.
         /// </summary>
         public const string RoutePrefixAndVersion = "/" + RoutePrefix + "/" + "v{version:apiVersion}";
+
+        /// <summary>
+        /// Json files path.  
+        /// </summary>
+        public static string JsonFilesPath { get; } = Path.Combine(RootPath, "StaticFiles", "JSON");
 
         /// <summary>
         /// Rootpath of application.
@@ -94,7 +100,7 @@ namespace MilvaMongoTemplate.API.Helpers
         /// <summary>
         /// Mail of application.
         /// </summary>
-        public const string AppMail = "app@milvasoft.com";
+        public const string AppMail = "app@yourdomain.com";
 
         /// <summary>
         /// Site url of application.
@@ -110,5 +116,7 @@ namespace MilvaMongoTemplate.API.Helpers
         /// Key of project.
         /// </summary>
         public const string MilvaMongoTemplateKey = "5u8x/A?D(G+KaPdS";
+
+        public static bool RealProduction { get; set; } = false;
     }
 }

@@ -9,7 +9,7 @@ using Microsoft.Extensions.Localization;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using MilvaMongoTemplate.API.Helpers;
-using MilvaMongoTemplate.API.Helpers.Identity;
+using MilvaMongoTemplate.API.Helpers.Models;
 using MilvaMongoTemplate.API.Helpers.Swagger;
 using MilvaMongoTemplate.API.Services.Common.Abstract;
 using MilvaMongoTemplate.API.Services.Common.Concrete;
@@ -24,7 +24,10 @@ using Milvasoft.Helpers.DataAccess.MongoDB.Concrete;
 using Milvasoft.Helpers.DataAccess.MongoDB.Utils;
 using Milvasoft.Helpers.DependencyInjection;
 using Milvasoft.Helpers.Encryption.Concrete;
+using Milvasoft.Helpers.FileOperations;
 using Milvasoft.Helpers.FileOperations.Abstract;
+using Milvasoft.Helpers.FileOperations.Concrete;
+using Milvasoft.Helpers.Identity.Abstract;
 using Milvasoft.Helpers.Identity.Concrete;
 using Milvasoft.Helpers.Mail;
 using Milvasoft.Helpers.Models.Response;
@@ -141,14 +144,27 @@ namespace MilvaMongoTemplate.API.AppStartup
         {
             var localizer = services.BuildServiceProvider().GetRequiredService<IStringLocalizer<SharedResource>>();
 
-            var tokenManagement = jSONFile.GetRequiredSingleContentCryptedFromJsonFileAsync<TokenManagement>(Path.Combine(GlobalConstants.RootPath,
+            var tokenManagement = jSONFile.GetRequiredSingleContentCryptedFromJsonFileAsync<TokenManagement>(Path.Combine(GlobalConstant.RootPath,
                                                                                                                           "StaticFiles",
                                                                                                                           "JSON",
                                                                                                                           "tokenmanagement.json"),
-                                                                                                             GlobalConstants.MilvaMongoTemplateKey,
+                                                                                                             GlobalConstant.MilvaMongoTemplateKey,
                                                                                                              new CultureInfo("tr-TR")).Result;
 
-            services.AddSingleton(tokenManagement);
+            services.AddSingleton<ITokenManagement>(tokenManagement);
+
+            var tokenValidationParams = new TokenValidationParameters
+            {
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(tokenManagement.Secret)),
+                ValidateIssuer = false,
+                ValidIssuer = string.Empty,
+                ValidateAudience = false,
+                ValidAudience = string.Empty,
+                ValidateLifetime = true
+            };
+
+            services.AddSingleton(tokenValidationParams);
 
             services.AddAuthentication(opt =>
             {
@@ -221,17 +237,7 @@ namespace MilvaMongoTemplate.API.AppStartup
 
                 opt.RequireHttpsMetadata = false;
                 opt.SaveToken = true;
-                opt.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuerSigningKey = true,
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
-                    ValidateLifetime = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(tokenManagement.Secret)),
-                    ValidIssuer = tokenManagement.Issuer,
-                    ValidAudience = tokenManagement.Audience,
-                    ClockSkew = TimeSpan.Zero
-                };
+                opt.TokenValidationParameters = tokenValidationParams;
             });
         }
 
@@ -243,16 +249,18 @@ namespace MilvaMongoTemplate.API.AppStartup
         {
             services.AddSingleton<SharedResource>();
 
-            services.AddSingleton<IMilvaMailSender>(new MilvaMailSender(GlobalConstants.AppMail,
-                                                                        new NetworkCredential(GlobalConstants.AppMail, "Cxb-u..9gD4U_E76"),
+            services.AddSingleton<IMilvaMailSender>(new MilvaMailSender(GlobalConstant.AppMail,
+                                                                        new NetworkCredential(GlobalConstant.AppMail, string.Empty),
                                                                         587,
-                                                                        "mail.milvasoft.com"));
+                                                                        "mail.yourdomain.com"));
 
-            services.AddScoped((_) => new MilvaEncryptionProvider(GlobalConstants.MilvaMongoTemplateKey));
+            services.AddScoped((_) => new MilvaEncryptionProvider(GlobalConstant.MilvaMongoTemplateKey));
 
             services.AddScoped<IMilvaLogger, MilvaMongoTemplateLogger>();
 
             services.AddScoped<IApplicationBuilder, ApplicationBuilder>();
+
+            services.AddTransient(typeof(Lazy<>), typeof(MilvaLazy<>));
 
             #region Repositories
 
@@ -277,8 +285,8 @@ namespace MilvaMongoTemplate.API.AppStartup
         /// <param name="jsonOperations"></param>
         public static void ConfigureDatabase(this IServiceCollection services, IJsonOperations jsonOperations)
         {
-            var mongoSettings = jsonOperations.GetRequiredSingleContentCryptedFromJsonFileAsync<MongoDbSettings>(Path.Combine(GlobalConstants.RootPath, "StaticFiles", "JSON", $"connectionstring.{Startup.WebHostEnvironment.EnvironmentName}.json"),
-                                                                                                                 GlobalConstants.MilvaMongoTemplateKey,
+            var mongoSettings = jsonOperations.GetRequiredSingleContentCryptedFromJsonFileAsync<MongoDbSettings>(Path.Combine(GlobalConstant.RootPath, "StaticFiles", "JSON", $"connectionstring.{Startup.WebHostEnvironment.EnvironmentName}.json"),
+                                                                                                                 GlobalConstant.MilvaMongoTemplateKey,
                                                                                                                  new CultureInfo("tr-TR")).Result;
 
             services.AddSingleton<IMongoDbSettings>(mongoSettings);
@@ -305,20 +313,21 @@ namespace MilvaMongoTemplate.API.AppStartup
         /// Configures API versioning.
         /// </summary>
         /// <param name="services"></param>
-        public static void AddMilvaRedisCaching(this IServiceCollection services)
+        public static IServiceCollection AddMilvaRedisCaching(this IServiceCollection services)
         {
             var connectionString = Startup.WebHostEnvironment.EnvironmentName == "Development" ? "127.0.0.1:6379" : "redis";
 
-            var cacheOptions = new RedisCacheServiceOptions(connectionString)
-            {
-                Lifetime = ServiceLifetime.Scoped,
-                ConnectWhenCreatingNewInstance = false
-            };
+            var cacheOptions = new RedisCacheServiceOptions(connectionString);
 
             cacheOptions.ConfigurationOptions.AbortOnConnectFail = false;
-            cacheOptions.ConfigurationOptions.ConnectTimeout = 2000;
+            cacheOptions.ConfigurationOptions.ConnectTimeout = 10000;
+            cacheOptions.ConfigurationOptions.SyncTimeout = 10000;
+            cacheOptions.ConfigurationOptions.ConnectRetry = 1;
+            cacheOptions.Lifetime = ServiceLifetime.Singleton;
+            //cacheOptions.ConfigurationOptions.Ssl = true;
+            //cacheOptions.ConfigurationOptions.SslProtocols = SslProtocols.Tls12;
 
-            services.AddMilvaRedisCaching(cacheOptions);
+            return services.AddMilvaRedisCaching(cacheOptions);
         }
 
         /// <summary>
@@ -372,5 +381,28 @@ namespace MilvaMongoTemplate.API.AppStartup
                 options.DocumentFilter<ReplaceVersionWithExactValueInPathFilter>();
             });
         }
+
+        /// <summary>
+        /// Adds json operations to service collection.
+        /// </summary>
+        /// <param name="services"></param>
+        /// <returns></returns>
+        public static IJsonOperations AddJsonOperations(this IServiceCollection services)
+        {
+            var jsonOperationsConfig = new JsonOperationsConfig
+            {
+                EncryptionKey = GlobalConstant.MilvaMongoTemplateKey,
+                BasePath = GlobalConstant.JsonFilesPath
+            };
+
+            services.AddJsonOperations(options: opt =>
+            {
+                opt.BasePath = jsonOperationsConfig.BasePath;
+                opt.EncryptionKey = jsonOperationsConfig.EncryptionKey;
+            });
+
+            return new JsonOperations(jsonOperationsConfig);
+        }
+
     }
 }

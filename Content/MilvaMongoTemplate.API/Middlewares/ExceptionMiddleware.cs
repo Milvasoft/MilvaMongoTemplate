@@ -1,11 +1,13 @@
 ﻿using Fody;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
+using MilvaMongoTemplate.API.Helpers;
 using MilvaMongoTemplate.Localization;
 using Milvasoft.Helpers;
 using Milvasoft.Helpers.DependencyInjection;
-using Milvasoft.Helpers.Enums;
 using Milvasoft.Helpers.Exceptions;
+using Milvasoft.Helpers.Extensions;
+using Milvasoft.Helpers.Mail;
 using Milvasoft.Helpers.Models.Response;
 using Milvasoft.Helpers.Utils;
 using Newtonsoft.Json;
@@ -13,7 +15,9 @@ using Serilog;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
+using ResourceKey = MilvaMongoTemplate.Localization.Resources.SharedResource;
 
 namespace MilvaMongoTemplate.API.Middlewares
 {
@@ -41,22 +45,9 @@ namespace MilvaMongoTemplate.API.Middlewares
         /// <returns></returns>
         public async Task Invoke(HttpContext context)
         {
-            void SendExceptionMail(Exception ex)
-            {
-                var logger = context.RequestServices.GetRequiredService<IMilvaLogger>();
-
-                using var sr = new StringReader(ex.StackTrace);
-
-                var path = context.Request.Path;
-
-                var stackTraceFirstLine = sr.ReadLine();
-
-                logger.LogFatal($"{path}|{ex.Message}|{stackTraceFirstLine}", MailSubject.Error);
-            }
-
             var sharedLocalizer = context.RequestServices.GetLocalizerInstance<SharedResource>();
 
-            string message = sharedLocalizer["MiddlewareGeneralErrorMessage"];
+            string message = sharedLocalizer[nameof(ResourceKey.MiddlewareGeneralErrorMessage)];
 
             List<int> errorCodes = new();
 
@@ -71,42 +62,71 @@ namespace MilvaMongoTemplate.API.Middlewares
                 {
                     if (userFriendlyEx.ExceptionObject == null)
                         message = sharedLocalizer[userFriendlyEx.Message];
-                    else message = sharedLocalizer[userFriendlyEx.Message, userFriendlyEx.ExceptionObject];
+                    else
+                    {
+                        if (!userFriendlyEx.UseLocalizerKey
+                            && userFriendlyEx.ExceptionCode == (int)MilvaException.CannotFindEntity
+                            && !userFriendlyEx.ExceptionObject.ToList().IsNullOrEmpty())
+                        {
+                            message = sharedLocalizer[nameof(ResourceKey.CannotFoundMessage), sharedLocalizer[userFriendlyEx.ExceptionObject[0].ToString()]];
+                        }
+                        else message = sharedLocalizer[userFriendlyEx.Message, userFriendlyEx.ExceptionObject];
+                    }
 
                     errorCodes.Add(userFriendlyEx.ExceptionCode);
 
+                    //If the exception is thrown due to not being able to connect to a service.
                     if (userFriendlyEx.ExceptionCode == (int)MilvaException.CannotGetResponse)
-                    {
-                        //SendExceptionMail(baseEx);
-                    }
+                        _ = SendExceptionMail(ex);
                 }
                 else
                 {
+                    if (GlobalConstant.RealProduction)
+                    {
+                        if (ex is OverflowException || ex is StackOverflowException) message = sharedLocalizer[nameof(ResourceKey.PleaseEnterAValidValue)];
+                        else message = sharedLocalizer[nameof(ResourceKey.AnErrorOccured)];
 
-                    if (ex is OverflowException || ex is StackOverflowException) message = "Please enter a valid value!";
-                    else message = ex.Message;//Prodda burası kapatılacak.
-                    Log.Logger.Error(ex, ex.Message);
-                    //var logger = context.RequestServices.GetRequiredService<IMilvaLogger>();
-                    //logger.LogError(ex.Message);
-                    //SendExceptionMail(ex);
+                        var logger = context.RequestServices.GetRequiredService<IMilvaLogger>();
+
+                        logger.Write(SeriLogEventLevel.Fatal, ex, ex.Message);
+
+                        _ = SendExceptionMail(ex);
+                    }
+                    else
+                    {
+                        message = ex + ex.Message + "  --- Inner exception : " + ex.InnerException?.Message;
+                        Log.Logger.Error(ex, ex.Message);
+                    }
+                }
+
+                if (!context.Response.HasStarted)
+                {
+                    var response = new ExceptionResponse
+                    {
+                        Message = message,
+                        StatusCode = MilvaStatusCodes.Status600Exception,
+                        Success = false,
+                        Result = new object(),
+                        ErrorCodes = errorCodes
+                    };
+                    var json = JsonConvert.SerializeObject(response);
+                    context.Response.ContentType = MimeTypeNames.ApplicationJson;
+                    context.Response.StatusCode = MilvaStatusCodes.Status200OK;
+                    await context.Response.WriteAsync(json);
                 }
             }
 
-            if (!context.Response.HasStarted)
+            async Task SendExceptionMail(Exception ex)
             {
-                var response = new ExceptionResponse
-                {
-                    Message = message,
-                    StatusCode = MilvaStatusCodes.Status600Exception,
-                    Success = false,
-                    Result = new object(),
-                    ErrorCodes = errorCodes
-                };
-                var json = JsonConvert.SerializeObject(response);
-                context.Response.ContentType = "application/json";
-                context.Items.Remove("ActionContent");
-                context.Response.StatusCode = MilvaStatusCodes.Status200OK;
-                await context.Response.WriteAsync(json);
+                var mailSender = context.RequestServices.GetRequiredService<IMilvaMailSender>();
+
+                using var sr = new StringReader(ex.StackTrace);
+
+                var path = context.Request.Path;
+
+                var stackTraceFirstLine = sr.ReadLine();
+
+                await mailSender.MilvaSendMailAsync("errors@yours.com", "Unhandled Exception From MilvaMongoTemplate", $"{path}|{ex.Message}|{stackTraceFirstLine}");
             }
         }
     }

@@ -2,12 +2,18 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Localization;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using MilvaMongoTemplate.API.Helpers;
+using MilvaMongoTemplate.API.Helpers.Extensions;
+using MilvaMongoTemplate.Data.Utils;
+using Milvasoft.Helpers.FileOperations.Abstract;
 using Swashbuckle.AspNetCore.SwaggerUI;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace MilvaMongoTemplate.API.AppStartup
 {
@@ -27,7 +33,7 @@ namespace MilvaMongoTemplate.API.AppStartup
             app.UseDirectoryBrowser(new DirectoryBrowserOptions()
             {
                 FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot", "Media Library")),
-                RequestPath = new PathString($"/{GlobalConstants.RoutePrefix}/MediaLibrary")
+                RequestPath = new PathString($"/{GlobalConstant.RoutePrefix}/MediaLibrary")
             });
         }
 
@@ -38,21 +44,21 @@ namespace MilvaMongoTemplate.API.AppStartup
         /// <returns></returns>
         public static void UseStaticFiles(this IApplicationBuilder app)
         {
-            app.UseStaticFiles($"/{GlobalConstants.RoutePrefix}");
+            app.UseStaticFiles($"/{GlobalConstant.RoutePrefix}");
             app.UseStaticFiles(new StaticFileOptions()
             {
                 FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "StaticFiles")),
-                RequestPath = new PathString($"/{GlobalConstants.RoutePrefix}/admin")
+                RequestPath = new PathString($"/{GlobalConstant.RoutePrefix}/admin")
             });
             app.UseStaticFiles(new StaticFileOptions()
             {
                 FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot", @"Media Library/Image Library")),
-                RequestPath = new PathString($"/{GlobalConstants.RoutePrefix}/ImageLibrary")
+                RequestPath = new PathString($"/{GlobalConstant.RoutePrefix}/ImageLibrary")
             });
             app.UseStaticFiles(new StaticFileOptions()
             {
                 FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot", @"Media Library/Video Library")),
-                RequestPath = new PathString($"/{GlobalConstants.RoutePrefix}/VideoLibrary")
+                RequestPath = new PathString($"/{GlobalConstant.RoutePrefix}/VideoLibrary")
             });
         }
 
@@ -83,18 +89,18 @@ namespace MilvaMongoTemplate.API.AppStartup
             app.UseSwagger(c =>
             {
                 c.SerializeAsV2 = true;
-                c.RouteTemplate = GlobalConstants.RoutePrefix + "/docs/{documentName}/docs.json";
+                c.RouteTemplate = GlobalConstant.RoutePrefix + "/docs/{documentName}/docs.json";
             }).UseSwaggerUI(c =>
             {
                 c.DefaultModelExpandDepth(-1);
                 c.DefaultModelsExpandDepth(1);
                 c.DefaultModelRendering(ModelRendering.Model);
                 c.DocExpansion(DocExpansion.None);
-                c.RoutePrefix = $"{GlobalConstants.RoutePrefix}/documentation";
-                c.SwaggerEndpoint($"/{GlobalConstants.RoutePrefix}/docs/v1.0/docs.json", "MilvaMongoTemplate API v1.0");
-                c.SwaggerEndpoint($"/{GlobalConstants.RoutePrefix}/docs/v1.1/docs.json", "MilvaMongoTemplate API v1.1");
-                c.InjectStylesheet($"/{GlobalConstants.RoutePrefix}/swagger-ui/custom.css");
-                c.InjectJavascript($"/{GlobalConstants.RoutePrefix}/swagger-ui/custom.js");
+                c.RoutePrefix = $"{GlobalConstant.RoutePrefix}/documentation";
+                c.SwaggerEndpoint($"/{GlobalConstant.RoutePrefix}/docs/v1.0/docs.json", "MilvaMongoTemplate API v1.0");
+                c.SwaggerEndpoint($"/{GlobalConstant.RoutePrefix}/docs/v1.1/docs.json", "MilvaMongoTemplate API v1.1");
+                c.InjectStylesheet($"/{GlobalConstant.RoutePrefix}/swagger-ui/custom.css");
+                c.InjectJavascript($"/{GlobalConstant.RoutePrefix}/swagger-ui/custom.js");
             });
         }
 
@@ -121,6 +127,37 @@ namespace MilvaMongoTemplate.API.AppStartup
 
             return app.UseRequestLocalization(options);
         }
-    }
 
+        /// <summary>
+        /// This method provides async configure process which configure() called by the runtime.
+        /// </summary>
+        /// <param name="app"></param>
+        /// <param name="serviceCollection"></param>
+        /// <returns></returns>
+        public static async Task ConfigureAppStartupAsync(this IApplicationBuilder app, IServiceCollection serviceCollection)
+        {
+            var jsonOperations = app.ApplicationServices.GetRequiredService<IJsonOperations>();
+
+            #region Fill Constants From Jsons
+
+            await Console.Out.WriteAppInfoAsync("Json contents assignment starting...");
+
+            await jsonOperations.FillConstansAsync();
+
+            serviceCollection.AddSingleton(GlobalConstant.StringBlacklist);
+
+            await Console.Out.WriteAppInfoAsync("Json contents are assigned to variables.");
+
+            #endregion
+
+            if (Startup.WebHostEnvironment.EnvironmentName == "Production")
+            {
+                await Console.Out.WriteAppInfoAsync("Seed starting...\n");
+
+                await app.ResetDataAsync();
+
+                await Console.Out.WriteAppInfoAsync("Database seed successfully completed.");
+            }
+        }
+    }
 }

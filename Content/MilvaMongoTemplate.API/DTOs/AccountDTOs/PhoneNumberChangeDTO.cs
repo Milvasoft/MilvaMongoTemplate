@@ -23,9 +23,8 @@ namespace MilvaMongoTemplate.API.DTOs.AccountDTOs
         public string NewPhoneNumber { get; init; }
 
         /// <summary>
-        /// Phone number change token.
+        /// Phone number verification code if phone number will change.
         /// </summary>
-        [MValidateString(5, 6, MemberNameLocalizerKey = "InvalidVerificationToken")]
-        public string TokenString { get; init; }
+        public string VerificationCode { get; set; }
     }
 }

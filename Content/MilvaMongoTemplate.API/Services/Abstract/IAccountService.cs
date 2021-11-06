@@ -118,7 +118,7 @@ namespace MilvaMongoTemplate.API.Services.Common.Abstract
         /// Sends email verification mail to logged-in user.
         /// </summary>
         /// <returns></returns>
-        Task SendEmailVerificationMailAsync();
+        Task SendEmailVerificationMailAsync(string userName = "");
 
         /// <summary>
         /// Sends phone number change mail to logged-in user.
@@ -145,7 +145,7 @@ namespace MilvaMongoTemplate.API.Services.Common.Abstract
         Task SendForgotPasswordMailAsync(string email);
 
         /// <summary>
-        /// Sends verification code to logged-in user's phone number.
+        /// Sends verification code to phone number.
         /// <para><b> IMPORTANT INFORMATION : The message sending service has not yet been integrated. 
         ///                                   So this method will not send message to the user's gsm number.
         ///                                   Instead of returns verification code for testing. </b></para>
@@ -175,13 +175,12 @@ namespace MilvaMongoTemplate.API.Services.Common.Abstract
         Task<IdentityResult> ChangeEmailAsync(EmailChangeDTO emailChangeDTO);
 
         /// <summary>
-        /// Changes <paramref name="phoneNumberChangeDTO"/>.UserName's email 
+        /// Changes <paramref name="phoneNumberChangeDTO"/>.UserName's phone number. 
         /// with <paramref name="phoneNumberChangeDTO"/>.NewPhoneNumber, if <paramref name="phoneNumberChangeDTO"/>.TokenString is valid.
         /// </summary>
         /// <param name="phoneNumberChangeDTO"></param>
-        /// <param name="isEncrypte"></param>
         /// <returns></returns>
-        Task<IdentityResult> ChangePhoneNumberAsync(PhoneNumberChangeDTO phoneNumberChangeDTO, bool isEncrypte = false);
+        Task<IdentityResult> ChangePhoneNumberAsync(PhoneNumberChangeDTO phoneNumberChangeDTO);
 
         /// <summary>
         /// Resets <paramref name="passwordResetDTO"/>.UserName's password with <paramref name="passwordResetDTO"/>.NewPassword, if <paramref name="passwordResetDTO"/>.TokenString is valid.

@@ -519,4 +519,58 @@
   <data name="FileCannotBeEmpty" xml:space="preserve">
     <value>Please select a file to upload.</value>
   </data>
+  <data name="AnErrorOccured" xml:space="preserve">
+    <value>An unexpected error occurred during the process, please try again. If the problem is not resolved, please contact the technical team.</value>
+  </data>
+  <data name="CannotFoundMessage" xml:space="preserve">
+    <value>Cannot found {0}.</value>
+  </data>
+  <data name="AccountActivityErrorMessage" xml:space="preserve">
+    <value>An error occurred during the process, please try again. If the problem is not resolved, please contact the developer team.</value>
+  </data>
+  <data name="EmailChangeMailSent" xml:space="preserve">
+    <value>The e-mail address change e-mail has been sent successfully</value>
+  </data>
+  <data name="EmailChangeSuccessfull" xml:space="preserve">
+    <value>Your e-mail address has been successfully changed.</value>
+  </data>
+  <data name="EmailVerificationMailSent" xml:space="preserve">
+    <value>The e-mail verification mail has been sent successfully.</value>
+  </data>
+  <data name="EmailVerificationSuccessfull" xml:space="preserve">
+    <value>Your e-mail address has been successfully verified.</value>
+  </data>
+  <data name="InvalidVerificationToken" xml:space="preserve">
+    <value>Your verification link is incorrect.</value>
+  </data>
+  <data name="PasswordChangeSuccessfull" xml:space="preserve">
+    <value>Your password has been changed successfully.</value>
+  </data>
+  <data name="PasswordResetMailSent" xml:space="preserve">
+    <value>Password reset email has been sent successfully.</value>
+  </data>
+  <data name="PasswordResetSuccessfull" xml:space="preserve">
+    <value>Your password has been reset successfully.</value>
+  </data>
+  <data name="PhoneNumberChangeMailSent" xml:space="preserve">
+    <value>The phone number verification mail has been sent successfully.</value>
+  </data>
+  <data name="PhoneNumberChangeSuccessfull" xml:space="preserve">
+    <value>Your phone number has been successfully changed.</value>
+  </data>
+  <data name="PhoneNumberVerificationMessageSent" xml:space="preserve">
+    <value>The phone number verification message has been sent successfully.</value>
+  </data>
+  <data name="PhoneNumberVerificationSuccessfull" xml:space="preserve">
+    <value>Your phone number has been successfully verified.</value>
+  </data>
+  <data name="ThereIsNoSavedVerificationCode" xml:space="preserve">
+    <value>An unexpected error has occurred. Please resubmit the verification code.</value>
+  </data>
+  <data name="UpdateSuccessBut" xml:space="preserve">
+    <value>The update process was successful, but a different unexpected error occurred.</value>
+  </data>
+  <data name="WrongPhoneNumberVerificationCode" xml:space="preserve">
+    <value>Your verification code is wrong.</value>
+  </data>
 </root>

@@ -17,7 +17,7 @@ namespace MilvaMongoTemplate.API.Helpers.Attributes.ActionFilters
         public MValidateStringParameterAttribute(int minimumLength, int maximumLength) : base(minimumLength, maximumLength)
         {
             base.ResourceType = typeof(SharedResource);
-            base.MailContent = GlobalConstants.MailContent;
+            base.MailContent = GlobalConstant.MailContent;
         }
 
         /// <summary>
