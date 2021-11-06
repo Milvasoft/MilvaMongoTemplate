@@ -33,14 +33,14 @@ namespace MilvaMongoTemplate.API.Helpers
         public const string RoutePrefixAndVersion = "/" + RoutePrefix + "/" + "v{version:apiVersion}";
 
         /// <summary>
-        /// Json files path.  
-        /// </summary>
-        public static string JsonFilesPath { get; } = Path.Combine(RootPath, "StaticFiles", "JSON");
-
-        /// <summary>
         /// Rootpath of application.
         /// </summary>
         public static string RootPath { get; } = Environment.CurrentDirectory;
+
+        /// <summary>
+        /// Json files path.  
+        /// </summary>
+        public static string JsonFilesPath { get; } = Path.Combine(RootPath, "StaticFiles", "JSON");
 
         /// <summary>
         /// Allowed file extensions for media files.

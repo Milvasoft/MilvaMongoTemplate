@@ -1014,14 +1014,14 @@
             Base route with "/" at the beginning.
             </summary>
         </member>
-        <member name="P:MilvaMongoTemplate.API.Helpers.GlobalConstant.JsonFilesPath">
-            <summary>
-            Json files path.  
-            </summary>
-        </member>
         <member name="P:MilvaMongoTemplate.API.Helpers.GlobalConstant.RootPath">
             <summary>
             Rootpath of application.
+            </summary>
+        </member>
+        <member name="P:MilvaMongoTemplate.API.Helpers.GlobalConstant.JsonFilesPath">
+            <summary>
+            Json files path.  
             </summary>
         </member>
         <member name="P:MilvaMongoTemplate.API.Helpers.GlobalConstant.AllowedFileExtensions">

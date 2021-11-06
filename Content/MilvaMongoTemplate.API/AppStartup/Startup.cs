@@ -77,8 +77,6 @@ namespace MilvaMongoTemplate.API.AppStartup
 
             Console.Out.WriteAppInfo("Service collection registration starting...");
 
-            StartupConfiguration.CheckPublicFiles();
-
             services.AddLocalization(options => options.ResourcesPath = "Resources");
 
             //services.AddMilvaRedisCaching();
