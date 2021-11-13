@@ -1,4 +1,4 @@
-<h2 align="center">Web API Template with MongoDB for .Net 5</h2>
+<h2 align="center">Web API Template with MongoDB for .Net 6</h2>
   
  <div align="center"> 
   
