@@ -205,14 +205,14 @@
         </member>
         <member name="M:MilvaMongoTemplate.API.AppStartup.StartupConfiguration.FillStringBlacklistAsync(Milvasoft.Helpers.FileOperations.Abstract.IJsonOperations)">
             <summary>
-            Fills <see cref="P:MilvaMongoTemplate.API.Helpers.GlobalConstant.StringBlacklist"/> list from stringblacklist.json file.
+            Fills <see cref="P:MilvaMongoTemplate.API.Helpers.Constants.GlobalConstant.StringBlacklist"/> list from stringblacklist.json file.
             </summary>
             <param name="jsonOperations"></param>
             <returns></returns>
         </member>
         <member name="M:MilvaMongoTemplate.API.AppStartup.StartupConfiguration.FillAllowedFileExtensionsAsync(Milvasoft.Helpers.FileOperations.Abstract.IJsonOperations)">
             <summary>
-            Fills <see cref="P:MilvaMongoTemplate.API.Helpers.GlobalConstant.AllowedFileExtensions"/> list from allowedfileextensions.json file.
+            Fills <see cref="P:MilvaMongoTemplate.API.Helpers.Constants.GlobalConstant.AllowedFileExtensions"/> list from allowedfileextensions.json file.
             </summary>
             <param name="jsonOperations"></param>
             <returns></returns>
@@ -222,7 +222,7 @@
             Provides account operations like login logout.
             </summary>
         </member>
-        <member name="M:MilvaMongoTemplate.API.Controllers.AccountController.#ctor(MilvaMongoTemplate.API.Services.Common.Abstract.IAccountService,Microsoft.Extensions.Localization.IStringLocalizer{MilvaMongoTemplate.Localization.SharedResource})">
+        <member name="M:MilvaMongoTemplate.API.Controllers.AccountController.#ctor(MilvaMongoTemplate.API.Services.Abstract.IAccountService,Microsoft.Extensions.Localization.IStringLocalizer{MilvaMongoTemplate.Localization.SharedResource})">
             <summary>
             Initializes new instances of <see cref="T:MilvaMongoTemplate.API.Controllers.AccountController"/>.
             </summary>
@@ -500,32 +500,31 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="T:MilvaMongoTemplate.API.Migrations.DeveloperOpsController">
+        <member name="T:MilvaMongoTemplate.API.Controllers.DeveloperOpsController">
             <summary>
             Provides competition's CRUD operations for admin and competition's operations for app users.
             </summary>
         </member>
-        <member name="M:MilvaMongoTemplate.API.Migrations.DeveloperOpsController.#ctor(MilvaMongoTemplate.Data.Utils.MilvaMongoTemplateUserManager,MilvaMongoTemplate.API.Services.Common.Abstract.IAccountService,Microsoft.AspNetCore.Identity.RoleManager{MilvaMongoTemplate.Entity.Collections.MilvaMongoTemplateRole})">
+        <member name="M:MilvaMongoTemplate.API.Controllers.DeveloperOpsController.#ctor(MilvaMongoTemplate.Data.Utils.MilvaMongoTemplateUserManager,MilvaMongoTemplate.API.Services.Abstract.IAccountService)">
             <summary>
-            Initializes new instances of <see cref="T:MilvaMongoTemplate.API.Migrations.DeveloperOpsController"/>.
+            Initializes new instances of <see cref="T:MilvaMongoTemplate.API.Controllers.DeveloperOpsController"/>.
             </summary>
             <param name="userManager"></param>
             <param name="accountService"></param>
-            <param name="roleManager"></param>
         </member>
-        <member name="M:MilvaMongoTemplate.API.Migrations.DeveloperOpsController.SwitchAppEnv">
+        <member name="M:MilvaMongoTemplate.API.Controllers.DeveloperOpsController.SwitchAppEnv">
             <summary>
             Switch environment.
             </summary>
             <returns></returns>
         </member>
-        <member name="M:MilvaMongoTemplate.API.Migrations.DeveloperOpsController.GetAnyAdminToken">
+        <member name="M:MilvaMongoTemplate.API.Controllers.DeveloperOpsController.GetAnyAdminToken">
             <summary>
             Return any user token.
             </summary>
             <returns></returns>
         </member>
-        <member name="M:MilvaMongoTemplate.API.Migrations.DeveloperOpsController.ResetEntities">
+        <member name="M:MilvaMongoTemplate.API.Controllers.DeveloperOpsController.ResetEntities">
             <summary>
             Reset database.
             </summary>
@@ -989,114 +988,119 @@
             <param name="minimumLength">The minimum length, inclusive.  It may not be negative.</param>
             <param name="maximumLength">The maximum length, inclusive.  It may not be negative.</param>
         </member>
-        <member name="T:MilvaMongoTemplate.API.Helpers.GlobalConstant">
+        <member name="T:MilvaMongoTemplate.API.Helpers.Constants.GlobalConstant">
             <summary>
             Global constants.
             </summary>
         </member>
-        <member name="F:MilvaMongoTemplate.API.Helpers.GlobalConstant.RoutePrefix">
+        <member name="F:MilvaMongoTemplate.API.Helpers.Constants.GlobalConstant.RoutePrefix">
             <summary>
             Route prefix of api.
             </summary>
         </member>
-        <member name="F:MilvaMongoTemplate.API.Helpers.GlobalConstant.RouteBase">
+        <member name="F:MilvaMongoTemplate.API.Helpers.Constants.GlobalConstant.RouteBase">
             <summary>
             Base route path of api.
             </summary>
         </member>
-        <member name="F:MilvaMongoTemplate.API.Helpers.GlobalConstant.FullRoute">
+        <member name="F:MilvaMongoTemplate.API.Helpers.Constants.GlobalConstant.FullRoute">
             <summary>
-            Full route path of api. It includes <see cref="F:MilvaMongoTemplate.API.Helpers.GlobalConstant.RouteBase"/> and controller name. 
+            Full route path of api. It includes <see cref="F:MilvaMongoTemplate.API.Helpers.Constants.GlobalConstant.RouteBase"/> and controller name. 
             </summary>
         </member>
-        <member name="F:MilvaMongoTemplate.API.Helpers.GlobalConstant.RoutePrefixAndVersion">
+        <member name="F:MilvaMongoTemplate.API.Helpers.Constants.GlobalConstant.RoutePrefixAndVersion">
             <summary>
             Base route with "/" at the beginning.
             </summary>
         </member>
-        <member name="P:MilvaMongoTemplate.API.Helpers.GlobalConstant.RootPath">
+        <member name="P:MilvaMongoTemplate.API.Helpers.Constants.GlobalConstant.RootPath">
             <summary>
             Rootpath of application.
             </summary>
         </member>
-        <member name="P:MilvaMongoTemplate.API.Helpers.GlobalConstant.JsonFilesPath">
+        <member name="P:MilvaMongoTemplate.API.Helpers.Constants.GlobalConstant.JsonFilesPath">
             <summary>
             Json files path.  
             </summary>
         </member>
-        <member name="P:MilvaMongoTemplate.API.Helpers.GlobalConstant.AllowedFileExtensions">
+        <member name="P:MilvaMongoTemplate.API.Helpers.Constants.GlobalConstant.AllowedFileExtensions">
             <summary>
             Allowed file extensions for media files.
             </summary>
         </member>
-        <member name="P:MilvaMongoTemplate.API.Helpers.GlobalConstant.StringBlacklist">
+        <member name="P:MilvaMongoTemplate.API.Helpers.Constants.GlobalConstant.StringBlacklist">
             <summary>
             Invalid strings for prevent hacking or someting ;)
             </summary>
         </member>
-        <member name="P:MilvaMongoTemplate.API.Helpers.GlobalConstant.MediaLibraryPath">
+        <member name="P:MilvaMongoTemplate.API.Helpers.Constants.GlobalConstant.MediaLibraryPath">
             <summary>
             Path of "Media Library" folder in wwwroot folder.
             </summary>
         </member>
-        <member name="P:MilvaMongoTemplate.API.Helpers.GlobalConstant.ImageLibraryPath">
+        <member name="P:MilvaMongoTemplate.API.Helpers.Constants.GlobalConstant.ImageLibraryPath">
             <summary>
             Path of "Image Library" folder in wwwroot folder.
             </summary>
         </member>
-        <member name="P:MilvaMongoTemplate.API.Helpers.GlobalConstant.ARModelLibraryPath">
+        <member name="P:MilvaMongoTemplate.API.Helpers.Constants.GlobalConstant.ARModelLibraryPath">
             <summary>
             Path of "ARModel Library" folder in wwwroot folder.
             </summary>
         </member>
-        <member name="P:MilvaMongoTemplate.API.Helpers.GlobalConstant.VideoLibraryPath">
+        <member name="P:MilvaMongoTemplate.API.Helpers.Constants.GlobalConstant.VideoLibraryPath">
             <summary>
             Path of "Video Library" folder in wwwroot folder.
             </summary>
         </member>
-        <member name="P:MilvaMongoTemplate.API.Helpers.GlobalConstant.DocumentLibraryPath">
+        <member name="P:MilvaMongoTemplate.API.Helpers.Constants.GlobalConstant.DocumentLibraryPath">
             <summary>
             Path of "Video Library" folder in wwwroot folder.
             </summary>
         </member>
-        <member name="P:MilvaMongoTemplate.API.Helpers.GlobalConstant.MailContent">
+        <member name="P:MilvaMongoTemplate.API.Helpers.Constants.GlobalConstant.MailContent">
             <summary>
             Mail content of injection mails.
             </summary>
         </member>
-        <member name="P:MilvaMongoTemplate.API.Helpers.GlobalConstant.DefaultLanguageId">
+        <member name="P:MilvaMongoTemplate.API.Helpers.Constants.GlobalConstant.DefaultLanguageId">
             <summary>
             Default language id of system.
             </summary>
         </member>
-        <member name="F:MilvaMongoTemplate.API.Helpers.GlobalConstant.Zero">
+        <member name="F:MilvaMongoTemplate.API.Helpers.Constants.GlobalConstant.Zero">
             <summary>
             Zero
             </summary>
         </member>
-        <member name="F:MilvaMongoTemplate.API.Helpers.GlobalConstant.ApplicationName">
+        <member name="F:MilvaMongoTemplate.API.Helpers.Constants.GlobalConstant.ApplicationName">
             <summary>
             Name of application.
             </summary>
         </member>
-        <member name="F:MilvaMongoTemplate.API.Helpers.GlobalConstant.AppMail">
+        <member name="F:MilvaMongoTemplate.API.Helpers.Constants.GlobalConstant.AppMail">
             <summary>
             Mail of application.
             </summary>
         </member>
-        <member name="F:MilvaMongoTemplate.API.Helpers.GlobalConstant.ApplicationSiteUrl">
+        <member name="F:MilvaMongoTemplate.API.Helpers.Constants.GlobalConstant.ApplicationSiteUrl">
             <summary>
             Site url of application.
             </summary>
         </member>
-        <member name="F:MilvaMongoTemplate.API.Helpers.GlobalConstant.DeveloperSiteUrl">
+        <member name="F:MilvaMongoTemplate.API.Helpers.Constants.GlobalConstant.DeveloperSiteUrl">
             <summary>
             Developer site url.
             </summary>
         </member>
-        <member name="F:MilvaMongoTemplate.API.Helpers.GlobalConstant.MilvaMongoTemplateKey">
+        <member name="F:MilvaMongoTemplate.API.Helpers.Constants.GlobalConstant.MilvaMongoTemplateKey">
             <summary>
             Key of project.
+            </summary>
+        </member>
+        <member name="P:MilvaMongoTemplate.API.Helpers.Constants.GlobalConstant.RealProduction">
+            <summary>
+            Determines app is real production or run in production test server.
             </summary>
         </member>
         <member name="T:MilvaMongoTemplate.API.Helpers.Constants.MilvaMongoTemplateStringKey">
@@ -1104,7 +1108,7 @@
             Constants of localizer keys.
             </summary>
         </member>
-        <member name="T:MilvaMongoTemplate.API.Helpers.RoleName">
+        <member name="T:MilvaMongoTemplate.API.Helpers.Constants.RoleName">
             <summary>
             Constants of MilvaMongoTemplate roles.
             </summary>
@@ -1113,87 +1117,18 @@
             <summary>
             Helper extensions methods for Ops!yon Project.
             </summary>
-        </member>
-        <member name="M:MilvaMongoTemplate.API.Helpers.Extensions.HelperExtensions.ValidateFile(Microsoft.AspNetCore.Http.IFormFile,Milvasoft.Helpers.FileOperations.Enums.FileType)">
             <summary>
-            Validates file. 
+            Helper extensions methods for Ops!yon Project.
             </summary>
-            <param name="file"></param>
-            <param name="fileType"></param>
-        </member>
-        <member name="M:MilvaMongoTemplate.API.Helpers.Extensions.HelperExtensions.SaveVideoToServerAsync``2(Microsoft.AspNetCore.Http.IFormFile,``0)">
             <summary>
-            Save uploaded IFormFile file to server. Target Path will be : ".../wwwroot/Media Library/Image Library/<paramref name="entity"></paramref>.Id".
+            Helper extensions methods for Ops!yon Project.
             </summary>
-            <typeparam name="TEntity"></typeparam>
-            <typeparam name="TKey"></typeparam>
-            <param name="file"> Uploaded file in entity. </param>
-            <param name="entity"></param>
-            <returns></returns>
-        </member>
-        <member name="M:MilvaMongoTemplate.API.Helpers.Extensions.HelperExtensions.GetFileUrlFromPath(System.String,Milvasoft.Helpers.FileOperations.Enums.FileType)">
             <summary>
-            Returns the path of the uploaded file.
+            Helper extensions methods for Ops!yon Project.
             </summary>
-            <param name="originalImagePath"> Uploaded file. </param>
-            <param name="fileType"> Uploaded file type. (e.g image,video,sound) </param>
-        </member>
-        <member name="M:MilvaMongoTemplate.API.Helpers.Extensions.HelperExtensions.ConvertToFormFile(System.String)">
             <summary>
-            Converts data URI formatted base64 string to IFormFile.
+            Helper extensions methods for Ops!yon Project.
             </summary>
-            <param name="milvaBase64"></param>
-            <returns></returns>
-        </member>
-        <member name="P:MilvaMongoTemplate.API.Helpers.Extensions.HelperExtensions.LanguageIdIsoPairs">
-            <summary>
-            Stores language id and iso code.
-            </summary>
-        </member>
-        <member name="M:MilvaMongoTemplate.API.Helpers.Extensions.HelperExtensions.GetLang``1(System.Collections.Generic.IEnumerable{``0},System.Linq.Expressions.Expression{System.Func{``0,System.String}})">
-            <summary>
-            Performs the necessary mapping for language dependent objects. For example, it is used to map the data in the Product class to the ProductDTO class.
-            </summary>
-            <param name="langs"></param>
-            <param name="propertyName"></param>
-            <returns></returns>
-        </member>
-        <member name="M:MilvaMongoTemplate.API.Helpers.Extensions.HelperExtensions.GetLangs``2(System.Collections.Generic.IEnumerable{``0})">
-            <summary>
-            Performs the necessary mapping for language dependent objects. For example, it is used to map the data in the Product class to the ProductDTO class.
-            </summary>
-            <param name="langs"></param>
-            <returns></returns>
-        </member>
-        <member name="M:MilvaMongoTemplate.API.Helpers.Extensions.HelperExtensions.GetLanguageId(System.Int32)">
-            <summary>
-            Gets language id from CultureInfo.CurrentCulture.
-            </summary>
-        </member>
-        <member name="M:MilvaMongoTemplate.API.Helpers.Extensions.HelperExtensions.GetLangPropValue(System.Object,System.String,System.String)">
-            <summary>
-            Get langs property in runtime.
-            </summary>
-            <param name="obj"></param>
-            <param name="langPropName"></param>
-            <param name="requestedPropName"></param>
-            <returns></returns>
-        </member>
-        <member name="M:MilvaMongoTemplate.API.Helpers.Extensions.HelperExtensions.GetLang``1(System.Collections.Generic.HashSet{``0},System.String)">
-            <summary>
-            Performs the necessary mapping for language dependent objects. For example, it is used to map the data in the Product class to the ProductDTO class.
-            </summary>
-            <param name="langs"></param>
-            <param name="propName"></param>
-            <returns></returns>
-        </member>
-        <member name="M:MilvaMongoTemplate.API.Helpers.Extensions.HelperExtensions.GetPropertyValue(System.Object,System.String)">
-            <summary>
-            Gets requested property value.
-            </summary>
-            <param name="obj"></param>
-            <param name="propertyName"> e.g : ProductLangs.Name </param>
-            <returns></returns>
         </member>
         <member name="M:MilvaMongoTemplate.API.Helpers.Extensions.HelperExtensions.CheckList``2(System.Collections.Generic.IEnumerable{``0},System.Func{System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{``1}})">
             <summary>
@@ -1240,28 +1175,28 @@
             Throwns <see cref="T:Milvasoft.Helpers.Exceptions.MilvaUserFriendlyException"/> if <paramref name="parameterObject"/> is null.
             </summary>
             <param name="parameterObject"></param>
-            <param name="message"></param>
+            <param name="localizerKey"></param>
         </member>
         <member name="M:MilvaMongoTemplate.API.Helpers.Extensions.HelperExtensions.ThrowIfListIsNullOrEmpty(System.Collections.Generic.List{System.Object},System.String)">
             <summary>
             Throwns <see cref="T:Milvasoft.Helpers.Exceptions.MilvaUserFriendlyException"/> if <paramref name="list"/> is null or empty.
             </summary>
             <param name="list"></param>
-            <param name="message"></param>
+            <param name="localizerKey"></param>
         </member>
         <member name="M:MilvaMongoTemplate.API.Helpers.Extensions.HelperExtensions.ThrowIfParameterIsNullOrEmpty``1(System.Collections.Generic.List{``0},System.String)">
             <summary>
             Throwns <see cref="T:Milvasoft.Helpers.Exceptions.MilvaUserFriendlyException"/> if <paramref name="list"/> is null or empty.
             </summary>
             <param name="list"></param>
-            <param name="message"></param>
+            <param name="localizerKey"></param>
         </member>
         <member name="M:MilvaMongoTemplate.API.Helpers.Extensions.HelperExtensions.ThrowIfListIsNullOrEmpty(System.Collections.Generic.IEnumerable{System.Object},System.String)">
             <summary>
             Throwns <see cref="T:Milvasoft.Helpers.Exceptions.MilvaUserFriendlyException"/> if <paramref name="list"/> is null or empty.
             </summary>
             <param name="list"></param>
-            <param name="message"></param>
+            <param name="localizerKey"></param>
         </member>
         <member name="M:MilvaMongoTemplate.API.Helpers.Extensions.HelperExtensions.ThrowIfListIsNotNullOrEmpty(System.Collections.Generic.IEnumerable{System.Object},System.String)">
             <summary>
@@ -1270,34 +1205,49 @@
             <param name="list"></param>
             <param name="message"></param>
         </member>
+        <member name="M:MilvaMongoTemplate.API.Helpers.Extensions.HelperExtensions.ThrowIfNullForGuidObject``1(``0,System.String)">
+            <summary>
+            Throwns <see cref="T:Milvasoft.Helpers.Exceptions.MilvaUserFriendlyException"/> if <paramref name="entity"/> is null.
+            </summary>
+            <param name="entity"></param>
+            <param name="localizerKey"></param>
+        </member>
         <member name="M:MilvaMongoTemplate.API.Helpers.Extensions.HelperExtensions.ThrowIfNullObject``1(``0,System.String)">
             <summary>
             Throwns <see cref="T:Milvasoft.Helpers.Exceptions.MilvaUserFriendlyException"/> if <paramref name="entity"/> is null.
             </summary>
             <param name="entity"></param>
-            <param name="message"></param>
+            <param name="localizerKey"></param>
         </member>
-        <member name="M:MilvaMongoTemplate.API.Helpers.Extensions.HelperExtensions.IsBetween(System.DateTime,System.TimeSpan,System.TimeSpan)">
+        <member name="M:MilvaMongoTemplate.API.Helpers.Extensions.HelperExtensions.ValidateFile(Microsoft.AspNetCore.Http.IFormFile,Milvasoft.Helpers.FileOperations.Enums.FileType)">
             <summary>
-            Compares <paramref name="date"/> for whether between <paramref name="startTime"/> and <paramref name="endTime"/>. 
+            Validates file. 
             </summary>
-            
-            <remarks>
-            This is a time comparison not a date comparison.
-            </remarks>
-            
-            <param name="date"></param>
-            <param name="startTime"></param>
-            <param name="endTime"></param>
+            <param name="file"></param>
+            <param name="fileType"></param>
+        </member>
+        <member name="M:MilvaMongoTemplate.API.Helpers.Extensions.HelperExtensions.SaveVideoToServerAsync``2(Microsoft.AspNetCore.Http.IFormFile,``0)">
+            <summary>
+            Save uploaded IFormFile file to server. Target Path will be : ".../wwwroot/Media Library/Image Library/<paramref name="entity"></paramref>.Id".
+            </summary>
+            <typeparam name="TEntity"></typeparam>
+            <typeparam name="TKey"></typeparam>
+            <param name="file"> Uploaded file in entity. </param>
+            <param name="entity"></param>
             <returns></returns>
         </member>
-        <member name="M:MilvaMongoTemplate.API.Helpers.Extensions.HelperExtensions.IsBetween(System.DateTime,System.DateTime,System.DateTime)">
+        <member name="M:MilvaMongoTemplate.API.Helpers.Extensions.HelperExtensions.GetFileUrlFromPath(System.String,Milvasoft.Helpers.FileOperations.Enums.FileType)">
             <summary>
-            Compares <paramref name="date"/> for whether between <paramref name="startDate"/> and <paramref name="endDate"/>. 
+            Returns the path of the uploaded file.
             </summary>
-            <param name="date"></param>
-            <param name="startDate"></param>
-            <param name="endDate"></param>
+            <param name="originalImagePath"> Uploaded file. </param>
+            <param name="fileType"> Uploaded file type. (e.g image,video,sound) </param>
+        </member>
+        <member name="M:MilvaMongoTemplate.API.Helpers.Extensions.HelperExtensions.ConvertToFormFile(System.String)">
+            <summary>
+            Converts data URI formatted base64 string to IFormFile.
+            </summary>
+            <param name="milvaBase64"></param>
             <returns></returns>
         </member>
         <member name="M:MilvaMongoTemplate.API.Helpers.Extensions.HelperExtensions.AddIsDeletedFilter(MongoDB.Driver.FilterDefinition{MilvaMongoTemplate.Entity.Collections.MilvaMongoTemplateUser})">
@@ -1350,6 +1300,56 @@
             </summary>
             <param name="textWriter"></param>
             <param name="message"></param>
+            <returns></returns>
+        </member>
+        <member name="P:MilvaMongoTemplate.API.Helpers.Extensions.HelperExtensions.LanguageIdIsoPairs">
+            <summary>
+            Stores language id and iso code.
+            </summary>
+        </member>
+        <member name="M:MilvaMongoTemplate.API.Helpers.Extensions.HelperExtensions.GetLang``1(System.Collections.Generic.IEnumerable{``0},System.Linq.Expressions.Expression{System.Func{``0,System.String}})">
+            <summary>
+            Performs the necessary mapping for language dependent objects. For example, it is used to map the data in the Product class to the ProductDTO class.
+            </summary>
+            <param name="langs"></param>
+            <param name="propertyName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MilvaMongoTemplate.API.Helpers.Extensions.HelperExtensions.GetLangs``2(System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            Performs the necessary mapping for language dependent objects. For example, it is used to map the data in the Product class to the ProductDTO class.
+            </summary>
+            <param name="langs"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MilvaMongoTemplate.API.Helpers.Extensions.HelperExtensions.GetLanguageId(System.Int32)">
+            <summary>
+            Gets language id from CultureInfo.CurrentCulture.
+            </summary>
+        </member>
+        <member name="M:MilvaMongoTemplate.API.Helpers.Extensions.HelperExtensions.GetLangPropValue(System.Object,System.String,System.String)">
+            <summary>
+            Get langs property in runtime.
+            </summary>
+            <param name="obj"></param>
+            <param name="langPropName"></param>
+            <param name="requestedPropName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MilvaMongoTemplate.API.Helpers.Extensions.HelperExtensions.GetLang``1(System.Collections.Generic.HashSet{``0},System.String)">
+            <summary>
+            Performs the necessary mapping for language dependent objects. For example, it is used to map the data in the Product class to the ProductDTO class.
+            </summary>
+            <param name="langs"></param>
+            <param name="propName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MilvaMongoTemplate.API.Helpers.Extensions.HelperExtensions.GetPropertyValue(System.Object,System.String)">
+            <summary>
+            Gets requested property value.
+            </summary>
+            <param name="obj"></param>
+            <param name="propertyName"> e.g : ProductLangs.Name </param>
             <returns></returns>
         </member>
         <member name="T:MilvaMongoTemplate.API.Helpers.MilvaLazy`1">
@@ -1611,39 +1611,39 @@
             <param name="builder"></param>
             <returns></returns>
         </member>
-        <member name="T:MilvaMongoTemplate.API.Services.Common.Abstract.IAccountService">
+        <member name="T:MilvaMongoTemplate.API.Services.Abstract.IAccountService">
             <summary>
             <para><b>EN:</b> The class in which user transactions are entered and exited</para>
             <para><b>TR:</b> Kullanıcı işlemlerinin giriş-çıkış işlemlerinin yapıldığı sınıf</para>
             </summary>
         </member>
-        <member name="M:MilvaMongoTemplate.API.Services.Common.Abstract.IAccountService.LoginAsync(MilvaMongoTemplate.API.DTOs.AccountDTOs.LoginDTO)">
+        <member name="M:MilvaMongoTemplate.API.Services.Abstract.IAccountService.LoginAsync(MilvaMongoTemplate.API.DTOs.AccountDTOs.LoginDTO)">
             <summary>
             Signs in for incoming user. Returns a token if login informations are valid or the user is not lockedout. Otherwise returns the error list.
             </summary>
             <param name="loginDTO"></param>
             <returns></returns>
         </member>
-        <member name="M:MilvaMongoTemplate.API.Services.Common.Abstract.IAccountService.RefreshTokenLogin(System.String)">
+        <member name="M:MilvaMongoTemplate.API.Services.Abstract.IAccountService.RefreshTokenLogin(System.String)">
             <summary>
             Refresh token login for all users.
             </summary>
             <param name="refreshToken"></param>
             <returns></returns>
         </member>
-        <member name="M:MilvaMongoTemplate.API.Services.Common.Abstract.IAccountService.LogoutAsync">
+        <member name="M:MilvaMongoTemplate.API.Services.Abstract.IAccountService.LogoutAsync">
             <summary>
             Signs out from database. Returns null if already signed out.
             </summary>
             <returns></returns>
         </member>
-        <member name="M:MilvaMongoTemplate.API.Services.Common.Abstract.IAccountService.GetLoggedInInUserInformationAsync">
+        <member name="M:MilvaMongoTemplate.API.Services.Abstract.IAccountService.GetLoggedInInUserInformationAsync">
             <summary>
             Gets a specific personnel data from repository by token value if exsist.
             </summary>
             <returns> Logged-in user data. </returns>
         </member>
-        <member name="M:MilvaMongoTemplate.API.Services.Common.Abstract.IAccountService.RegisterAsync(MilvaMongoTemplate.API.DTOs.AccountDTOs.RegisterDTO)">
+        <member name="M:MilvaMongoTemplate.API.Services.Abstract.IAccountService.RegisterAsync(MilvaMongoTemplate.API.DTOs.AccountDTOs.RegisterDTO)">
             <summary>
             Sign up process for application user.
             If signup process is succesful,then sign in.
@@ -1651,91 +1651,91 @@
             <param name="userSignUpDTO"></param>
             <returns></returns>
         </member>
-        <member name="M:MilvaMongoTemplate.API.Services.Common.Abstract.IAccountService.UpdateAccountAsync(MilvaMongoTemplate.API.DTOs.AccountDTOs.AppUserUpdateDTO)">
+        <member name="M:MilvaMongoTemplate.API.Services.Abstract.IAccountService.UpdateAccountAsync(MilvaMongoTemplate.API.DTOs.AccountDTOs.AppUserUpdateDTO)">
             <summary>
             Updates logged-in user's personal information.
             </summary>
             <param name="userDTO"></param>
             <returns></returns>
         </member>
-        <member name="M:MilvaMongoTemplate.API.Services.Common.Abstract.IAccountService.DeleteAccountAsync">
+        <member name="M:MilvaMongoTemplate.API.Services.Abstract.IAccountService.DeleteAccountAsync">
             <summary>
             Deletes logged-in user's account. This operation is irreversible.
             </summary>
             <returns></returns>
         </member>
-        <member name="M:MilvaMongoTemplate.API.Services.Common.Abstract.IAccountService.GetAllUsersAsync(MilvaMongoTemplate.API.DTOs.PaginationParams)">
+        <member name="M:MilvaMongoTemplate.API.Services.Abstract.IAccountService.GetAllUsersAsync(MilvaMongoTemplate.API.DTOs.PaginationParams)">
             <summary>
             Returns all users as paginated.
             </summary>
             <param name="paginationParams"></param>
             <returns></returns>
         </member>
-        <member name="M:MilvaMongoTemplate.API.Services.Common.Abstract.IAccountService.GetUserByIdAsync(MongoDB.Bson.ObjectId)">
+        <member name="M:MilvaMongoTemplate.API.Services.Abstract.IAccountService.GetUserByIdAsync(MongoDB.Bson.ObjectId)">
             <summary>
             Return single user by <paramref name="userId"/>.
             </summary>
             <param name="userId"></param>
             <returns></returns>
         </member>
-        <member name="M:MilvaMongoTemplate.API.Services.Common.Abstract.IAccountService.CreateUserAsync(MilvaMongoTemplate.API.DTOs.AccountDTOs.MilvaMongoTemplateUserCreateDTO)">
+        <member name="M:MilvaMongoTemplate.API.Services.Abstract.IAccountService.CreateUserAsync(MilvaMongoTemplate.API.DTOs.AccountDTOs.MilvaMongoTemplateUserCreateDTO)">
             <summary>
             Creates user according to <paramref name="userDTO"/> by admin.
             </summary>
             <param name="userDTO"></param>
             <returns></returns>
         </member>
-        <member name="M:MilvaMongoTemplate.API.Services.Common.Abstract.IAccountService.UpdateUserAsync(MilvaMongoTemplate.API.DTOs.AccountDTOs.MilvaMongoTemplateUserUpdateDTO)">
+        <member name="M:MilvaMongoTemplate.API.Services.Abstract.IAccountService.UpdateUserAsync(MilvaMongoTemplate.API.DTOs.AccountDTOs.MilvaMongoTemplateUserUpdateDTO)">
             <summary>
             Updates user according to <paramref name="userDTO"/> by admin.
             </summary>
             <param name="userDTO"></param>
             <returns></returns>
         </member>
-        <member name="M:MilvaMongoTemplate.API.Services.Common.Abstract.IAccountService.DeleteUserAsync(MongoDB.Bson.ObjectId)">
+        <member name="M:MilvaMongoTemplate.API.Services.Abstract.IAccountService.DeleteUserAsync(MongoDB.Bson.ObjectId)">
             <summary>
             Deletes user by <paramref name="userId"/> by admin.
             </summary>
             <param name="userId"></param>
             <returns></returns>
         </member>
-        <member name="M:MilvaMongoTemplate.API.Services.Common.Abstract.IAccountService.GetRolesAsync">
+        <member name="M:MilvaMongoTemplate.API.Services.Abstract.IAccountService.GetRolesAsync">
             <summary>
             Returns all MilvaMongoTemplate app roles.
             </summary>
             <returns></returns>
         </member>
-        <member name="M:MilvaMongoTemplate.API.Services.Common.Abstract.IAccountService.SendEmailVerificationMailAsync(System.String)">
+        <member name="M:MilvaMongoTemplate.API.Services.Abstract.IAccountService.SendEmailVerificationMailAsync(System.String)">
             <summary>
             Sends email verification mail to logged-in user.
             </summary>
             <returns></returns>
         </member>
-        <member name="M:MilvaMongoTemplate.API.Services.Common.Abstract.IAccountService.SendChangePhoneNumberMailAsync(System.String)">
+        <member name="M:MilvaMongoTemplate.API.Services.Abstract.IAccountService.SendChangePhoneNumberMailAsync(System.String)">
             <summary>
             Sends phone number change mail to logged-in user.
             </summary>
             <returns></returns>
         </member>
-        <member name="M:MilvaMongoTemplate.API.Services.Common.Abstract.IAccountService.SendChangeEmailMailAsync(System.String)">
+        <member name="M:MilvaMongoTemplate.API.Services.Abstract.IAccountService.SendChangeEmailMailAsync(System.String)">
             <summary>
             Sends email chage mail to logged-in user.
             </summary>
             <returns></returns>
         </member>
-        <member name="M:MilvaMongoTemplate.API.Services.Common.Abstract.IAccountService.SendResetPasswordMailAsync">
+        <member name="M:MilvaMongoTemplate.API.Services.Abstract.IAccountService.SendResetPasswordMailAsync">
             <summary>
             Sends password reset mail to logged-in user.
             </summary>
             <returns></returns>
         </member>
-        <member name="M:MilvaMongoTemplate.API.Services.Common.Abstract.IAccountService.SendForgotPasswordMailAsync(System.String)">
+        <member name="M:MilvaMongoTemplate.API.Services.Abstract.IAccountService.SendForgotPasswordMailAsync(System.String)">
             <summary>
             Sends password reset mail to <paramref name="email"/>.
             </summary>
             <returns></returns>
         </member>
-        <member name="M:MilvaMongoTemplate.API.Services.Common.Abstract.IAccountService.SendPhoneNumberVerificationMessageAsync">
+        <member name="M:MilvaMongoTemplate.API.Services.Abstract.IAccountService.SendPhoneNumberVerificationMessageAsync">
             <summary>
             Sends verification code to phone number.
             <para><b> IMPORTANT INFORMATION : The message sending service has not yet been integrated. 
@@ -1744,28 +1744,28 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:MilvaMongoTemplate.API.Services.Common.Abstract.IAccountService.VerifyPhoneNumberAsync(System.String)">
+        <member name="M:MilvaMongoTemplate.API.Services.Abstract.IAccountService.VerifyPhoneNumberAsync(System.String)">
             <summary>
             Verifies email, if <paramref name="verificationCode"/> is correct.
             </summary>
             <param name="verificationCode"></param>
             <returns></returns>
         </member>
-        <member name="M:MilvaMongoTemplate.API.Services.Common.Abstract.IAccountService.VerifyEmailAsync(MilvaMongoTemplate.API.DTOs.AccountDTOs.EmailVerificationDTO)">
+        <member name="M:MilvaMongoTemplate.API.Services.Abstract.IAccountService.VerifyEmailAsync(MilvaMongoTemplate.API.DTOs.AccountDTOs.EmailVerificationDTO)">
             <summary>
             Verifies <paramref name="emailVerificationDTO"/>.UserName's email, if <paramref name="emailVerificationDTO"/>.TokenString is valid.
             </summary>
             <param name="emailVerificationDTO"></param>
             <returns></returns>
         </member>
-        <member name="M:MilvaMongoTemplate.API.Services.Common.Abstract.IAccountService.ChangeEmailAsync(MilvaMongoTemplate.API.DTOs.AccountDTOs.EmailChangeDTO)">
+        <member name="M:MilvaMongoTemplate.API.Services.Abstract.IAccountService.ChangeEmailAsync(MilvaMongoTemplate.API.DTOs.AccountDTOs.EmailChangeDTO)">
             <summary>
             Changes <paramref name="emailChangeDTO"/>.UserName's email with <paramref name="emailChangeDTO"/>.NewEmail, if <paramref name="emailChangeDTO"/>.TokenString is valid.
             </summary>
             <param name="emailChangeDTO"></param>
             <returns></returns>
         </member>
-        <member name="M:MilvaMongoTemplate.API.Services.Common.Abstract.IAccountService.ChangePhoneNumberAsync(MilvaMongoTemplate.API.DTOs.AccountDTOs.PhoneNumberChangeDTO)">
+        <member name="M:MilvaMongoTemplate.API.Services.Abstract.IAccountService.ChangePhoneNumberAsync(MilvaMongoTemplate.API.DTOs.AccountDTOs.PhoneNumberChangeDTO)">
             <summary>
             Changes <paramref name="phoneNumberChangeDTO"/>.UserName's phone number. 
             with <paramref name="phoneNumberChangeDTO"/>.NewPhoneNumber, if <paramref name="phoneNumberChangeDTO"/>.TokenString is valid.
@@ -1773,36 +1773,36 @@
             <param name="phoneNumberChangeDTO"></param>
             <returns></returns>
         </member>
-        <member name="M:MilvaMongoTemplate.API.Services.Common.Abstract.IAccountService.ResetPasswordAsync(MilvaMongoTemplate.API.DTOs.AccountDTOs.PasswordResetDTO)">
+        <member name="M:MilvaMongoTemplate.API.Services.Abstract.IAccountService.ResetPasswordAsync(MilvaMongoTemplate.API.DTOs.AccountDTOs.PasswordResetDTO)">
             <summary>
             Resets <paramref name="passwordResetDTO"/>.UserName's password with <paramref name="passwordResetDTO"/>.NewPassword, if <paramref name="passwordResetDTO"/>.TokenString is valid.
             </summary>
             <param name="passwordResetDTO"></param>
             <returns></returns>
         </member>
-        <member name="M:MilvaMongoTemplate.API.Services.Common.Abstract.IAccountService.ChangePasswordAsync(MilvaMongoTemplate.API.DTOs.AccountDTOs.PasswordChangeDTO)">
+        <member name="M:MilvaMongoTemplate.API.Services.Abstract.IAccountService.ChangePasswordAsync(MilvaMongoTemplate.API.DTOs.AccountDTOs.PasswordChangeDTO)">
             <summary>
             Changes <paramref name="passwordChangeDTO"/>.UserName's <paramref name="passwordChangeDTO"/>.OldPassword with <paramref name="passwordChangeDTO"/>.NewPassword.
             </summary>
             <param name="passwordChangeDTO"></param>
             <returns></returns>
         </member>
-        <member name="T:MilvaMongoTemplate.API.Services.Common.Concrete.AccountService">
+        <member name="T:MilvaMongoTemplate.API.Services.Concrete.AccountService">
             <summary>
             Provides sign-in,sign-up and sign-out process for user.
             </summary>
         </member>
-        <member name="F:MilvaMongoTemplate.API.Services.Common.Concrete.AccountService._loginProvider">
+        <member name="F:MilvaMongoTemplate.API.Services.Concrete.AccountService._loginProvider">
             <summary>
             The authentication scheme for the provider the token is associated with.
             </summary>
         </member>
-        <member name="F:MilvaMongoTemplate.API.Services.Common.Concrete.AccountService._tokenName">
+        <member name="F:MilvaMongoTemplate.API.Services.Concrete.AccountService._tokenName">
             <summary>
             The name of token.
             </summary>
         </member>
-        <member name="M:MilvaMongoTemplate.API.Services.Common.Concrete.AccountService.#ctor(System.Lazy{Milvasoft.Helpers.DataAccess.MongoDB.Abstract.IBaseRepository{MilvaMongoTemplate.Entity.Collections.MilvaMongoTemplateUser}},System.Lazy{Milvasoft.Helpers.DataAccess.MongoDB.Abstract.IBaseRepository{MilvaMongoTemplate.Entity.Collections.MilvaMongoTemplateRole}},System.Lazy{Microsoft.AspNetCore.Identity.UserManager{MilvaMongoTemplate.Entity.Collections.MilvaMongoTemplateUser}},System.Lazy{Microsoft.AspNetCore.Identity.SignInManager{MilvaMongoTemplate.Entity.Collections.MilvaMongoTemplateUser}},System.Lazy{Milvasoft.Helpers.Mail.IMilvaMailSender},System.Lazy{Milvasoft.Helpers.Caching.IRedisCacheService},System.Lazy{Milvasoft.Helpers.DependencyInjection.IMilvaLogger},System.Lazy{Milvasoft.Helpers.Encryption.Concrete.MilvaEncryptionProvider},Microsoft.AspNetCore.Http.HttpContextAccessor,Milvasoft.Helpers.Identity.Abstract.ITokenManagement,Microsoft.Extensions.Localization.IStringLocalizer{MilvaMongoTemplate.Localization.SharedResource})">
+        <member name="M:MilvaMongoTemplate.API.Services.Concrete.AccountService.#ctor(System.Lazy{Milvasoft.Helpers.DataAccess.MongoDB.Abstract.IBaseRepository{MilvaMongoTemplate.Entity.Collections.MilvaMongoTemplateUser}},System.Lazy{Milvasoft.Helpers.DataAccess.MongoDB.Abstract.IBaseRepository{MilvaMongoTemplate.Entity.Collections.MilvaMongoTemplateRole}},System.Lazy{Microsoft.AspNetCore.Identity.UserManager{MilvaMongoTemplate.Entity.Collections.MilvaMongoTemplateUser}},System.Lazy{Microsoft.AspNetCore.Identity.SignInManager{MilvaMongoTemplate.Entity.Collections.MilvaMongoTemplateUser}},System.Lazy{Milvasoft.Helpers.Mail.IMilvaMailSender},System.Lazy{Milvasoft.Helpers.Caching.IRedisCacheService},System.Lazy{Milvasoft.Helpers.DependencyInjection.IMilvaLogger},System.Lazy{Milvasoft.Helpers.Encryption.Concrete.MilvaEncryptionProvider},Microsoft.AspNetCore.Http.HttpContextAccessor,Milvasoft.Helpers.Identity.Abstract.ITokenManagement,Microsoft.Extensions.Localization.IStringLocalizer{MilvaMongoTemplate.Localization.SharedResource})">
             <summary>
             Performs constructor injection for repository interfaces used in this service.
             </summary>
@@ -1818,33 +1818,33 @@
             <param name="lazyMilvaLogger"></param>
             <param name="lazyMilvaEncryptionProvider"></param>
         </member>
-        <member name="M:MilvaMongoTemplate.API.Services.Common.Concrete.AccountService.LoginAsync(MilvaMongoTemplate.API.DTOs.AccountDTOs.LoginDTO)">
+        <member name="M:MilvaMongoTemplate.API.Services.Concrete.AccountService.LoginAsync(MilvaMongoTemplate.API.DTOs.AccountDTOs.LoginDTO)">
             <summary>
             Signs in for incoming user. Returns a token if login informations are valid or the user is not lockedout. Otherwise returns the error list.
             </summary>
             <param name="loginDTO"></param>
             <returns></returns>
         </member>
-        <member name="M:MilvaMongoTemplate.API.Services.Common.Concrete.AccountService.RefreshTokenLogin(System.String)">
+        <member name="M:MilvaMongoTemplate.API.Services.Concrete.AccountService.RefreshTokenLogin(System.String)">
             <summary>
             Refresh token login for all users.
             </summary>
             <param name="refreshToken"></param>
             <returns></returns>
         </member>
-        <member name="M:MilvaMongoTemplate.API.Services.Common.Concrete.AccountService.LogoutAsync">
+        <member name="M:MilvaMongoTemplate.API.Services.Concrete.AccountService.LogoutAsync">
             <summary>
             Signs out from database. Returns null if already signed out.
             </summary>
             <returns></returns>
         </member>
-        <member name="M:MilvaMongoTemplate.API.Services.Common.Concrete.AccountService.GetLoggedInInUserInformationAsync">
+        <member name="M:MilvaMongoTemplate.API.Services.Concrete.AccountService.GetLoggedInInUserInformationAsync">
             <summary>
             Gets a specific personnel data from repository by token value if exsist.
             </summary>
             <returns> Logged-in user data. </returns>
         </member>
-        <member name="M:MilvaMongoTemplate.API.Services.Common.Concrete.AccountService.RegisterAsync(MilvaMongoTemplate.API.DTOs.AccountDTOs.RegisterDTO)">
+        <member name="M:MilvaMongoTemplate.API.Services.Concrete.AccountService.RegisterAsync(MilvaMongoTemplate.API.DTOs.AccountDTOs.RegisterDTO)">
             <summary>
             Sign up process for application user.
             If signup process is succesful,then sign in.
@@ -1852,50 +1852,50 @@
             <param name="registerDTO"></param>
             <returns></returns>
         </member>
-        <member name="M:MilvaMongoTemplate.API.Services.Common.Concrete.AccountService.UpdateAccountAsync(MilvaMongoTemplate.API.DTOs.AccountDTOs.AppUserUpdateDTO)">
+        <member name="M:MilvaMongoTemplate.API.Services.Concrete.AccountService.UpdateAccountAsync(MilvaMongoTemplate.API.DTOs.AccountDTOs.AppUserUpdateDTO)">
             <summary>
             Updates logged-in user's personal information.
             </summary>
             <param name="userDTO"></param>
             <returns></returns>
         </member>
-        <member name="M:MilvaMongoTemplate.API.Services.Common.Concrete.AccountService.DeleteAccountAsync">
+        <member name="M:MilvaMongoTemplate.API.Services.Concrete.AccountService.DeleteAccountAsync">
             <summary>
             Deletes logged-in user's account. This operation is irreversible.
             </summary>
             <returns></returns>
         </member>
-        <member name="M:MilvaMongoTemplate.API.Services.Common.Concrete.AccountService.SendEmailVerificationMailAsync(System.String)">
+        <member name="M:MilvaMongoTemplate.API.Services.Concrete.AccountService.SendEmailVerificationMailAsync(System.String)">
             <summary>
             Sends email verification mail to logged-in user.
             </summary>
             <returns></returns>
         </member>
-        <member name="M:MilvaMongoTemplate.API.Services.Common.Concrete.AccountService.SendChangePhoneNumberMailAsync(System.String)">
+        <member name="M:MilvaMongoTemplate.API.Services.Concrete.AccountService.SendChangePhoneNumberMailAsync(System.String)">
             <summary>
             Sends phone number change mail to logged-in user.
             </summary>
             <returns></returns>
         </member>
-        <member name="M:MilvaMongoTemplate.API.Services.Common.Concrete.AccountService.SendChangeEmailMailAsync(System.String)">
+        <member name="M:MilvaMongoTemplate.API.Services.Concrete.AccountService.SendChangeEmailMailAsync(System.String)">
             <summary>
             Sends email chage mail to logged-in user.
             </summary>
             <returns></returns>
         </member>
-        <member name="M:MilvaMongoTemplate.API.Services.Common.Concrete.AccountService.SendResetPasswordMailAsync">
+        <member name="M:MilvaMongoTemplate.API.Services.Concrete.AccountService.SendResetPasswordMailAsync">
             <summary>
             Sends password reset mail to logged-in user.
             </summary>
             <returns></returns>
         </member>
-        <member name="M:MilvaMongoTemplate.API.Services.Common.Concrete.AccountService.SendForgotPasswordMailAsync(System.String)">
+        <member name="M:MilvaMongoTemplate.API.Services.Concrete.AccountService.SendForgotPasswordMailAsync(System.String)">
             <summary>
             Sends password reset mail to<paramref name="email"/>.
             </summary>
             <returns></returns>
         </member>
-        <member name="M:MilvaMongoTemplate.API.Services.Common.Concrete.AccountService.SendPhoneNumberVerificationMessageAsync">
+        <member name="M:MilvaMongoTemplate.API.Services.Concrete.AccountService.SendPhoneNumberVerificationMessageAsync">
             <summary>
             Sends verification code to logged-in user's phone number.
             <para><b> IMPORTANT INFORMATION : The message sending service has not yet been integrated. 
@@ -1904,28 +1904,28 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:MilvaMongoTemplate.API.Services.Common.Concrete.AccountService.VerifyPhoneNumberAsync(System.String)">
+        <member name="M:MilvaMongoTemplate.API.Services.Concrete.AccountService.VerifyPhoneNumberAsync(System.String)">
             <summary>
             Verifies email, if <paramref name="verificationCode"/> is correct.
             </summary>
             <param name="verificationCode"></param>
             <returns></returns>
         </member>
-        <member name="M:MilvaMongoTemplate.API.Services.Common.Concrete.AccountService.VerifyEmailAsync(MilvaMongoTemplate.API.DTOs.AccountDTOs.EmailVerificationDTO)">
+        <member name="M:MilvaMongoTemplate.API.Services.Concrete.AccountService.VerifyEmailAsync(MilvaMongoTemplate.API.DTOs.AccountDTOs.EmailVerificationDTO)">
             <summary>
             Verifies <paramref name="emailVerificationDTO"/>.UserName's email, if <paramref name="emailVerificationDTO"/>.TokenString is valid.
             </summary>
             <param name="emailVerificationDTO"></param>
             <returns></returns>
         </member>
-        <member name="M:MilvaMongoTemplate.API.Services.Common.Concrete.AccountService.ChangeEmailAsync(MilvaMongoTemplate.API.DTOs.AccountDTOs.EmailChangeDTO)">
+        <member name="M:MilvaMongoTemplate.API.Services.Concrete.AccountService.ChangeEmailAsync(MilvaMongoTemplate.API.DTOs.AccountDTOs.EmailChangeDTO)">
             <summary>
             Changes <paramref name="emailChangeDTO"/>.UserName's email with <paramref name="emailChangeDTO"/>.NewEmail, if <paramref name="emailChangeDTO"/>.TokenString is valid.
             </summary>
             <param name="emailChangeDTO"></param>
             <returns></returns>
         </member>
-        <member name="M:MilvaMongoTemplate.API.Services.Common.Concrete.AccountService.ChangePhoneNumberAsync(MilvaMongoTemplate.API.DTOs.AccountDTOs.PhoneNumberChangeDTO)">
+        <member name="M:MilvaMongoTemplate.API.Services.Concrete.AccountService.ChangePhoneNumberAsync(MilvaMongoTemplate.API.DTOs.AccountDTOs.PhoneNumberChangeDTO)">
             <summary>
             Changes <paramref name="phoneNumberChangeDTO"/>.UserName's email 
             with <paramref name="phoneNumberChangeDTO"/>.NewPhoneNumber, if <paramref name="phoneNumberChangeDTO"/>.TokenString is valid.
@@ -1933,75 +1933,75 @@
             <param name="phoneNumberChangeDTO"></param>
             <returns></returns>
         </member>
-        <member name="M:MilvaMongoTemplate.API.Services.Common.Concrete.AccountService.ResetPasswordAsync(MilvaMongoTemplate.API.DTOs.AccountDTOs.PasswordResetDTO)">
+        <member name="M:MilvaMongoTemplate.API.Services.Concrete.AccountService.ResetPasswordAsync(MilvaMongoTemplate.API.DTOs.AccountDTOs.PasswordResetDTO)">
             <summary>
             Resets <paramref name="passwordResetDTO"/>.UserName's password with <paramref name="passwordResetDTO"/>.NewPassword, if <paramref name="passwordResetDTO"/>.TokenString is valid.
             </summary>
             <param name="passwordResetDTO"></param>
             <returns></returns>
         </member>
-        <member name="M:MilvaMongoTemplate.API.Services.Common.Concrete.AccountService.ChangePasswordAsync(MilvaMongoTemplate.API.DTOs.AccountDTOs.PasswordChangeDTO)">
+        <member name="M:MilvaMongoTemplate.API.Services.Concrete.AccountService.ChangePasswordAsync(MilvaMongoTemplate.API.DTOs.AccountDTOs.PasswordChangeDTO)">
             <summary>
             Changes <paramref name="passwordChangeDTO"/>.UserName's <paramref name="passwordChangeDTO"/>.OldPassword with <paramref name="passwordChangeDTO"/>.NewPassword.
             </summary>
             <param name="passwordChangeDTO"></param>
             <returns></returns>
         </member>
-        <member name="M:MilvaMongoTemplate.API.Services.Common.Concrete.AccountService.GetAllUsersAsync(MilvaMongoTemplate.API.DTOs.PaginationParams)">
+        <member name="M:MilvaMongoTemplate.API.Services.Concrete.AccountService.GetAllUsersAsync(MilvaMongoTemplate.API.DTOs.PaginationParams)">
             <summary>
             Returns all users as paginated.
             </summary>
             <param name="paginationParams"></param>
             <returns></returns>
         </member>
-        <member name="M:MilvaMongoTemplate.API.Services.Common.Concrete.AccountService.GetUserByIdAsync(MongoDB.Bson.ObjectId)">
+        <member name="M:MilvaMongoTemplate.API.Services.Concrete.AccountService.GetUserByIdAsync(MongoDB.Bson.ObjectId)">
             <summary>
             Return single user by <paramref name="userId"/>.
             </summary>
             <param name="userId"></param>
             <returns></returns>
         </member>
-        <member name="M:MilvaMongoTemplate.API.Services.Common.Concrete.AccountService.CreateUserAsync(MilvaMongoTemplate.API.DTOs.AccountDTOs.MilvaMongoTemplateUserCreateDTO)">
+        <member name="M:MilvaMongoTemplate.API.Services.Concrete.AccountService.CreateUserAsync(MilvaMongoTemplate.API.DTOs.AccountDTOs.MilvaMongoTemplateUserCreateDTO)">
             <summary>
             Creates user according to <paramref name="userDTO"/> by admin.
             </summary>
             <param name="userDTO"></param>
             <returns></returns>
         </member>
-        <member name="M:MilvaMongoTemplate.API.Services.Common.Concrete.AccountService.UpdateUserAsync(MilvaMongoTemplate.API.DTOs.AccountDTOs.MilvaMongoTemplateUserUpdateDTO)">
+        <member name="M:MilvaMongoTemplate.API.Services.Concrete.AccountService.UpdateUserAsync(MilvaMongoTemplate.API.DTOs.AccountDTOs.MilvaMongoTemplateUserUpdateDTO)">
             <summary>
             Updates user according to <paramref name="userDTO"/> by admin.
             </summary>
             <param name="userDTO"></param>
             <returns></returns>
         </member>
-        <member name="M:MilvaMongoTemplate.API.Services.Common.Concrete.AccountService.DeleteUserAsync(MongoDB.Bson.ObjectId)">
+        <member name="M:MilvaMongoTemplate.API.Services.Concrete.AccountService.DeleteUserAsync(MongoDB.Bson.ObjectId)">
             <summary>
             Deletes user by <paramref name="userId"/> by admin.
             </summary>
             <param name="userId"></param>
             <returns></returns>
         </member>
-        <member name="M:MilvaMongoTemplate.API.Services.Common.Concrete.AccountService.GetRolesAsync">
+        <member name="M:MilvaMongoTemplate.API.Services.Concrete.AccountService.GetRolesAsync">
             <summary>
             Returns all MilvaMongoTemplate app roles.
             </summary>
             <returns></returns>
         </member>
-        <member name="M:MilvaMongoTemplate.API.Services.Common.Concrete.AccountService.ThrowErrorMessagesIfNotSuccess(Microsoft.AspNetCore.Identity.IdentityResult)">
+        <member name="M:MilvaMongoTemplate.API.Services.Concrete.AccountService.ThrowErrorMessagesIfNotSuccess(Microsoft.AspNetCore.Identity.IdentityResult)">
             <summary>
             If <paramref name="identityResult"/> is not succeeded throwns <see cref="T:Milvasoft.Helpers.Exceptions.MilvaUserFriendlyException"/>.
             </summary>
             <param name="identityResult"></param>
         </member>
-        <member name="M:MilvaMongoTemplate.API.Services.Common.Concrete.AccountService.ValidateUser(MilvaMongoTemplate.API.DTOs.AccountDTOs.LoginDTO)">
+        <member name="M:MilvaMongoTemplate.API.Services.Concrete.AccountService.ValidateUser(MilvaMongoTemplate.API.DTOs.AccountDTOs.LoginDTO)">
             <summary>
             Validating user to login.
             </summary>
             <param name="loginDTO"></param>
             <returns></returns>
         </member>
-        <member name="M:MilvaMongoTemplate.API.Services.Common.Concrete.AccountService.GenerateTokenWithRoleAsync(MilvaMongoTemplate.Entity.Collections.MilvaMongoTemplateUser,System.Boolean)">
+        <member name="M:MilvaMongoTemplate.API.Services.Concrete.AccountService.GenerateTokenWithRoleAsync(MilvaMongoTemplate.Entity.Collections.MilvaMongoTemplateUser,System.Boolean)">
             <summary>
             Roll is added according to user type and token is produced.
             </summary>
@@ -2009,7 +2009,7 @@
             <param name="isAppUser"></param>
             <returns></returns>
         </member>
-        <member name="M:MilvaMongoTemplate.API.Services.Common.Concrete.AccountService.GenerateToken(System.String,System.Collections.Generic.IList{System.String},System.Boolean)">
+        <member name="M:MilvaMongoTemplate.API.Services.Concrete.AccountService.GenerateToken(System.String,System.Collections.Generic.IList{System.String},System.Boolean)">
             <summary>
             If Authentication is successful, JWT tokens are generated.
             </summary>
@@ -2017,13 +2017,13 @@
             <param name="roles"></param>
             <param name="isAppUser"></param>
         </member>
-        <member name="M:MilvaMongoTemplate.API.Services.Common.Concrete.AccountService.GenerateVerificationCode">
+        <member name="M:MilvaMongoTemplate.API.Services.Concrete.AccountService.GenerateVerificationCode">
             <summary>
             Generates 6-digit verification code.
             </summary>
             <returns></returns>
         </member>
-        <member name="M:MilvaMongoTemplate.API.Services.Common.Concrete.AccountService.PrepareMailBodyDictionary(System.String[])">
+        <member name="M:MilvaMongoTemplate.API.Services.Concrete.AccountService.PrepareMailBodyDictionary(System.String[])">
             <summary>
             <para> Please add items to <paramref name="values"/> with this sorting; </para>
                      <para> - Mail Title         </para>
@@ -2036,10 +2036,10 @@
             <param name="values"></param>
             <returns></returns>
         </member>
-        <member name="M:MilvaMongoTemplate.API.Services.Common.Concrete.AccountService.SendActivityMailAsync(System.Collections.Generic.Dictionary{System.String,System.String},System.String,MilvaMongoTemplate.API.Services.Common.Concrete.AccountService.AccountActivity,System.String,System.String)">
+        <member name="M:MilvaMongoTemplate.API.Services.Concrete.AccountService.SendActivityMailAsync(System.Collections.Generic.Dictionary{System.String,System.String},System.String,MilvaMongoTemplate.API.Services.Concrete.AccountService.AccountActivity,System.String,System.String)">
             <summary>
             Sends email to logged-in user's email.
-            Please make sure <paramref name="localizedMailBodyContents"/> dictionary parameter taken from <see cref="M:MilvaMongoTemplate.API.Services.Common.Concrete.AccountService.PrepareMailBodyDictionary(System.String[])"/>.
+            Please make sure <paramref name="localizedMailBodyContents"/> dictionary parameter taken from <see cref="M:MilvaMongoTemplate.API.Services.Concrete.AccountService.PrepareMailBodyDictionary(System.String[])"/>.
             </summary>
             <param name="localizedMailBodyContents"></param>
             <param name="urlPath"></param>
@@ -2048,7 +2048,7 @@
             <param name="username"></param>
             <returns></returns>
         </member>
-        <member name="M:MilvaMongoTemplate.API.Services.Common.Concrete.AccountService.VerifyPhoneNumberAsync(System.String,System.String)">
+        <member name="M:MilvaMongoTemplate.API.Services.Concrete.AccountService.VerifyPhoneNumberAsync(System.String,System.String)">
             <summary>
             Verifies phonen number, if <paramref name="verificationCode"/> is correct.
             </summary>
@@ -2056,16 +2056,16 @@
             <param name="phoneNumber"></param>
             <returns></returns>
         </member>
-        <member name="M:MilvaMongoTemplate.API.Services.Common.Concrete.AccountService.CheckRegex(System.String,System.String)">
+        <member name="M:MilvaMongoTemplate.API.Services.Concrete.AccountService.CheckRegex(System.String,System.String)">
             <summary>
             Regex check for action parameter.
             </summary>
             <param name="input"></param>
             <param name="propName"></param>
         </member>
-        <member name="M:MilvaMongoTemplate.API.Services.Common.Concrete.AccountService.CheckLoginStatus(System.String)">
+        <member name="M:MilvaMongoTemplate.API.Services.Concrete.AccountService.CheckLoginStatus(System.String)">
             <summary>
-            Cheks <see cref="F:MilvaMongoTemplate.API.Services.Common.Concrete.AccountService._userName"/>. If is null or empty throwns <see cref="T:Milvasoft.Helpers.Exceptions.MilvaUserFriendlyException"/>. Otherwise does nothing.
+            Cheks <see cref="F:MilvaMongoTemplate.API.Services.Concrete.AccountService._userName"/>. If is null or empty throwns <see cref="T:Milvasoft.Helpers.Exceptions.MilvaUserFriendlyException"/>. Otherwise does nothing.
             </summary>
         </member>
     </members>

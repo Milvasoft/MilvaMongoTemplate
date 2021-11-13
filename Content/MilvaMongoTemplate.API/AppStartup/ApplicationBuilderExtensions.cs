@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
-using MilvaMongoTemplate.API.Helpers;
+using MilvaMongoTemplate.API.Helpers.Constants;
 using MilvaMongoTemplate.API.Helpers.Extensions;
 using MilvaMongoTemplate.Data.Utils;
 using Milvasoft.Helpers.FileOperations.Abstract;
@@ -15,149 +15,148 @@ using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
 
-namespace MilvaMongoTemplate.API.AppStartup
+namespace MilvaMongoTemplate.API.AppStartup;
+
+/// <summary>
+/// Application builder extension helpers.
+/// </summary>
+[ConfigureAwait(false)]
+public static class ApplicationBuilderExtensions
 {
     /// <summary>
-    /// Application builder extension helpers.
+    /// Static file definitions.
     /// </summary>
-    [ConfigureAwait(false)]
-    public static class ApplicationBuilderExtensions
+    /// <param name="app"></param>
+    /// <returns></returns>
+    public static void UseDirectoryBrowser(this IApplicationBuilder app)
     {
-        /// <summary>
-        /// Static file definitions.
-        /// </summary>
-        /// <param name="app"></param>
-        /// <returns></returns>
-        public static void UseDirectoryBrowser(this IApplicationBuilder app)
+        app.UseDirectoryBrowser(new DirectoryBrowserOptions()
         {
-            app.UseDirectoryBrowser(new DirectoryBrowserOptions()
-            {
-                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot", "Media Library")),
-                RequestPath = new PathString($"/{GlobalConstant.RoutePrefix}/MediaLibrary")
-            });
-        }
+            FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot", "Media Library")),
+            RequestPath = new PathString($"/{GlobalConstant.RoutePrefix}/MediaLibrary")
+        });
+    }
 
-        /// <summary>
-        /// Static file definitions
-        /// </summary>
-        /// <param name="app"></param>
-        /// <returns></returns>
-        public static void UseStaticFiles(this IApplicationBuilder app)
+    /// <summary>
+    /// Static file definitions
+    /// </summary>
+    /// <param name="app"></param>
+    /// <returns></returns>
+    public static void UseStaticFiles(this IApplicationBuilder app)
+    {
+        app.UseStaticFiles($"/{GlobalConstant.RoutePrefix}");
+        app.UseStaticFiles(new StaticFileOptions()
         {
-            app.UseStaticFiles($"/{GlobalConstant.RoutePrefix}");
-            app.UseStaticFiles(new StaticFileOptions()
-            {
-                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "StaticFiles")),
-                RequestPath = new PathString($"/{GlobalConstant.RoutePrefix}/admin")
-            });
-            app.UseStaticFiles(new StaticFileOptions()
-            {
-                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot", @"Media Library/Image Library")),
-                RequestPath = new PathString($"/{GlobalConstant.RoutePrefix}/ImageLibrary")
-            });
-            app.UseStaticFiles(new StaticFileOptions()
-            {
-                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot", @"Media Library/Video Library")),
-                RequestPath = new PathString($"/{GlobalConstant.RoutePrefix}/VideoLibrary")
-            });
-        }
-
-        /// <summary>
-        /// <para> Adds a Microsoft.AspNetCore.Routing.EndpointMiddleware middleware to the specified
-        ///        Microsoft.AspNetCore.Builder.IApplicationBuilder with the Microsoft.AspNetCore.Routing.EndpointDataSource
-        ///        instances built from configured Microsoft.AspNetCore.Routing.IEndpointRouteBuilder.
-        ///        The Microsoft.AspNetCore.Routing.EndpointMiddleware will execute the Microsoft.AspNetCore.Http.Endpoint
-        ///        associated with the current request. </para>
-        /// </summary>
-        /// <param name="app"> The Microsoft.AspNetCore.Builder.IApplicationBuilder to add the middleware to. </param>
-        /// <returns>  A reference to this instance after the operation has completed. </returns>
-        public static void UseEndpoints(this IApplicationBuilder app)
+            FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "StaticFiles")),
+            RequestPath = new PathString($"/{GlobalConstant.RoutePrefix}/admin")
+        });
+        app.UseStaticFiles(new StaticFileOptions()
         {
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllerRoute("Default", "{controller=Product}/{action=product}/{id?}");
-            });
-        }
-
-        /// <summary>
-        /// Static file definitions.
-        /// </summary>
-        /// <param name="app"></param>
-        /// <returns></returns>
-        public static void UseSwagger(this IApplicationBuilder app)
+            FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot", @"Media Library/Image Library")),
+            RequestPath = new PathString($"/{GlobalConstant.RoutePrefix}/ImageLibrary")
+        });
+        app.UseStaticFiles(new StaticFileOptions()
         {
-            app.UseSwagger(c =>
-            {
-                c.SerializeAsV2 = true;
-                c.RouteTemplate = GlobalConstant.RoutePrefix + "/docs/{documentName}/docs.json";
-            }).UseSwaggerUI(c =>
-            {
-                c.DefaultModelExpandDepth(-1);
-                c.DefaultModelsExpandDepth(1);
-                c.DefaultModelRendering(ModelRendering.Model);
-                c.DocExpansion(DocExpansion.None);
-                c.RoutePrefix = $"{GlobalConstant.RoutePrefix}/documentation";
-                c.SwaggerEndpoint($"/{GlobalConstant.RoutePrefix}/docs/v1.0/docs.json", "MilvaMongoTemplate API v1.0");
-                c.SwaggerEndpoint($"/{GlobalConstant.RoutePrefix}/docs/v1.1/docs.json", "MilvaMongoTemplate API v1.1");
-                c.InjectStylesheet($"/{GlobalConstant.RoutePrefix}/swagger-ui/custom.css");
-                c.InjectJavascript($"/{GlobalConstant.RoutePrefix}/swagger-ui/custom.js");
-            });
-        }
+            FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot", @"Media Library/Video Library")),
+            RequestPath = new PathString($"/{GlobalConstant.RoutePrefix}/VideoLibrary")
+        });
+    }
 
-        /// <summary>
-        /// Adds the required middleware to use the localization. Configures the options before add.
-        /// </summary>
-        /// <param name="app"></param>
-        /// <returns></returns>
-        public static IApplicationBuilder UseRequestLocalization(this IApplicationBuilder app)
+    /// <summary>
+    /// <para> Adds a Microsoft.AspNetCore.Routing.EndpointMiddleware middleware to the specified
+    ///        Microsoft.AspNetCore.Builder.IApplicationBuilder with the Microsoft.AspNetCore.Routing.EndpointDataSource
+    ///        instances built from configured Microsoft.AspNetCore.Routing.IEndpointRouteBuilder.
+    ///        The Microsoft.AspNetCore.Routing.EndpointMiddleware will execute the Microsoft.AspNetCore.Http.Endpoint
+    ///        associated with the current request. </para>
+    /// </summary>
+    /// <param name="app"> The Microsoft.AspNetCore.Builder.IApplicationBuilder to add the middleware to. </param>
+    /// <returns>  A reference to this instance after the operation has completed. </returns>
+    public static void UseEndpoints(this IApplicationBuilder app)
+    {
+        app.UseEndpoints(endpoints =>
         {
-            CultureInfo.CurrentCulture = new CultureInfo("tr-TR");
+            endpoints.MapControllerRoute("Default", "{controller=Product}/{action=product}/{id?}");
+        });
+    }
 
-            var supportedCultures = new List<CultureInfo>
+    /// <summary>
+    /// Static file definitions.
+    /// </summary>
+    /// <param name="app"></param>
+    /// <returns></returns>
+    public static void UseSwagger(this IApplicationBuilder app)
+    {
+        app.UseSwagger(c =>
+        {
+            c.SerializeAsV2 = true;
+            c.RouteTemplate = GlobalConstant.RoutePrefix + "/docs/{documentName}/docs.json";
+        }).UseSwaggerUI(c =>
+        {
+            c.DefaultModelExpandDepth(-1);
+            c.DefaultModelsExpandDepth(1);
+            c.DefaultModelRendering(ModelRendering.Model);
+            c.DocExpansion(DocExpansion.None);
+            c.RoutePrefix = $"{GlobalConstant.RoutePrefix}/documentation";
+            c.SwaggerEndpoint($"/{GlobalConstant.RoutePrefix}/docs/v1.0/docs.json", "MilvaMongoTemplate API v1.0");
+            c.SwaggerEndpoint($"/{GlobalConstant.RoutePrefix}/docs/v1.1/docs.json", "MilvaMongoTemplate API v1.1");
+            c.InjectStylesheet($"/{GlobalConstant.RoutePrefix}/swagger-ui/custom.css");
+            c.InjectJavascript($"/{GlobalConstant.RoutePrefix}/swagger-ui/custom.js");
+        });
+    }
+
+    /// <summary>
+    /// Adds the required middleware to use the localization. Configures the options before add.
+    /// </summary>
+    /// <param name="app"></param>
+    /// <returns></returns>
+    public static IApplicationBuilder UseRequestLocalization(this IApplicationBuilder app)
+    {
+        CultureInfo.CurrentCulture = new CultureInfo("tr-TR");
+
+        var supportedCultures = new List<CultureInfo>
             {
                 new CultureInfo("tr-TR"),
                 new CultureInfo("en-US")
             };
-            var options = new RequestLocalizationOptions
-            {
-                DefaultRequestCulture = new RequestCulture("tr-TR"),
-                SupportedCultures = supportedCultures,
-                SupportedUICultures = supportedCultures
-            };
-
-            return app.UseRequestLocalization(options);
-        }
-
-        /// <summary>
-        /// This method provides async configure process which configure() called by the runtime.
-        /// </summary>
-        /// <param name="app"></param>
-        /// <param name="serviceCollection"></param>
-        /// <returns></returns>
-        public static async Task ConfigureAppStartupAsync(this IApplicationBuilder app, IServiceCollection serviceCollection)
+        var options = new RequestLocalizationOptions
         {
-            var jsonOperations = app.ApplicationServices.GetRequiredService<IJsonOperations>();
+            DefaultRequestCulture = new RequestCulture("tr-TR"),
+            SupportedCultures = supportedCultures,
+            SupportedUICultures = supportedCultures
+        };
 
-            #region Fill Constants From Jsons
+        return app.UseRequestLocalization(options);
+    }
 
-            await Console.Out.WriteAppInfoAsync("Json contents assignment starting...");
+    /// <summary>
+    /// This method provides async configure process which configure() called by the runtime.
+    /// </summary>
+    /// <param name="app"></param>
+    /// <param name="serviceCollection"></param>
+    /// <returns></returns>
+    public static async Task ConfigureAppStartupAsync(this IApplicationBuilder app, IServiceCollection serviceCollection)
+    {
+        var jsonOperations = app.ApplicationServices.GetRequiredService<IJsonOperations>();
 
-            await jsonOperations.FillConstansAsync();
+        #region Fill Constants From Jsons
 
-            serviceCollection.AddSingleton(GlobalConstant.StringBlacklist);
+        await Console.Out.WriteAppInfoAsync("Json contents assignment starting...");
 
-            await Console.Out.WriteAppInfoAsync("Json contents are assigned to variables.");
+        await jsonOperations.FillConstansAsync();
 
-            #endregion
+        serviceCollection.AddSingleton(GlobalConstant.StringBlacklist);
 
-            if (Startup.WebHostEnvironment.EnvironmentName == "Production")
-            {
-                await Console.Out.WriteAppInfoAsync("Seed starting...\n");
+        await Console.Out.WriteAppInfoAsync("Json contents are assigned to variables.");
 
-                await app.ResetDataAsync();
+        #endregion
 
-                await Console.Out.WriteAppInfoAsync("Database seed successfully completed.");
-            }
+        if (Startup.WebHostEnvironment.EnvironmentName == "Production")
+        {
+            await Console.Out.WriteAppInfoAsync("Seed starting...\n");
+
+            await app.ResetDataAsync();
+
+            await Console.Out.WriteAppInfoAsync("Database seed successfully completed.");
         }
     }
 }

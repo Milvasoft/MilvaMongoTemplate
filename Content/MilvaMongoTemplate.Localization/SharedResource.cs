@@ -1,9 +1,8 @@
-﻿namespace MilvaMongoTemplate.Localization
+﻿namespace MilvaMongoTemplate.Localization;
+
+/// <summary>
+/// Dummy class for localization.
+/// </summary>
+public class SharedResource
 {
-    /// <summary>
-    /// Dummy class for localization.
-    /// </summary>
-    public class SharedResource
-    {
-    }
 }
