@@ -78,6 +78,16 @@ public static class GlobalConstant
     public static string DocumentLibraryPath { get; } = Path.Combine(MediaLibraryPath, "Document Library");
 
     /// <summary>
+    /// Main mail address information.
+    /// </summary>
+    public static MailConfiguration MainMail { get; set; }
+
+    /// <summary>
+    /// Configurations.
+    /// </summary>
+    public static Configurations Configurations { get; set; }
+
+    /// <summary>
     /// Mail content of injection mails.
     /// </summary>
     public static string MailContent { get; } = $"Injection warning from MilvaMongoTemplate.";

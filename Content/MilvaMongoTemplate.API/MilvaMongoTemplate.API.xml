@@ -97,12 +97,11 @@
             </summary>
             <param name="services"></param>
         </member>
-        <member name="M:MilvaMongoTemplate.API.AppStartup.ServiceCollectionExtensions.AddJwtBearer(Microsoft.Extensions.DependencyInjection.IServiceCollection,Milvasoft.Helpers.FileOperations.Abstract.IJsonOperations)">
+        <member name="M:MilvaMongoTemplate.API.AppStartup.ServiceCollectionExtensions.AddJwtBearer(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
             <summary>
             Configures JWT Token Authentication.
             </summary>
             <param name="services"></param>
-            <param name="jSONFile"></param>
         </member>
         <member name="M:MilvaMongoTemplate.API.AppStartup.ServiceCollectionExtensions.ConfigureDependencyInjection(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
             <summary>
@@ -960,6 +959,22 @@
             </summary>
             <param name="minValue"></param>
         </member>
+        <member name="T:MilvaMongoTemplate.API.Helpers.Attributes.ValidationAttributes.MValidateEnumAttribute">
+            <summary>
+            Determines minimum decimal value.
+            </summary>
+        </member>
+        <member name="M:MilvaMongoTemplate.API.Helpers.Attributes.ValidationAttributes.MValidateEnumAttribute.#ctor">
+            <summary>
+            Constructor of atrribute.
+            </summary>
+        </member>
+        <member name="M:MilvaMongoTemplate.API.Helpers.Attributes.ValidationAttributes.MValidateEnumAttribute.#ctor(System.Type)">
+            <summary>
+            Constructor of atrribute.
+            </summary>
+            <param name="enumType"></param>
+        </member>
         <member name="T:MilvaMongoTemplate.API.Helpers.Attributes.ValidationAttributes.MValidateIdAttribute">
             <summary>
             Specifies that the class or property that this attribute is applied to requires the specified the valid id.
@@ -969,6 +984,29 @@
             <summary>
             Constructor that accepts the maximum length of the string.
             </summary>
+        </member>
+        <member name="T:MilvaMongoTemplate.API.Helpers.Attributes.ValidationAttributes.MValidateListCountAttribute">
+            <summary>
+            Specifies that the class or property that this attribute is applied to requires the specified the valid list count.
+            </summary>
+        </member>
+        <member name="M:MilvaMongoTemplate.API.Helpers.Attributes.ValidationAttributes.MValidateListCountAttribute.#ctor">
+            <summary>
+            Constructor of atrribute.
+            </summary>
+        </member>
+        <member name="M:MilvaMongoTemplate.API.Helpers.Attributes.ValidationAttributes.MValidateListCountAttribute.#ctor(System.Int32)">
+            <summary>
+            Constructor of atrribute.
+            </summary>
+            <param name="minValue"></param>
+        </member>
+        <member name="M:MilvaMongoTemplate.API.Helpers.Attributes.ValidationAttributes.MValidateListCountAttribute.#ctor(System.Int32,System.Int32)">
+            <summary>
+            Constructor of atrribute.
+            </summary>
+            <param name="minValue"></param>
+            <param name="maxValue"></param>
         </member>
         <member name="T:MilvaMongoTemplate.API.Helpers.Attributes.ValidationAttributes.MValidateStringAttribute">
             <summary>
@@ -1058,6 +1096,16 @@
             Path of "Video Library" folder in wwwroot folder.
             </summary>
         </member>
+        <member name="P:MilvaMongoTemplate.API.Helpers.Constants.GlobalConstant.MainMail">
+            <summary>
+            Main mail address information.
+            </summary>
+        </member>
+        <member name="P:MilvaMongoTemplate.API.Helpers.Constants.GlobalConstant.Configurations">
+            <summary>
+            Configurations.
+            </summary>
+        </member>
         <member name="P:MilvaMongoTemplate.API.Helpers.Constants.GlobalConstant.MailContent">
             <summary>
             Mail content of injection mails.
@@ -1103,14 +1151,14 @@
             Determines app is real production or run in production test server.
             </summary>
         </member>
-        <member name="T:MilvaMongoTemplate.API.Helpers.Constants.MilvaMongoTemplateStringKey">
-            <summary>
-            Constants of localizer keys.
-            </summary>
-        </member>
         <member name="T:MilvaMongoTemplate.API.Helpers.Constants.RoleName">
             <summary>
             Constants of MilvaMongoTemplate roles.
+            </summary>
+        </member>
+        <member name="T:MilvaMongoTemplate.API.Helpers.Constants.StringKey">
+            <summary>
+            Constants of localizer keys.
             </summary>
         </member>
         <member name="T:MilvaMongoTemplate.API.Helpers.Extensions.HelperExtensions">
@@ -1302,6 +1350,13 @@
             <param name="message"></param>
             <returns></returns>
         </member>
+        <member name="M:MilvaMongoTemplate.API.Helpers.Extensions.HelperExtensions.ReadBodyFromRequestAsync(Microsoft.AspNetCore.Http.HttpRequest)">
+            <summary>
+            Reads body from http request.
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
         <member name="P:MilvaMongoTemplate.API.Helpers.Extensions.HelperExtensions.LanguageIdIsoPairs">
             <summary>
             Stores language id and iso code.
@@ -1484,6 +1539,11 @@
         <member name="P:MilvaMongoTemplate.API.Helpers.Models.AllowedFileExtensions.AllowedExtensions">
             <summary>
             Allowed extensions for this media type.
+            </summary>
+        </member>
+        <member name="T:MilvaMongoTemplate.API.Helpers.Models.IJsonModel">
+            <summary>
+            Indicates that the class to which it is implemented represents the model of a json file in the project.
             </summary>
         </member>
         <member name="T:MilvaMongoTemplate.API.Helpers.ObjectIdJsonConverter">

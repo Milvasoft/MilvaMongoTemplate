@@ -5,9 +5,10 @@ using Newtonsoft.Json;
 namespace MilvaMongoTemplate.API.Helpers.Models;
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-[JsonObject("tokenManagement")]
 public class TokenManagement : ITokenManagement
 {
+    public string Key { get; set; }
+
     [MValidateString(1000)]
     public string Secret { get; set; }
 

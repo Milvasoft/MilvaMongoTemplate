@@ -1,4 +1,5 @@
 ﻿using Fody;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
@@ -137,5 +138,33 @@ public static partial class HelperExtensions
         await textWriter.WriteAsync("\n\n info: ");
         Console.ForegroundColor = ConsoleColor.Gray;
         await textWriter.WriteAsync($"{message}");
+    }
+
+    /// <summary>
+    /// Reads body from http request.
+    /// </summary>
+    /// <param name="request"></param>
+    /// <returns></returns>
+    public static async Task<string> ReadBodyFromRequestAsync(this HttpRequest request)
+    {
+        string json = null;
+
+        if (request.HasJsonContentType())
+        {
+            if (request.Body.CanRead)
+            {
+                Stream requestStream = request.Body;
+
+                requestStream.Seek(0, SeekOrigin.Begin);
+
+                using var reader = new StreamReader(requestStream);
+
+                json = await reader.ReadToEndAsync();
+
+                request.Body.Position = 0;
+            }
+        }
+
+        return json;
     }
 }

@@ -4,7 +4,7 @@
 /// <summary>
 /// Constants of localizer keys.
 /// </summary>
-public static class MilvaMongoTemplateStringKey
+public static class StringKey
 {
     public const string AccountInfo = nameof(AccountInfo);
     public const string Account = nameof(Account);
@@ -18,5 +18,7 @@ public static class MilvaMongoTemplateStringKey
     public const string LocalizedEntityName = nameof(LocalizedEntityName);
     public const string Authorization = nameof(Authorization);
     public const string Action = nameof(Action);
+    public const string Public = nameof(Public);
+    public const string MilvaTemplateMail = nameof(MilvaTemplateMail);
 }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member

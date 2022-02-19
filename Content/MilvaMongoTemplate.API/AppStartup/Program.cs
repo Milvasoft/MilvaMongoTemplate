@@ -62,9 +62,8 @@ public class Program
                             .UseWebRoot("wwwroot")
                             .UseStartup<Startup>()
                             .UseDefaultServiceProvider(options => options.ValidateScopes = false)
-                            .ConfigureLogging(config => config.ClearProviders())
-                            .UseSerilog();
+                            .ConfigureLogging(config => config.ClearProviders());
 
-              });
+              }).UseSerilog();
 
 }

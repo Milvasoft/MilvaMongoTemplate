@@ -38,6 +38,7 @@ using Newtonsoft.Json;
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Text;
@@ -138,13 +139,11 @@ public static class ServiceCollectionExtensions
     /// Configures JWT Token Authentication.
     /// </summary>
     /// <param name="services"></param>
-    /// <param name="jSONFile"></param>
-    public static void AddJwtBearer(this IServiceCollection services, IJsonOperations jSONFile)
+    public static void AddJwtBearer(this IServiceCollection services)
     {
-        var localizer = services.BuildServiceProvider().GetRequiredService<IStringLocalizer<SharedResource>>();
+        var tokenManagement = GlobalConstant.Configurations.Tokens.First(i => i.Key == StringKey.Public);
 
-        var tokenManagement = jSONFile.GetCryptedContentAsync<TokenManagement>(Path.Combine(GlobalConstant.JsonFilesPath,
-                                                                                            "tokenmanagement.json")).Result;
+        var localizer = services.BuildServiceProvider().GetRequiredService<IStringLocalizer<SharedResource>>();
 
         services.AddSingleton<ITokenManagement>(tokenManagement);
 
@@ -244,10 +243,13 @@ public static class ServiceCollectionExtensions
     {
         services.AddSingleton<SharedResource>();
 
-        services.AddSingleton<IMilvaMailSender>(new MilvaMailSender(GlobalConstant.AppMail,
-                                                                    new NetworkCredential(GlobalConstant.AppMail, string.Empty),
-                                                                    587,
-                                                                    "mail.yourdomain.com"));
+        GlobalConstant.MainMail = GlobalConstant.Configurations.Mails.First(i => i.Key == StringKey.MilvaTemplateMail);
+
+        services.AddSingleton<IMilvaMailSender>(new MilvaMailSender(GlobalConstant.MainMail.Sender,
+                                                                    new NetworkCredential(GlobalConstant.MainMail.Sender, GlobalConstant.MainMail.SenderPass),
+                                                                    GlobalConstant.MainMail.SmtpPort,
+                                                                    GlobalConstant.MainMail.SmtpHost,
+                                                                    true));
 
         services.AddScoped((_) => new MilvaEncryptionProvider(GlobalConstant.MilvaMongoTemplateKey));
 

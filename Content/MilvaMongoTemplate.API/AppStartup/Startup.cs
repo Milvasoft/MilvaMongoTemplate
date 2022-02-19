@@ -5,11 +5,14 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Localization;
+using MilvaMongoTemplate.API.Helpers.Constants;
 using MilvaMongoTemplate.API.Helpers.Extensions;
+using MilvaMongoTemplate.API.Helpers.Models;
 using MilvaMongoTemplate.API.Middlewares;
 using MilvaMongoTemplate.Localization;
 using Milvasoft.Helpers.Middlewares;
 using System;
+using System.IO;
 #endregion
 
 namespace MilvaMongoTemplate.API.AppStartup;
@@ -77,6 +80,11 @@ public class Startup
 
         Console.Out.WriteAppInfo("Service collection registration starting...");
 
+        var jsonOperations = services.AddJsonOperations();
+
+        GlobalConstant.Configurations = jsonOperations.GetCryptedContentAsync<Configurations>(Path.Combine(GlobalConstant.JsonFilesPath,
+                                                                                                           "configurations.json")).Result;
+
         services.AddLocalization(options => options.ResourcesPath = "Resources");
 
         //services.AddMilvaRedisCaching();
@@ -89,13 +97,11 @@ public class Startup
 
         services.ConfigureDependencyInjection();
 
-        var jsonOperations = services.AddJsonOperations();
-
         services.ConfigureDatabase(jsonOperations);
 
         services.AddIdentity();
 
-        services.AddJwtBearer(jsonOperations);
+        services.AddJwtBearer();
 
         services.AddSwagger();
 

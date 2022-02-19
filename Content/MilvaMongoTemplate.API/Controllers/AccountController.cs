@@ -142,7 +142,7 @@ public class AccountController : ControllerBase
     [Authorize(Roles = RoleName.AppUser)]
     public async Task<IActionResult> UpdateMyAccountAsync(AppUserUpdateDTO userDTO)
     {
-        var successMessage = _sharedLocalizer.GetSuccessMessage(MilvaMongoTemplateStringKey.Account, CrudOperation.Update);
+        var successMessage = _sharedLocalizer.GetSuccessMessage(StringKey.Account, CrudOperation.Update);
 
         return await _accountService.UpdateAccountAsync(userDTO).GetObjectResponseAsync<object>(successMessage);
     }
@@ -155,7 +155,7 @@ public class AccountController : ControllerBase
     [Authorize(Roles = RoleName.AppUser)]
     public async Task<IActionResult> DeleteAccountAsync()
     {
-        var successMessage = _sharedLocalizer.GetSuccessMessage(MilvaMongoTemplateStringKey.Account, CrudOperation.Delete);
+        var successMessage = _sharedLocalizer.GetSuccessMessage(StringKey.Account, CrudOperation.Delete);
 
         return await _accountService.DeleteAccountAsync().GetObjectResponseAsync<object>(successMessage);
     }
@@ -397,7 +397,7 @@ public class AccountController : ControllerBase
     [Authorize(Roles = RoleName.Administrator)]
     public async Task<IActionResult> GetAllUsersAsync([FromBody] PaginationParams paginationParams)
     {
-        var errorMessage = _sharedLocalizer.GetErrorMessage(MilvaMongoTemplateStringKey.User, CrudOperation.GetAll);
+        var errorMessage = _sharedLocalizer.GetErrorMessage(StringKey.User, CrudOperation.GetAll);
 
         var users = await _accountService.GetAllUsersAsync(paginationParams);
 
@@ -413,7 +413,7 @@ public class AccountController : ControllerBase
     [Authorize(Roles = RoleName.Administrator)]
     public async Task<IActionResult> GetUserByIdAsync(ObjectId userId)
     {
-        var errorMessage = _sharedLocalizer.GetErrorMessage(MilvaMongoTemplateStringKey.User, CrudOperation.GetById);
+        var errorMessage = _sharedLocalizer.GetErrorMessage(StringKey.User, CrudOperation.GetById);
 
         var user = await _accountService.GetUserByIdAsync(userId);
 
@@ -429,7 +429,7 @@ public class AccountController : ControllerBase
     [Authorize(Roles = RoleName.Administrator)]
     public async Task<IActionResult> CreateUserAsync([FromBody] MilvaMongoTemplateUserCreateDTO userDTO)
     {
-        var successMessage = _sharedLocalizer.GetSuccessMessage(MilvaMongoTemplateStringKey.User, CrudOperation.Add);
+        var successMessage = _sharedLocalizer.GetSuccessMessage(StringKey.User, CrudOperation.Add);
 
         return await _accountService.CreateUserAsync(userDTO).GetObjectResponseAsync(successMessage);
     }
@@ -443,7 +443,7 @@ public class AccountController : ControllerBase
     [Authorize(Roles = RoleName.Administrator)]
     public async Task<IActionResult> UpdateUserAsync([FromBody] MilvaMongoTemplateUserUpdateDTO userDTO)
     {
-        var successMessage = _sharedLocalizer.GetSuccessMessage(MilvaMongoTemplateStringKey.User, CrudOperation.Update);
+        var successMessage = _sharedLocalizer.GetSuccessMessage(StringKey.User, CrudOperation.Update);
 
         return await _accountService.UpdateUserAsync(userDTO).GetObjectResponseAsync<object>(successMessage);
     }
@@ -457,7 +457,7 @@ public class AccountController : ControllerBase
     [Authorize(Roles = RoleName.Administrator)]
     public async Task<IActionResult> DeleteUserAsync(ObjectId userId)
     {
-        var successMessage = _sharedLocalizer.GetSuccessMessage(MilvaMongoTemplateStringKey.User, CrudOperation.Delete);
+        var successMessage = _sharedLocalizer.GetSuccessMessage(StringKey.User, CrudOperation.Delete);
 
         return await _accountService.DeleteUserAsync(userId).GetObjectResponseAsync<object>(successMessage);
     }
