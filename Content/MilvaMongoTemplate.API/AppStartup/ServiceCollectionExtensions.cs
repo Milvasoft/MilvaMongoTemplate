@@ -242,6 +242,12 @@ public static class ServiceCollectionExtensions
     public static void ConfigureDependencyInjection(this IServiceCollection services)
     {
         services.AddSingleton<SharedResource>();
+        services.AddScoped<IJsonOperations, JsonOperations>();
+        services.AddSingleton<IMilvaLogger, MilvaMongoTemplateLogger>();
+        services.AddScoped<IApplicationBuilder, ApplicationBuilder>();
+        services.AddTransient(typeof(Lazy<>), typeof(MilvaLazy<>));
+        services.AddHttpClient();
+        services.AddHttpContextAccessor();
 
         GlobalConstant.MainMail = GlobalConstant.Configurations.Mails.First(i => i.Key == StringKey.MilvaTemplateMail);
 
@@ -253,11 +259,7 @@ public static class ServiceCollectionExtensions
 
         services.AddScoped((_) => new MilvaEncryptionProvider(GlobalConstant.MilvaMongoTemplateKey));
 
-        services.AddScoped<IMilvaLogger, MilvaMongoTemplateLogger>();
 
-        services.AddScoped<IApplicationBuilder, ApplicationBuilder>();
-
-        services.AddTransient(typeof(Lazy<>), typeof(MilvaLazy<>));
 
         #region Repositories
 

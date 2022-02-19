@@ -150,13 +150,13 @@ public static class ApplicationBuilderExtensions
 
         #endregion
 
-        if (Startup.WebHostEnvironment.EnvironmentName == "Production")
-        {
+        //if (Startup.WebHostEnvironment.EnvironmentName == "Production")
+        //{
             await Console.Out.WriteAppInfoAsync("Seed starting...\n");
 
             await app.ResetDataAsync();
 
             await Console.Out.WriteAppInfoAsync("Database seed successfully completed.");
-        }
+        //}
     }
 }

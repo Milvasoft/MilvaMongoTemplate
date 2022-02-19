@@ -98,7 +98,7 @@ public class AccountService : IAccountService
                           Lazy<IRedisCacheService> lazyRedisCacheService,
                           Lazy<IMilvaLogger> lazyMilvaLogger,
                           Lazy<MilvaEncryptionProvider> lazyMilvaEncryptionProvider,
-                          HttpContextAccessor httpContextAccessor,
+                          IHttpContextAccessor httpContextAccessor,
                           ITokenManagement tokenManagement,
                           IStringLocalizer<SharedResource> localizer)
     {

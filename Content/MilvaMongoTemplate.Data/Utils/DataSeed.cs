@@ -126,7 +126,7 @@ public static class DataSeed
                     Id = 13.ToObjectId(),
                     Name = "Admin",
                     Surname = "Admin",
-                    UserName = "admin",
+                    UserName = "templateAdmin",
                     CreationDate = DateTime.Now,
                     Email = "admin@milvasoft.com",
                     PhoneNumber = "0 506 000 00 00",
@@ -142,7 +142,7 @@ public static class DataSeed
 
         foreach (var user in users)
         {
-            var userPassword = $"{user.Name.ToUpper().First()}{user.Surname.ToLower().First()}+1234";
+            var userPassword = $"{user.UserName}-!";
 
             user.Name = await _milvaEncryptionProvider.EncryptAsync(user.Name).ConfigureAwait(false);
             user.Surname = await _milvaEncryptionProvider.EncryptAsync(user.Surname).ConfigureAwait(false);
