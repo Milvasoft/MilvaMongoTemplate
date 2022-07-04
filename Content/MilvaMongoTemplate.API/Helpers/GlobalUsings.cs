@@ -1,0 +1,22 @@
+﻿global using Fody;
+global using MilvaMongoTemplate.API.DTOs;
+global using MilvaMongoTemplate.API.Helpers.Constants;
+global using MilvaMongoTemplate.API.Helpers.Extensions;
+global using MilvaMongoTemplate.Entity.Collections;
+global using MilvaMongoTemplate.Localization;
+global using Milvasoft.Core;
+global using Milvasoft.Core.Exceptions;
+global using Milvasoft.Core.Extensions;
+global using Milvasoft.Core.Utils.Constants;
+global using Milvasoft.Core.Utils.Models;
+global using Milvasoft.DataAccess.MongoDB.Abstract;
+global using Milvasoft.DataAccess.MongoDB.Concrete;
+global using MongoDB.Bson;
+global using MongoDB.Driver;
+global using System;
+global using System.Collections.Generic;
+global using System.Linq;
+global using System.Linq.Expressions;
+global using System.Threading.Tasks;
+global using ResourceKey = MilvaMongoTemplate.Localization.Resources.SharedResource;
+

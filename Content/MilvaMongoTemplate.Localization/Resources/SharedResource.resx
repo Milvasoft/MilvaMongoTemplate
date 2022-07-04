@@ -264,8 +264,8 @@
   <data name="RegexExamplePhoneNumber" xml:space="preserve">
     <value>0 505 010 79 85</value>
   </data>
-  <data name="LocalizedName" xml:space="preserve">
-    <value>İsim</value>
+  <data name="LocalizedNameSurname" xml:space="preserve">
+    <value>Ad-Soyad</value>
   </data>
   <data name="LocalizedPassword" xml:space="preserve">
     <value>Parola</value>
@@ -375,7 +375,7 @@
   <data name="SuccessfullyLoginMessage" xml:space="preserve">
     <value>Başarıyla giriş yapıldı.</value>
   </data>
-  <data name="SuccessfullyLoguotMessage" xml:space="preserve">
+  <data name="SuccessfullyLogoutMessage" xml:space="preserve">
     <value>Başarıyla çıkış yapıldı.</value>
   </data>
   <data name="SuccessfullyOperationMessage" xml:space="preserve">
@@ -548,5 +548,86 @@
   </data>
   <data name="WrongPhoneNumberVerificationCode" xml:space="preserve">
     <value>Doğrulama kodunuz yanlış.</value>
+  </data>
+  <data name="AtLeastSelectOneRole" xml:space="preserve">
+    <value>En az 1 adet rol seçmelisiniz.</value>
+  </data>
+  <data name="CannotDeleteAppUser" xml:space="preserve">
+    <value>You cannot delete app user.</value>
+  </data>
+  <data name="CannotDeleteDefaultAdminUser" xml:space="preserve">
+    <value>You cannot delete default admin user.</value>
+  </data>
+  <data name="EmailChangeMailBodyButtonText" xml:space="preserve">
+    <value>Emailimi Değiştir</value>
+  </data>
+  <data name="EmailChangeMailBodyDesciption" xml:space="preserve">
+    <value>Aşağıdaki butona tıklayarak email değişikliği işlemini gerçekleştirebileceğiniz sayfaya ulaşabilirsiniz. Butonu görüntüleyemiyorsanız &lt;a href="~ButtonLink"&gt;buraya&lt;/a&gt; tıklayınız. Email değişiklik işleminde hata aldıysanız, lütfen &lt;a href="{0}" target="_blank"&gt;teknik ekip &lt;/a&gt; ile iletişime geçiniz. </value>
+  </data>
+  <data name="EmailChangeMailBodyResendText" xml:space="preserve">
+    <value>Böyle bir istekte bulunmadıysanız, şifrenizi yenilemenizi öneririz. </value>
+  </data>
+  <data name="EmailChangeMailBodyTitle" xml:space="preserve">
+    <value>Email Değişikliği</value>
+  </data>
+  <data name="EmailChangeMailTitle" xml:space="preserve">
+    <value>MilvaMongoTemplate Email Değişikliği</value>
+  </data>
+  <data name="InvalidOperation" xml:space="preserve">
+    <value>Geçersiz bir işlem yapmaya çalışıyorsunuz.</value>
+  </data>
+  <data name="PasswordResetMailBodyButtonText" xml:space="preserve">
+    <value>Şifremi Sıfırla</value>
+  </data>
+  <data name="PasswordResetMailBodyDesciption" xml:space="preserve">
+    <value>Aşağıdaki butona tıklayarak şifre sıfırlama işlemini gerçekleştirebileceğiniz sayfaya ulaşabilirsiniz. Butonu görüntüleyemiyorsanız &lt;a href="~ButtonLink"&gt;buraya&lt;/a&gt; tıklayınız. Şifre sıfırlama işleminde hata alırsanız, lütfen &lt;a href="{0}" target="_blank"&gt;teknik ekip &lt;/a&gt; ile iletişime geçiniz.</value>
+  </data>
+  <data name="PasswordResetMailBodyResendText" xml:space="preserve">
+    <value>Böyle bir istekte bulunmadıysanız, şifrenizi değiştirmenizi öneririz. </value>
+  </data>
+  <data name="PasswordResetMailBodyTitle" xml:space="preserve">
+    <value>Şifre Sıfırlama</value>
+  </data>
+  <data name="PasswordResetMailTitle" xml:space="preserve">
+    <value>MilvaMongoTemplate Şifre Sıfırlama</value>
+  </data>
+  <data name="PhoneNumberExists" xml:space="preserve">
+    <value>Bu telefon numarası zaten kullanımda. Lütfen başka bir telefon numarası giriniz.</value>
+  </data>
+  <data name="PleaseEnterUsername" xml:space="preserve">
+    <value>Lütfen kullanıcı adınızı giriniz.</value>
+  </data>
+  <data name="TokenExpired" xml:space="preserve">
+    <value>Oturumunuz zaman aşımına uğradı lütfen tekrar giriş yapınız.</value>
+  </data>
+  <data name="UserHaventEmail" xml:space="preserve">
+    <value>Hesabınıza tanımlı email adresi bulunmadığı için hesap işlemlerini gerçekleştiremezsiniz.</value>
+  </data>
+  <data name="UsernameOrEmailExists" xml:space="preserve">
+    <value>Bu kullanıcı adına veya email adresine sahip bir kullanıcı zaten var.</value>
+  </data>
+  <data name="UserNotExitsWithEmail" xml:space="preserve">
+    <value>Bu mail adresine sahip bir kullanıcı bulunamadı.</value>
+  </data>
+  <data name="VerificationMailBodyButtonText" xml:space="preserve">
+    <value>Emaili Doğrula</value>
+  </data>
+  <data name="VerificationMailBodyDescription" xml:space="preserve">
+    <value>Aşağıdaki butona tıklayarak email doğrulamanızı gerçekleştirebilirsiniz. Butonu görüntüleyemiyorsanız &lt;a href="~ButtonLink"&gt;buraya&lt;/a&gt; tıklayınız. Doğrulama işleminde hata alırsanız, lütfen &lt;a href="{0}" target="_blank"&gt;teknik ekip &lt;/a&gt; ile iletişime geçiniz. </value>
+  </data>
+  <data name="VerificationMailBodyResendText" xml:space="preserve">
+    <value>&lt;a href="{0}"&gt;MilvaMongoTemplate'e &lt;/a&gt;, üye olmadıysanız bu maili dikkate almayınız.</value>
+  </data>
+  <data name="VerificationMailBodyTitle" xml:space="preserve">
+    <value>Email Adresinizi Doğrulayın</value>
+  </data>
+  <data name="VerificationMailBodyWelcomeText" xml:space="preserve">
+    <value>MilvaMongoTemplate'e Hoşgeldiniz !</value>
+  </data>
+  <data name="VerificationMailTitle" xml:space="preserve">
+    <value>MilvaMongoTemplate Email Doğrulaması</value>
+  </data>
+  <data name="LoggedOutPleaseRelogin" xml:space="preserve">
+    <value>Sistemden çıkış yapılmış lütfen tekrar giriş yapınız.</value>
   </data>
 </root>

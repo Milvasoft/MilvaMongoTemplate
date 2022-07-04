@@ -1,16 +1,18 @@
 ﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using MilvaMongoTemplate.Entity.Collections;
-using Milvasoft.Helpers.DataAccess.MongoDB.Utils;
-using Milvasoft.Helpers.Encryption.Concrete;
-using Milvasoft.Helpers.Exceptions;
-using Milvasoft.Helpers.Extensions;
+using Milvasoft.Core;
+using Milvasoft.Core.Exceptions;
+using Milvasoft.Core.Extensions;
+using Milvasoft.DataAccess.MongoDB.Utils;
+using Milvasoft.DataAccess.MongoDB.Utils.Serializers;
+using Milvasoft.DataAccess.MongoDB.Utils.Settings;
+using Milvasoft.Encryption.Abstract;
+using Milvasoft.Identity.Abstract;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -21,8 +23,13 @@ namespace MilvaMongoTemplate.Data.Utils;
 /// </summary>
 public static class DataSeed
 {
+    /// <summary>
+    /// Default admin user name.
+    /// </summary>
+    public const string AdminUserName = "sampleadmin";
+
     private static IMongoDatabase _mongoDatabase;
-    private static MilvaEncryptionProvider _milvaEncryptionProvider;
+    private static IMilvaEncryptionProvider _milvaEncryptionProvider;
 
     /// <summary>
     /// Resets all data in the database.
@@ -31,15 +38,14 @@ public static class DataSeed
     public static async Task ResetDataAsync(this IApplicationBuilder app)
     {
         var mongoDbSettings = app.ApplicationServices.GetRequiredService<IMongoDbSettings>();
+        var mongoClient = app.ApplicationServices.GetRequiredService<IMongoClient>();
 
-        _milvaEncryptionProvider = app.ApplicationServices.GetRequiredService<MilvaEncryptionProvider>();
+        _milvaEncryptionProvider = app.ApplicationServices.GetRequiredService<IMilvaEncryptionProvider>();
 
-        _mongoDatabase = new MongoClient(mongoDbSettings.ConnectionString).GetDatabase(mongoDbSettings.DatabaseName);
+        _mongoDatabase = mongoClient.GetDatabase(mongoDbSettings.DatabaseName);
 
-        NoSqlRelationHelper.DbName = mongoDbSettings.DatabaseName;
-
-        await InitializeRolesAsync(app.ApplicationServices.GetRequiredService<RoleManager<MilvaMongoTemplateRole>>()).ConfigureAwait(false);
-        await InitializeUsersAsync(app.ApplicationServices.GetRequiredService<MilvaMongoTemplateUserManager>()).ConfigureAwait(false);
+        await InitializeRolesAsync().ConfigureAwait(false);
+        await InitializeUsersAsync(app.ApplicationServices.GetRequiredService<IMilvaUserManager<MilvaMongoTemplateUser, ObjectId>>()).ConfigureAwait(false);
 
         //await ConfigureIndexes().ConfigureAwait(false);
     }
@@ -78,7 +84,7 @@ public static class DataSeed
     /// Initializes <see cref="MilvaMongoTemplateRole"/> to database.
     /// </summary>
     /// <returns></returns>
-    private static async Task InitializeRolesAsync(RoleManager<MilvaMongoTemplateRole> roleManager)
+    private static async Task InitializeRolesAsync()
     {
         var roles = new List<MilvaMongoTemplateRole>
             {
@@ -102,38 +108,31 @@ public static class DataSeed
                     Id = 4.ToObjectId(),
                     Name = "Developer"
                 },
-                new MilvaMongoTemplateRole
-                {
-                    Id = 5.ToObjectId(),
-                    Name = "PaymentOfficer"
-                }
             };
 
-        foreach (var role in roles)
-            await roleManager.CreateAsync(role).ConfigureAwait(false);
+        await InitializeDataAsync(roles);
     }
 
     /// <summary>
     /// Initializes <see cref="MilvaMongoTemplateUser"/> to database.
     /// </summary>
     /// <returns></returns>
-    private static async Task InitializeUsersAsync(MilvaMongoTemplateUserManager userManager)
+    private static async Task InitializeUsersAsync(IMilvaUserManager<MilvaMongoTemplateUser, ObjectId> userManager)
     {
         var users = new List<MilvaMongoTemplateUser>
             {
                 new MilvaMongoTemplateUser
                 {
-                    Id = 13.ToObjectId(),
-                    Name = "Admin",
-                    Surname = "Admin",
-                    UserName = "templateAdmin",
-                    CreationDate = DateTime.Now,
-                    Email = "admin@milvasoft.com",
-                    PhoneNumber = "0 506 000 00 00",
-                    Roles = new()
-                    {
-                        1.ToObjectId().ToString()
-                    }
+                     Id = 1.ToObjectId(),
+                     NameSurname = (EncryptedString)"Admin",
+                     UserName = AdminUserName,
+                     CreationDate = DateTime.UtcNow,
+                     Email = "admin@milvasoft.com",
+                     PhoneNumber = "905060998500",
+                     Roles = new()
+                     {
+                         "Administrator"
+                     }
                 }
             };
 
@@ -144,16 +143,13 @@ public static class DataSeed
         {
             var userPassword = $"{user.UserName}-!";
 
-            user.Name = await _milvaEncryptionProvider.EncryptAsync(user.Name).ConfigureAwait(false);
-            user.Surname = await _milvaEncryptionProvider.EncryptAsync(user.Surname).ConfigureAwait(false);
-            user.PhoneNumber = await _milvaEncryptionProvider.EncryptAsync(user.PhoneNumber).ConfigureAwait(false);
+            user.NameSurname = user.NameSurname;
+            user.PhoneNumber = user.PhoneNumber;
 
-            if (user.AppUser != null)
-                if (!string.IsNullOrEmpty(user.AppUser.IdentityNumber))
-                    user.AppUser.IdentityNumber = await _milvaEncryptionProvider.EncryptAsync(user.AppUser.IdentityNumber).ConfigureAwait(false);
-
-            await userManager.CreateAsync(user, userPassword).ConfigureAwait(false);
+            userManager.ConfigureForCreate(user, userPassword);
         }
+
+        await InitializeDataAsync(users);
     }
 
     /// <summary>
@@ -166,29 +162,6 @@ public static class DataSeed
     }
 
     #region Helper Methods
-
-    /// <summary>
-    /// Converts <paramref name="value"/>'s type to <see cref="ObjectId"/>
-    /// </summary>
-    /// <param name="value"></param>
-    /// <returns></returns>
-    private static ObjectId ToObjectId(this int value)
-    {
-        var totalObjectIdLenth = ObjectId.GenerateNewId().ToString().Length;
-
-        var valueConverted = value.ToString();
-
-        if (totalObjectIdLenth <= valueConverted.Length) return new ObjectId("");
-
-        string objectId = "";
-
-        for (int i = 0; i < totalObjectIdLenth - valueConverted.Length; i++)
-        {
-            objectId += "0";
-        }
-
-        return new ObjectId(objectId + valueConverted);
-    }
 
     private static async Task CreateIndexesAsync<TEntity>(Func<IEnumerable<CreateIndexModel<TEntity>>> func, CancellationToken cancellationToken = default)
         => await _mongoDatabase.GetCollection<TEntity>(typeof(TEntity).GetCollectionName()).Indexes.CreateManyAsync(func(), cancellationToken).ConfigureAwait(false);

@@ -1,7 +1,5 @@
 ﻿using MilvaMongoTemplate.API.Helpers.Attributes.ValidationAttributes;
-using MilvaMongoTemplate.Localization;
-using Milvasoft.Helpers.Attributes.Validation;
-using System.Collections.Generic;
+using Milvasoft.Attributes.Validation;
 
 namespace MilvaMongoTemplate.API.DTOs.AccountDTOs;
 
@@ -20,13 +18,7 @@ public class MilvaMongoTemplateUserDTO : DocumentBaseDTO
     /// Name of user.
     /// </summary>
     [MValidateString(3, 25)]
-    public string Name { get; set; }
-
-    /// <summary>
-    /// Surname of user.
-    /// </summary>
-    [MValidateString(3, 25)]
-    public string Surname { get; set; }
+    public string NameSurname { get; set; }
 
     /// <summary>
     /// User's identity number. (e.g. TC number)

@@ -1,6 +1,5 @@
 ﻿using MilvaMongoTemplate.API.Helpers;
 using MilvaMongoTemplate.API.Helpers.Attributes.ValidationAttributes;
-using MongoDB.Bson;
 using Newtonsoft.Json;
 
 namespace MilvaMongoTemplate.API.DTOs.AccountDTOs;

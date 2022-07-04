@@ -1,20 +1,11 @@
-﻿using Fody;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
-using MilvaMongoTemplate.API.DTOs;
 using MilvaMongoTemplate.API.DTOs.AccountDTOs;
 using MilvaMongoTemplate.API.Helpers.Attributes.ActionFilters;
-using MilvaMongoTemplate.API.Helpers.Constants;
-using MilvaMongoTemplate.API.Helpers.Extensions;
 using MilvaMongoTemplate.API.Services.Abstract;
 using MilvaMongoTemplate.Entity.Utils;
-using MilvaMongoTemplate.Localization;
-using Milvasoft.Helpers;
-using Milvasoft.Helpers.Enums;
-using MongoDB.Bson;
-using System.Threading.Tasks;
-using ResourceKey = MilvaMongoTemplate.Localization.Resources.SharedResource;
+using Milvasoft.Identity.Concrete;
 
 namespace MilvaMongoTemplate.API.Controllers;
 
@@ -48,15 +39,22 @@ public class AccountController : ControllerBase
         _defaultSucccessMessage = _sharedLocalizer[nameof(ResourceKey.SuccessfullyOperationMessage)];
     }
 
+
     /// <summary>
-    /// Login method. This endpoint is accessible for anyone.
+    /// Provides sign in operation.
     /// </summary>
-    /// <returns></returns>
+    /// 
+    /// <remarks> 
+    /// 
+    /// <para> Both users(admin and mobile app user) should use this endpoint. </para>
+    /// 
+    /// </remarks>
+    /// 
     /// <param name="loginDTO"></param>
     /// <returns></returns>
     [HttpPost("Login")]
     [AllowAnonymous]
-    [MValidationFilter]
+    [ProducesResponseType(typeof(LoginResultDTO), MilvaStatusCodes.Status200OK)]
     public async Task<IActionResult> LoginAsync([FromBody] LoginDTO loginDTO)
     {
         var loginResult = await _accountService.LoginAsync(loginDTO);
@@ -67,16 +65,16 @@ public class AccountController : ControllerBase
     /// <summary>
     /// Refresh token login for all users.
     /// </summary>
-    /// <param name="refreshLogin"></param>
+    /// <param name="refreshLoginDTO"></param>
     /// <returns></returns>
     [HttpPost("Login/{*refreshLogin}")]
     [AllowAnonymous]
-    [MValidateStringParameter(10, 1000)]
-    public async Task<IActionResult> RefreshTokenLogin(string refreshLogin)
+    [ProducesResponseType(typeof(MilvaToken), MilvaStatusCodes.Status200OK)]
+    public async Task<IActionResult> RefreshTokenLogin(RefreshLoginDTO refreshLoginDTO)
     {
-        var loginResult = await _accountService.RefreshTokenLogin(refreshLogin);
+        var loginResult = await _accountService.RefreshTokenLogin(refreshLoginDTO);
 
-        return loginResult.GetObjectResponse(_sharedLocalizer[nameof(ResourceKey.SuccessfullyLoginMessage)]);
+        return loginResult.GetObjectResponse(_sharedLocalizer[nameof(ResourceKey.SuccessfullyLogoutMessage)]);
     }
 
     /// <summary>
@@ -90,9 +88,9 @@ public class AccountController : ControllerBase
     /// </remarks>
     /// <returns></returns>
     [HttpPut("Logout")]
-    [Authorize(Roles = RoleName.All)]
+    [MilvaAuthorize(RoleName.Administrator, RoleName.AppUser, RoleName.Developer)]
     public async Task<IActionResult> LogoutAsync()
-        => await _accountService.LogoutAsync().GetObjectResponseAsync<object>(_sharedLocalizer[nameof(ResourceKey.SuccessfullyLoguotMessage)]);
+        => await _accountService.LogoutAsync().GetObjectResponseAsync<object>(_sharedLocalizer[nameof(ResourceKey.SuccessfullyLogoutMessage)]);
 
     /// <summary>
     /// Returns logged-in user's account information.
@@ -106,26 +104,38 @@ public class AccountController : ControllerBase
     /// 
     /// <returns></returns>
     [HttpGet("LoggedIn/User/Info")]
-    [Authorize(Roles = RoleName.All)]
+    [MilvaAuthorize(RoleName.Administrator, RoleName.AppUser, RoleName.Developer)]
+    [ProducesResponseType(typeof(MilvaMongoTemplateUserDTO), MilvaStatusCodes.Status200OK)]
     public async Task<IActionResult> GetLoggedInInUserInformationAsync()
     {
-        var errorMessage = _sharedLocalizer.GetErrorMessage("User", CrudOperation.GetById);
-
         var user = await _accountService.GetLoggedInInUserInformationAsync();
 
-        return user.GetObjectResponse(_defaultSucccessMessage, errorMessage);
+        return user.GetObjectResponseByEntity(HttpContext, StringKey.AccountInfo);
     }
 
     #region AppUser
+
+    /// <summary>
+    /// Checks username and email existance.
+    /// </summary>
+    /// <param name="checkUserExistanceDTO"></param>
+    /// <returns></returns>
+    [HttpPatch("Check")]
+    [AllowAnonymous]
+    [ApiExplorerSettings(GroupName = "v1.0")]
+    public async Task<IActionResult> UserExistsAsync([FromBody] CheckUserExistanceDTO checkUserExistanceDTO)
+        => await _accountService.UserExistsAsync(checkUserExistanceDTO)
+                                .GetObjectResponseAsync<object>(_sharedLocalizer[nameof(ResourceKey.SuccessfullyOperationMessage)]);
 
     /// <summary>
     /// Provides the registration process of mobile application users.
     /// </summary>
     /// <param name="registerDTO"></param>
     /// <returns></returns>
-    [HttpPost("Register/{language}")]
+    [HttpPost("Register")]
     [AllowAnonymous]
-    [MValidationFilter]
+    [ProducesResponseType(typeof(LoginResultDTO), MilvaStatusCodes.Status200OK)]
+    [ApiExplorerSettings(GroupName = "v1.0")]
     public async Task<IActionResult> RegisterAsync([FromBody] RegisterDTO registerDTO)
     {
         var loginResult = await _accountService.RegisterAsync(registerDTO);
@@ -134,34 +144,16 @@ public class AccountController : ControllerBase
     }
 
     /// <summary>
-    /// Updates logged-in user's personal information.
-    /// </summary>
-    /// <param name="userDTO"></param>
-    /// <returns></returns>
-    [HttpPut]
-    [Authorize(Roles = RoleName.AppUser)]
-    public async Task<IActionResult> UpdateMyAccountAsync(AppUserUpdateDTO userDTO)
-    {
-        var successMessage = _sharedLocalizer.GetSuccessMessage(StringKey.Account, CrudOperation.Update);
-
-        return await _accountService.UpdateAccountAsync(userDTO).GetObjectResponseAsync<object>(successMessage);
-    }
-
-    /// <summary>
     /// Deletes logged-in user's account.
     /// </summary>
     /// <returns></returns>
     [HttpDelete]
-    [Authorize(Roles = RoleName.AppUser)]
+    [MilvaAuthorize(RoleName.AppUser)]
+    [ApiExplorerSettings(GroupName = "v1.0")]
     public async Task<IActionResult> DeleteAccountAsync()
-    {
-        var successMessage = _sharedLocalizer.GetSuccessMessage(StringKey.Account, CrudOperation.Delete);
-
-        return await _accountService.DeleteAccountAsync().GetObjectResponseAsync<object>(successMessage);
-    }
+        => await _accountService.DeleteAccountAsync().GetObjectResponseByEntityAsync<object>(HttpContext);
 
     #endregion
-
 
     #region Account Activities / Note : Editors can be use this endpoints too.
 
@@ -179,30 +171,11 @@ public class AccountController : ControllerBase
     /// 
     /// <returns></returns>
     [HttpGet("Activity/Send/Mail/EmailVerification")]
-    [Authorize(Roles = RoleName.AppUser)]
+    [MilvaAuthorize(RoleName.AppUser)]
+    [ApiExplorerSettings(GroupName = "v1.0")]
     public async Task<IActionResult> SendEmailVerificationMailAsync()
         => await _accountService.SendEmailVerificationMailAsync()
                                 .GetObjectResponseByEntityAsync<object>(HttpContext, nameof(ResourceKey.EmailVerificationMailSent), false);
-
-    /// <summary>
-    /// Sends phone number change mail to logged-in user's email address.
-    /// </summary>
-    /// 
-    /// <remarks>
-    /// 
-    /// <para>Redirect link in the mail : <b> https://sampleappurl.com/change/phoneNumber?userName=sampleusername{AND}token=sampletoken </b> </para>
-    /// 
-    /// <para> <b>Note :</b> As "{AND}" is a special character, it is not suitable for a summary syntax. That's why it was written that way.</para>
-    /// 
-    /// </remarks>
-    /// 
-    /// <param name="newPhoneNumber"></param>
-    /// <returns></returns>
-    [HttpGet("Activity/Send/Mail/PhoneNumberChange/{newPhoneNumber}")]
-    [Authorize(Roles = RoleName.AppUser)]
-    public async Task<IActionResult> SendChangePhoneNumberMailAsync(string newPhoneNumber)
-        => await _accountService.SendChangePhoneNumberMailAsync(newPhoneNumber)
-                                .GetObjectResponseByEntityAsync<object>(HttpContext, nameof(ResourceKey.PhoneNumberChangeMailSent), false);
 
     /// <summary>
     /// Sends email change mail to logged-in user's email address.
@@ -219,7 +192,9 @@ public class AccountController : ControllerBase
     /// <param name="newEmail"></param>
     /// <returns></returns>
     [HttpGet("Activity/Send/Mail/EmailChange/{newEmail}")]
-    [Authorize(Roles = RoleName.AppUser)]
+    [MilvaAuthorize(RoleName.AppUser)]
+    [MValidateStringParameter(2, 75)]
+    [ApiExplorerSettings(GroupName = "v1.0")]
     public async Task<IActionResult> SendChangeEmailMailAsync(string newEmail)
         => await _accountService.SendChangeEmailMailAsync(newEmail)
                                 .GetObjectResponseByEntityAsync<object>(HttpContext, nameof(ResourceKey.EmailChangeMailSent), false);
@@ -237,7 +212,7 @@ public class AccountController : ControllerBase
     /// </remarks>
     /// <returns></returns>
     [HttpGet("Activity/Send/Mail/PasswordReset")]
-    [MValidateStringParameter(3, 30)]
+    [ApiExplorerSettings(GroupName = "v1.0")]
     public async Task<IActionResult> SendResetPasswordMailAsync()
         => await _accountService.SendResetPasswordMailAsync()
                                 .GetObjectResponseByEntityAsync<object>(HttpContext, nameof(ResourceKey.PasswordResetMailSent), false);
@@ -257,7 +232,8 @@ public class AccountController : ControllerBase
     /// <param name="email"></param>
     /// <returns></returns>
     [HttpGet("Activity/Send/Mail/ForgotPassword/{email}")]
-    [MValidateStringParameter(3, 30)]
+    [MValidateStringParameter(3, 75)]
+    [ApiExplorerSettings(GroupName = "v1.0")]
     public async Task<IActionResult> SendForgotPasswordMailAsync(string email)
         => await _accountService.SendForgotPasswordMailAsync(email)
                                 .GetObjectResponseByEntityAsync<object>(HttpContext, nameof(ResourceKey.PasswordResetMailSent), false);
@@ -274,11 +250,17 @@ public class AccountController : ControllerBase
     /// </remarks>
     /// 
     /// <returns></returns>
-    [HttpGet("Activity/Send/Message/PhoneNumberVerification")]
-    [Authorize(Roles = RoleName.AppUser)]
-    public async Task<IActionResult> SendPhoneNumberVerificationMessageAsync()
-        => await _accountService.SendPhoneNumberVerificationMessageAsync()
-                                .GetObjectResponseByEntityAsync<object>(HttpContext, nameof(ResourceKey.PhoneNumberVerificationMessageSent), false);
+    [HttpGet("Activity/Send/Message/PhoneNumberVerification/{phoneNumber}")]
+    [AllowAnonymous]
+    [MValidateStringParameter(2, 30)]
+    [ProducesResponseType(typeof(string), MilvaStatusCodes.Status200OK)]
+    [ApiExplorerSettings(GroupName = "v1.0")]
+    public async Task<IActionResult> SendPhoneNumberVerificationMessageAsync(string phoneNumber)
+    {
+        var verificationMessage = await _accountService.SendPhoneNumberVerificationMessageAsync(phoneNumber);
+
+        return verificationMessage.GetObjectResponse(nameof(ResourceKey.PhoneNumberVerificationMessageSent));
+    }
 
     /// <summary>
     /// Verifies logged-in user's phone number.
@@ -293,10 +275,11 @@ public class AccountController : ControllerBase
     /// <param name="verificationCode"></param>
     /// <returns></returns>
     [HttpGet("Activity/Verify/PhoneNumber/{verificationCode}")]
-    [Authorize(Roles = RoleName.AppUser)]
+    [MilvaAuthorize(RoleName.AppUser)]
+    [MValidateStringParameter(2, 6)]
+    [ApiExplorerSettings(GroupName = "v1.0")]
     public async Task<IActionResult> VerifyPhoneNumberAsync(string verificationCode)
-        => await _accountService.VerifyPhoneNumberAsync(verificationCode).GetActivityResponseAsync(_sharedLocalizer[nameof(ResourceKey.PhoneNumberVerificationSuccessfull)],
-                                                                                                   _sharedLocalizer[nameof(ResourceKey.AccountActivityErrorMessage)]);
+        => await _accountService.VerifyPhoneNumberAsync(verificationCode).GetObjectResponseByEntityAsync<object>(HttpContext);
 
     /// <summary>
     /// Verifies <paramref name="emailVerificationDTO"/>.UserName's email.
@@ -311,9 +294,9 @@ public class AccountController : ControllerBase
     /// <returns></returns>
     [HttpPut("Activity/Verify/Email")]
     [AllowAnonymous]
+    [ApiExplorerSettings(GroupName = "v1.0")]
     public async Task<IActionResult> VerifyEmailAsync([FromBody] EmailVerificationDTO emailVerificationDTO)
-        => await _accountService.VerifyEmailAsync(emailVerificationDTO).GetActivityResponseAsync(_sharedLocalizer[nameof(ResourceKey.EmailVerificationSuccessfull)],
-                                                                                                 _sharedLocalizer[nameof(ResourceKey.AccountActivityErrorMessage)]);
+        => await _accountService.VerifyEmailAsync(emailVerificationDTO).GetObjectResponseByEntityAsync<object>(HttpContext);
 
     /// <summary>
     /// Changes <paramref name="emailChangeDTO"/>.UserName's email.
@@ -328,9 +311,9 @@ public class AccountController : ControllerBase
     /// <returns></returns>
     [HttpPut("Activity/Change/Email")]
     [AllowAnonymous]
+    [ApiExplorerSettings(GroupName = "v1.0")]
     public async Task<IActionResult> ChangeEmailAsync([FromBody] EmailChangeDTO emailChangeDTO)
-        => await _accountService.ChangeEmailAsync(emailChangeDTO).GetActivityResponseAsync(_sharedLocalizer[nameof(ResourceKey.EmailChangeSuccessfull)],
-                                                                                           _sharedLocalizer[nameof(ResourceKey.AccountActivityErrorMessage)]);
+        => await _accountService.ChangeEmailAsync(emailChangeDTO).GetObjectResponseByEntityAsync<object>(HttpContext);
 
     /// <summary>
     /// Changes <paramref name="phoneNumberChangeDTO"/>.UserName's phone number.
@@ -345,9 +328,9 @@ public class AccountController : ControllerBase
     /// <returns></returns>
     [HttpPut("Activity/Change/PhoneNumber")]
     [AllowAnonymous]
+    [ApiExplorerSettings(GroupName = "v1.0")]
     public async Task<IActionResult> ChangePhoneNumberAsync([FromBody] PhoneNumberChangeDTO phoneNumberChangeDTO)
-        => await _accountService.ChangePhoneNumberAsync(phoneNumberChangeDTO).GetActivityResponseAsync(_sharedLocalizer[nameof(ResourceKey.PhoneNumberChangeSuccessfull)],
-                                                                                                       _sharedLocalizer[nameof(ResourceKey.AccountActivityErrorMessage)]);
+        => await _accountService.ChangePhoneNumberAsync(phoneNumberChangeDTO).GetObjectResponseByEntityAsync<object>(HttpContext);
 
     /// <summary>
     /// Changes <paramref name="passwordChangeDTO"/>.UserName's password.
@@ -361,10 +344,10 @@ public class AccountController : ControllerBase
     /// <param name="passwordChangeDTO"></param>
     /// <returns></returns>
     [HttpPut("Activity/Change/Password")]
-    [Authorize(Roles = RoleName.AppUser)]
+    [MilvaAuthorize(RoleName.AppUser)]
+    [ApiExplorerSettings(GroupName = "v1.0")]
     public async Task<IActionResult> ChangePasswordAsync([FromBody] PasswordChangeDTO passwordChangeDTO)
-        => await _accountService.ChangePasswordAsync(passwordChangeDTO).GetActivityResponseAsync(_sharedLocalizer[nameof(ResourceKey.PasswordChangeSuccessfull)],
-                                                                                                 _sharedLocalizer[nameof(ResourceKey.AccountActivityErrorMessage)]);
+        => await _accountService.ChangePasswordAsync(passwordChangeDTO).GetObjectResponseByEntityAsync<object>(HttpContext);
 
     /// <summary>
     /// Resets <paramref name="passwordResetDTO"/>.UserName's password.
@@ -379,29 +362,27 @@ public class AccountController : ControllerBase
     /// <returns></returns>
     [HttpPut("Activity/Reset/Password")]
     [AllowAnonymous]
+    [ApiExplorerSettings(GroupName = "v1.0")]
     public async Task<IActionResult> ResetPasswordAsync([FromBody] PasswordResetDTO passwordResetDTO)
-        => await _accountService.ResetPasswordAsync(passwordResetDTO).GetActivityResponseAsync(_sharedLocalizer[nameof(ResourceKey.PasswordResetSuccessfull)],
-                                                                                               _sharedLocalizer[nameof(ResourceKey.AccountActivityErrorMessage)]);
+        => await _accountService.ResetPasswordAsync(passwordResetDTO).GetObjectResponseByEntityAsync<object>(HttpContext);
 
     #endregion
-
 
     #region Admin
 
     /// <summary>
-    /// Returns all administration users for admin user.
+    /// Returns all administration users for admin user. You can transport data to modal from here.
     /// </summary>
     /// <param name="paginationParams"></param>
     /// <returns> Can be both Editors or Admins. </returns>
     [HttpPatch("Users")]
-    [Authorize(Roles = RoleName.Administrator)]
+    [MilvaAuthorize(RoleName.Administrator)]
+    [ProducesResponseType(typeof(PaginationDTO<MilvaMongoTemplateUserDTO>), MilvaStatusCodes.Status200OK)]
     public async Task<IActionResult> GetAllUsersAsync([FromBody] PaginationParams paginationParams)
     {
-        var errorMessage = _sharedLocalizer.GetErrorMessage(StringKey.User, CrudOperation.GetAll);
-
         var users = await _accountService.GetAllUsersAsync(paginationParams);
 
-        return users.GetPaginationResponse(_defaultSucccessMessage, errorMessage);
+        return users.GetPaginationResponseByEntities(HttpContext, CollectionNames.MilvaMongoTemplateUsers, false);
     }
 
     /// <summary>
@@ -410,14 +391,13 @@ public class AccountController : ControllerBase
     /// <param name="userId"></param>
     /// <returns> Can be both Editor or Admin. </returns>
     [HttpGet("Users/User/{userId}")]
-    [Authorize(Roles = RoleName.Administrator)]
+    [MilvaAuthorize(RoleName.Administrator)]
+    [ProducesResponseType(typeof(MilvaMongoTemplateUserDTO), MilvaStatusCodes.Status200OK)]
     public async Task<IActionResult> GetUserByIdAsync(ObjectId userId)
     {
-        var errorMessage = _sharedLocalizer.GetErrorMessage(StringKey.User, CrudOperation.GetById);
-
         var user = await _accountService.GetUserByIdAsync(userId);
 
-        return user.GetObjectResponse(_defaultSucccessMessage, errorMessage);
+        return user.GetObjectResponseByEntity(HttpContext, CollectionNames.MilvaMongoTemplateUsers);
     }
 
     /// <summary>
@@ -426,13 +406,10 @@ public class AccountController : ControllerBase
     /// <param name="userDTO"></param>
     /// <returns> Can be both Editors or Admins. </returns>
     [HttpPost("Users/User")]
-    [Authorize(Roles = RoleName.Administrator)]
+    [MilvaAuthorize(RoleName.Administrator)]
+    [ProducesResponseType(typeof(ObjectId), MilvaStatusCodes.Status200OK)]
     public async Task<IActionResult> CreateUserAsync([FromBody] MilvaMongoTemplateUserCreateDTO userDTO)
-    {
-        var successMessage = _sharedLocalizer.GetSuccessMessage(StringKey.User, CrudOperation.Add);
-
-        return await _accountService.CreateUserAsync(userDTO).GetObjectResponseAsync(successMessage);
-    }
+        => await _accountService.CreateUserAsync(userDTO).GetObjectResponseByEntityAsync(HttpContext);
 
     /// <summary>
     /// Updates one administration user according to <paramref name="userDTO"/>.
@@ -440,13 +417,9 @@ public class AccountController : ControllerBase
     /// <param name="userDTO"></param>
     /// <returns> Created user id. </returns>
     [HttpPut("Users/User")]
-    [Authorize(Roles = RoleName.Administrator)]
+    [MilvaAuthorize(RoleName.Administrator)]
     public async Task<IActionResult> UpdateUserAsync([FromBody] MilvaMongoTemplateUserUpdateDTO userDTO)
-    {
-        var successMessage = _sharedLocalizer.GetSuccessMessage(StringKey.User, CrudOperation.Update);
-
-        return await _accountService.UpdateUserAsync(userDTO).GetObjectResponseAsync<object>(successMessage);
-    }
+        => await _accountService.UpdateUserAsync(userDTO).GetObjectResponseByEntityAsync<object>(HttpContext);
 
     /// <summary>
     /// Deletes one administration user according to <paramref name="userId"/>.
@@ -454,29 +427,24 @@ public class AccountController : ControllerBase
     /// <param name="userId"></param>
     /// <returns> Created user id. </returns>
     [HttpDelete("Users/User/{userId}")]
-    [Authorize(Roles = RoleName.Administrator)]
+    [MilvaAuthorize(RoleName.Administrator)]
     public async Task<IActionResult> DeleteUserAsync(ObjectId userId)
-    {
-        var successMessage = _sharedLocalizer.GetSuccessMessage(StringKey.User, CrudOperation.Delete);
-
-        return await _accountService.DeleteUserAsync(userId).GetObjectResponseAsync<object>(successMessage);
-    }
+        => await _accountService.DeleteUserAsync(userId).GetObjectResponseByEntityAsync<object>(HttpContext);
 
     /// <summary>
-    /// Returns all obk app roles for combobox.
+    /// Returns all app roles for combobox.
     /// </summary>
     /// <returns></returns>
     [HttpGet("Roles")]
-    [Authorize(Roles = RoleName.Administrator)]
+    [MilvaAuthorize(RoleName.Administrator)]
+    [ProducesResponseType(typeof(List<MilvaMongoTemplateRoleDTO>), MilvaStatusCodes.Status200OK)]
     public async Task<IActionResult> GetRolesAsync()
     {
-        var errorMessage = _sharedLocalizer.GetErrorMessage(CollectionNames.MilvaMongoTemplateRoles, CrudOperation.GetAll);
-
         var roles = await _accountService.GetRolesAsync();
 
         roles.RemoveAll(i => i.Name == RoleName.Developer || i.Name == RoleName.AppUser);
 
-        return roles.GetObjectResponse(_defaultSucccessMessage, errorMessage);
+        return roles.GetObjectResponseByEntities(HttpContext, CollectionNames.MilvaMongoTemplateRoles, isFiltering: false);
     }
 
     #endregion

@@ -9,8 +9,9 @@
   </PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="AspNetCore.Identity.Mongo" Version="8.3.3" />
-		<PackageReference Include="Milvasoft.Helpers" Version="6.7.25" />
+		<PackageReference Include="Milvasoft.Core" Version="1.0.0" />
+		<PackageReference Include="Milvasoft.DataAccess.MongoDB" Version="1.0.2" />
+		<PackageReference Include="Milvasoft.Identity" Version="1.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>

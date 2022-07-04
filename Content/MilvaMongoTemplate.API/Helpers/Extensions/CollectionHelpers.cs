@@ -1,11 +1,4 @@
-﻿using Milvasoft.Helpers.DataAccess.EfCore.Abstract.Entity;
-using Milvasoft.Helpers.Extensions;
-using MongoDB.Bson;
-using MongoDB.Driver;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Milvasoft.Core.EntityBase.Abstract;
 
 namespace MilvaMongoTemplate.API.Helpers.Extensions;
 

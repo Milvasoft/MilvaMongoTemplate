@@ -1,9 +1,7 @@
 ﻿using MilvaMongoTemplate.API.Helpers;
-using Milvasoft.Helpers.DataAccess.EfCore.Abstract.Entity;
-using MongoDB.Bson;
+using Milvasoft.Core.EntityBase.Abstract;
 using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
-using System;
 
 namespace MilvaMongoTemplate.API.DTOs;
 

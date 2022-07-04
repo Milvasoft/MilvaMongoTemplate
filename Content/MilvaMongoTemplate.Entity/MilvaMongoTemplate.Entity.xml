@@ -9,19 +9,29 @@
             Roles of app.
             </summary>
         </member>
-        <member name="P:MilvaMongoTemplate.Entity.Collections.MilvaMongoTemplateRole.LastModificationDate">
+        <member name="P:MilvaMongoTemplate.Entity.Collections.MilvaMongoTemplateRole.Name">
             <summary>
-            Last modification date of entity.
+            Name of role.
             </summary>
         </member>
-        <member name="P:MilvaMongoTemplate.Entity.Collections.MilvaMongoTemplateRole.CreationDate">
+        <member name="P:MilvaMongoTemplate.Entity.Collections.MilvaMongoTemplateRole.NormalizedName">
             <summary>
-            Creation date of entity.
+            Normalized name of role.
+            </summary>
+        </member>
+        <member name="P:MilvaMongoTemplate.Entity.Collections.MilvaMongoTemplateRole.NameProjection">
+            <summary>
+            Projection for methods.
             </summary>
         </member>
         <member name="T:MilvaMongoTemplate.Entity.Collections.MilvaMongoTemplateUser">
             <summary>
             App user.
+            </summary>
+        </member>
+        <member name="P:MilvaMongoTemplate.Entity.Collections.MilvaMongoTemplateUser.DeletionDate">
+            <summary>
+            Deletion date of entity.
             </summary>
         </member>
         <member name="P:MilvaMongoTemplate.Entity.Collections.MilvaMongoTemplateUser.LastModificationDate">
@@ -34,14 +44,9 @@
             Creation date of entity.
             </summary>
         </member>
-        <member name="P:MilvaMongoTemplate.Entity.Collections.MilvaMongoTemplateUser.Name">
+        <member name="P:MilvaMongoTemplate.Entity.Collections.MilvaMongoTemplateUser.NameSurname">
             <summary>
             Name of app user.
-            </summary>
-        </member>
-        <member name="P:MilvaMongoTemplate.Entity.Collections.MilvaMongoTemplateUser.Surname">
-            <summary>
-            Surname of app user.
             </summary>
         </member>
         <member name="P:MilvaMongoTemplate.Entity.Collections.MilvaMongoTemplateUser.IsDeleted">
@@ -54,9 +59,69 @@
             Refresh token of user.
             </summary>
         </member>
+        <member name="P:MilvaMongoTemplate.Entity.Collections.MilvaMongoTemplateUser.ValidTokens">
+            <summary>
+            User's valid tokens.
+            </summary>
+        </member>
+        <member name="P:MilvaMongoTemplate.Entity.Collections.MilvaMongoTemplateUser.Roles">
+            <summary>
+            User's valid tokens.
+            </summary>
+        </member>
         <member name="P:MilvaMongoTemplate.Entity.Collections.MilvaMongoTemplateUser.AppUser">
             <summary>
             If this user is not mobile application user, this embedded document will be empty.
+            </summary>
+        </member>
+        <member name="P:MilvaMongoTemplate.Entity.Collections.MilvaMongoTemplateUser.AuthorizationAttributeProjection">
+            <summary>
+            Projection for AccountService.SendActivityMailAsync method.
+            </summary>
+        </member>
+        <member name="P:MilvaMongoTemplate.Entity.Collections.MilvaMongoTemplateUser.GetUserByUserNameProjection">
+            <summary>
+            Projection for AdministrationService.GetUserByUserNameAsync method.
+            </summary>
+        </member>
+        <member name="P:MilvaMongoTemplate.Entity.Collections.MilvaMongoTemplateUser.GetLoggedInUserInformationProjection">
+            <summary>
+            Projection for AccountService.GetLoggedInInUserInformationAsync method.
+            </summary>
+        </member>
+        <member name="P:MilvaMongoTemplate.Entity.Collections.MilvaMongoTemplateUser.GetLoggedInPanelUserInformationProjection">
+            <summary>
+            Projection for AccountService.GetLoggedPanelUserInfoAsync method.
+            </summary>
+        </member>
+        <member name="P:MilvaMongoTemplate.Entity.Collections.MilvaMongoTemplateUser.UpdateAccountProjection">
+            <summary>
+            Projection for AccountService.UpdateAccountAsync method.
+            </summary>
+        </member>
+        <member name="P:MilvaMongoTemplate.Entity.Collections.MilvaMongoTemplateUser.DeleteAccountProjection">
+            <summary>
+            Projection for AccountService.DeleteAccountAsync method.
+            </summary>
+        </member>
+        <member name="P:MilvaMongoTemplate.Entity.Collections.MilvaMongoTemplateUser.EmailProjection">
+            <summary>
+            Projection for AccountService.SendChangeEmailMailAsync method.
+            </summary>
+        </member>
+        <member name="P:MilvaMongoTemplate.Entity.Collections.MilvaMongoTemplateUser.EmailAndUserNameProjection">
+            <summary>
+            Projection for AccountService.SendForgotPasswordMailAsync method.
+            </summary>
+        </member>
+        <member name="P:MilvaMongoTemplate.Entity.Collections.MilvaMongoTemplateUser.GetUserProjection">
+            <summary>
+            Projection for AccountService.GetAllUsersAsync method.
+            </summary>
+        </member>
+        <member name="P:MilvaMongoTemplate.Entity.Collections.MilvaMongoTemplateUser.SendActivityMailProjection">
+            <summary>
+            Projection for AccountService.SendActivityMailAsync method.
             </summary>
         </member>
         <member name="T:MilvaMongoTemplate.Entity.EmbeddedDocuments.AppUser">
@@ -82,6 +147,21 @@
         <member name="P:MilvaMongoTemplate.Entity.EmbeddedDocuments.AppUser.IdentityNumber">
             <summary>
             User's identity number. (e.g. TC number)
+            </summary>
+        </member>
+        <member name="T:MilvaMongoTemplate.Entity.EmbeddedDocuments.Token">
+            <summary>
+            User valid tokens.
+            </summary>
+        </member>
+        <member name="P:MilvaMongoTemplate.Entity.EmbeddedDocuments.Token.TokenString">
+            <summary>
+            Token string.
+            </summary>
+        </member>
+        <member name="P:MilvaMongoTemplate.Entity.EmbeddedDocuments.Token.MacAddress">
+            <summary>
+            User mac address.
             </summary>
         </member>
         <member name="T:MilvaMongoTemplate.Entity.Utils.CollectionNames">

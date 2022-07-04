@@ -80,6 +80,21 @@
               Looks up a localized string similar to Uygulama başarıyla durduruldu..
             </summary>
         </member>
+        <member name="P:MilvaMongoTemplate.Localization.Resources.SharedResource.AtLeastSelectOneRole">
+            <summary>
+              Looks up a localized string similar to En az 1 adet rol seçmelisiniz..
+            </summary>
+        </member>
+        <member name="P:MilvaMongoTemplate.Localization.Resources.SharedResource.CannotDeleteAppUser">
+            <summary>
+              Looks up a localized string similar to You cannot delete app user..
+            </summary>
+        </member>
+        <member name="P:MilvaMongoTemplate.Localization.Resources.SharedResource.CannotDeleteDefaultAdminUser">
+            <summary>
+              Looks up a localized string similar to You cannot delete default admin user..
+            </summary>
+        </member>
         <member name="P:MilvaMongoTemplate.Localization.Resources.SharedResource.CannotFoundMessage">
             <summary>
               Looks up a localized string similar to {0} bulunamadı..
@@ -115,9 +130,34 @@
               Looks up a localized string similar to Geçersiz silme işlemi!.
             </summary>
         </member>
+        <member name="P:MilvaMongoTemplate.Localization.Resources.SharedResource.EmailChangeMailBodyButtonText">
+            <summary>
+              Looks up a localized string similar to Emailimi Değiştir.
+            </summary>
+        </member>
+        <member name="P:MilvaMongoTemplate.Localization.Resources.SharedResource.EmailChangeMailBodyDesciption">
+            <summary>
+              Looks up a localized string similar to Aşağıdaki butona tıklayarak email değişikliği işlemini gerçekleştirebileceğiniz sayfaya ulaşabilirsiniz. Butonu görüntüleyemiyorsanız &lt;a href=&quot;~ButtonLink&quot;&gt;buraya&lt;/a&gt; tıklayınız. Email değişiklik işleminde hata aldıysanız, lütfen &lt;a href=&quot;{0}&quot; target=&quot;_blank&quot;&gt;teknik ekip &lt;/a&gt; ile iletişime geçiniz. .
+            </summary>
+        </member>
+        <member name="P:MilvaMongoTemplate.Localization.Resources.SharedResource.EmailChangeMailBodyResendText">
+            <summary>
+              Looks up a localized string similar to Böyle bir istekte bulunmadıysanız, şifrenizi yenilemenizi öneririz. .
+            </summary>
+        </member>
+        <member name="P:MilvaMongoTemplate.Localization.Resources.SharedResource.EmailChangeMailBodyTitle">
+            <summary>
+              Looks up a localized string similar to Email Değişikliği.
+            </summary>
+        </member>
         <member name="P:MilvaMongoTemplate.Localization.Resources.SharedResource.EmailChangeMailSent">
             <summary>
               Looks up a localized string similar to E-posta adresi değişikliği maili başarıyla gönderildi..
+            </summary>
+        </member>
+        <member name="P:MilvaMongoTemplate.Localization.Resources.SharedResource.EmailChangeMailTitle">
+            <summary>
+              Looks up a localized string similar to MilvaMongoTemplate Email Değişikliği.
             </summary>
         </member>
         <member name="P:MilvaMongoTemplate.Localization.Resources.SharedResource.EmailChangeSuccessfull">
@@ -310,6 +350,11 @@
               Looks up a localized string similar to Girilen {0} sayısal değeri bu işlem için geçersiz bir değerdir..
             </summary>
         </member>
+        <member name="P:MilvaMongoTemplate.Localization.Resources.SharedResource.InvalidOperation">
+            <summary>
+              Looks up a localized string similar to Geçersiz bir işlem yapmaya çalışıyorsunuz..
+            </summary>
+        </member>
         <member name="P:MilvaMongoTemplate.Localization.Resources.SharedResource.InvalidOrderType">
             <summary>
               Looks up a localized string similar to Seçilen sipariş tipi ile uyuşan herhangi bir sipariş tipi bulunamadı..
@@ -355,9 +400,9 @@
               Looks up a localized string similar to Email.
             </summary>
         </member>
-        <member name="P:MilvaMongoTemplate.Localization.Resources.SharedResource.LocalizedName">
+        <member name="P:MilvaMongoTemplate.Localization.Resources.SharedResource.LocalizedNameSurname">
             <summary>
-              Looks up a localized string similar to İsim.
+              Looks up a localized string similar to Ad-Soyad.
             </summary>
         </member>
         <member name="P:MilvaMongoTemplate.Localization.Resources.SharedResource.LocalizedPassword">
@@ -393,6 +438,11 @@
         <member name="P:MilvaMongoTemplate.Localization.Resources.SharedResource.LoggedInOtherInstitution">
             <summary>
               Looks up a localized string similar to Başka bir işletmede bu hesap ile oturum açılmış. Şifrenizi değiştirmek için lütfen mail kutunuzu kontrol edin. Diğer oturumunuz kapatılacaktır..
+            </summary>
+        </member>
+        <member name="P:MilvaMongoTemplate.Localization.Resources.SharedResource.LoggedOutPleaseRelogin">
+            <summary>
+              Looks up a localized string similar to Sistemden çıkış yapılmış lütfen tekrar giriş yapınız..
             </summary>
         </member>
         <member name="P:MilvaMongoTemplate.Localization.Resources.SharedResource.LoginCustomerErrorMessageFromAPI">
@@ -460,9 +510,34 @@
               Looks up a localized string similar to Şifreniz başarıyla değiştirildi..
             </summary>
         </member>
+        <member name="P:MilvaMongoTemplate.Localization.Resources.SharedResource.PasswordResetMailBodyButtonText">
+            <summary>
+              Looks up a localized string similar to Şifremi Sıfırla.
+            </summary>
+        </member>
+        <member name="P:MilvaMongoTemplate.Localization.Resources.SharedResource.PasswordResetMailBodyDesciption">
+            <summary>
+              Looks up a localized string similar to Aşağıdaki butona tıklayarak şifre sıfırlama işlemini gerçekleştirebileceğiniz sayfaya ulaşabilirsiniz. Butonu görüntüleyemiyorsanız &lt;a href=&quot;~ButtonLink&quot;&gt;buraya&lt;/a&gt; tıklayınız. Şifre sıfırlama işleminde hata alırsanız, lütfen &lt;a href=&quot;{0}&quot; target=&quot;_blank&quot;&gt;teknik ekip &lt;/a&gt; ile iletişime geçiniz..
+            </summary>
+        </member>
+        <member name="P:MilvaMongoTemplate.Localization.Resources.SharedResource.PasswordResetMailBodyResendText">
+            <summary>
+              Looks up a localized string similar to Böyle bir istekte bulunmadıysanız, şifrenizi değiştirmenizi öneririz. .
+            </summary>
+        </member>
+        <member name="P:MilvaMongoTemplate.Localization.Resources.SharedResource.PasswordResetMailBodyTitle">
+            <summary>
+              Looks up a localized string similar to Şifre Sıfırlama.
+            </summary>
+        </member>
         <member name="P:MilvaMongoTemplate.Localization.Resources.SharedResource.PasswordResetMailSent">
             <summary>
               Looks up a localized string similar to Şifre sıfırlama maili başarıyla gönderildi.
+            </summary>
+        </member>
+        <member name="P:MilvaMongoTemplate.Localization.Resources.SharedResource.PasswordResetMailTitle">
+            <summary>
+              Looks up a localized string similar to MilvaMongoTemplate Şifre Sıfırlama.
             </summary>
         </member>
         <member name="P:MilvaMongoTemplate.Localization.Resources.SharedResource.PasswordResetSuccessfull">
@@ -480,6 +555,11 @@
               Looks up a localized string similar to Telefon numaranız başarıyla değiştirildi..
             </summary>
         </member>
+        <member name="P:MilvaMongoTemplate.Localization.Resources.SharedResource.PhoneNumberExists">
+            <summary>
+              Looks up a localized string similar to Bu telefon numarası zaten kullanımda. Lütfen başka bir telefon numarası giriniz..
+            </summary>
+        </member>
         <member name="P:MilvaMongoTemplate.Localization.Resources.SharedResource.PhoneNumberVerificationMessageSent">
             <summary>
               Looks up a localized string similar to Telefon numarası doğrulama mesajı başarıyla gönderildi..
@@ -493,6 +573,11 @@
         <member name="P:MilvaMongoTemplate.Localization.Resources.SharedResource.PleaseEnterAValidValue">
             <summary>
               Looks up a localized string similar to Lütfen geçerli bir değer girin..
+            </summary>
+        </member>
+        <member name="P:MilvaMongoTemplate.Localization.Resources.SharedResource.PleaseEnterUsername">
+            <summary>
+              Looks up a localized string similar to Lütfen kullanıcı adınızı giriniz..
             </summary>
         </member>
         <member name="P:MilvaMongoTemplate.Localization.Resources.SharedResource.PleaseEnterValidUserInfo">
@@ -625,7 +710,7 @@
               Looks up a localized string similar to Başarıyla giriş yapıldı..
             </summary>
         </member>
-        <member name="P:MilvaMongoTemplate.Localization.Resources.SharedResource.SuccessfullyLoguotMessage">
+        <member name="P:MilvaMongoTemplate.Localization.Resources.SharedResource.SuccessfullyLogoutMessage">
             <summary>
               Looks up a localized string similar to Başarıyla çıkış yapıldı..
             </summary>
@@ -643,6 +728,11 @@
         <member name="P:MilvaMongoTemplate.Localization.Resources.SharedResource.TokenCouldNotBeGenerated">
             <summary>
               Looks up a localized string similar to Token üretilemedi..
+            </summary>
+        </member>
+        <member name="P:MilvaMongoTemplate.Localization.Resources.SharedResource.TokenExpired">
+            <summary>
+              Looks up a localized string similar to Oturumunuz zaman aşımına uğradı lütfen tekrar giriş yapınız..
             </summary>
         </member>
         <member name="P:MilvaMongoTemplate.Localization.Resources.SharedResource.Unauthorized">
@@ -680,6 +770,21 @@
               Looks up a localized string similar to Güncelleme işlemi başarısız..
             </summary>
         </member>
+        <member name="P:MilvaMongoTemplate.Localization.Resources.SharedResource.UserHaventEmail">
+            <summary>
+              Looks up a localized string similar to Hesabınıza tanımlı email adresi bulunmadığı için hesap işlemlerini gerçekleştiremezsiniz..
+            </summary>
+        </member>
+        <member name="P:MilvaMongoTemplate.Localization.Resources.SharedResource.UsernameOrEmailExists">
+            <summary>
+              Looks up a localized string similar to Bu kullanıcı adına veya email adresine sahip bir kullanıcı zaten var..
+            </summary>
+        </member>
+        <member name="P:MilvaMongoTemplate.Localization.Resources.SharedResource.UserNotExitsWithEmail">
+            <summary>
+              Looks up a localized string similar to Bu mail adresine sahip bir kullanıcı bulunamadı..
+            </summary>
+        </member>
         <member name="P:MilvaMongoTemplate.Localization.Resources.SharedResource.UserRoleAddNotFoundException">
             <summary>
               Looks up a localized string similar to Rol bulunamadı..
@@ -713,6 +818,36 @@
         <member name="P:MilvaMongoTemplate.Localization.Resources.SharedResource.ValidationIdPropertyError">
             <summary>
               Looks up a localized string similar to Lütfen geçerli bir {0} seçin..
+            </summary>
+        </member>
+        <member name="P:MilvaMongoTemplate.Localization.Resources.SharedResource.VerificationMailBodyButtonText">
+            <summary>
+              Looks up a localized string similar to Emaili Doğrula.
+            </summary>
+        </member>
+        <member name="P:MilvaMongoTemplate.Localization.Resources.SharedResource.VerificationMailBodyDescription">
+            <summary>
+              Looks up a localized string similar to Aşağıdaki butona tıklayarak email doğrulamanızı gerçekleştirebilirsiniz. Butonu görüntüleyemiyorsanız &lt;a href=&quot;~ButtonLink&quot;&gt;buraya&lt;/a&gt; tıklayınız. Doğrulama işleminde hata alırsanız, lütfen &lt;a href=&quot;{0}&quot; target=&quot;_blank&quot;&gt;teknik ekip &lt;/a&gt; ile iletişime geçiniz. .
+            </summary>
+        </member>
+        <member name="P:MilvaMongoTemplate.Localization.Resources.SharedResource.VerificationMailBodyResendText">
+            <summary>
+              Looks up a localized string similar to &lt;a href=&quot;{0}&quot;&gt;MilvaMongoTemplate&apos;e &lt;/a&gt;, üye olmadıysanız bu maili dikkate almayınız..
+            </summary>
+        </member>
+        <member name="P:MilvaMongoTemplate.Localization.Resources.SharedResource.VerificationMailBodyTitle">
+            <summary>
+              Looks up a localized string similar to Email Adresinizi Doğrulayın.
+            </summary>
+        </member>
+        <member name="P:MilvaMongoTemplate.Localization.Resources.SharedResource.VerificationMailBodyWelcomeText">
+            <summary>
+              Looks up a localized string similar to MilvaMongoTemplate&apos;e Hoşgeldiniz !.
+            </summary>
+        </member>
+        <member name="P:MilvaMongoTemplate.Localization.Resources.SharedResource.VerificationMailTitle">
+            <summary>
+              Looks up a localized string similar to MilvaMongoTemplate Email Doğrulaması.
             </summary>
         </member>
         <member name="P:MilvaMongoTemplate.Localization.Resources.SharedResource.WantedWasNotFound">

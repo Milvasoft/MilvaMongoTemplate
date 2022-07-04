@@ -1,20 +1,12 @@
-﻿using Fody;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using MilvaMongoTemplate.Entity.Collections;
-using MilvaMongoTemplate.Localization;
-using Milvasoft.Helpers.Models.Response;
-using Milvasoft.Helpers.Utils;
-using MongoDB.Bson;
-using MongoDB.Driver;
-using System;
+using Milvasoft.Core.Utils.Models.Response;
 using System.Globalization;
 using System.IO;
-using System.Threading.Tasks;
 
 namespace MilvaMongoTemplate.API.Helpers.Extensions;
 
@@ -33,8 +25,24 @@ public static partial class HelperExtensions
     {
         var isDeletedFilter = Builders<MilvaMongoTemplateUser>.Filter.Eq(a => a.IsDeleted, false);
 
-        return Builders<MilvaMongoTemplateUser>.Filter.And(filterDefinition, isDeletedFilter);
+        return Builders<MilvaMongoTemplateUser>.Filter.And(isDeletedFilter, filterDefinition);
     }
+
+    /// <summary>
+    /// Creates id and IsDeleted filter.
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    public static FilterDefinition<MilvaMongoTemplateUser> CreateIdAndIsDeletedFilter(ObjectId id)
+        => Builders<MilvaMongoTemplateUser>.Filter.Eq(a => a.Id, id).AddIsDeletedFilter();
+
+    /// <summary>
+    /// UserName id and IsDeleted filter.
+    /// </summary>
+    /// <param name="userName"></param>
+    /// <returns></returns>
+    public static FilterDefinition<MilvaMongoTemplateUser> CreateUserNameAndIsDeletedFilter(string userName)
+        => Builders<MilvaMongoTemplateUser>.Filter.Eq(a => a.UserName, userName).AddIsDeletedFilter();
 
     /// <summary>
     /// Returns specific string localizer.

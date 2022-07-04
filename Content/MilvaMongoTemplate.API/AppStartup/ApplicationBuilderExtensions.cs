@@ -1,19 +1,13 @@
-﻿using Fody;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
-using MilvaMongoTemplate.API.Helpers.Constants;
-using MilvaMongoTemplate.API.Helpers.Extensions;
 using MilvaMongoTemplate.Data.Utils;
-using Milvasoft.Helpers.FileOperations.Abstract;
+using Milvasoft.FileOperations.Abstract;
 using Swashbuckle.AspNetCore.SwaggerUI;
-using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Threading.Tasks;
 
 namespace MilvaMongoTemplate.API.AppStartup;
 
@@ -152,11 +146,11 @@ public static class ApplicationBuilderExtensions
 
         //if (Startup.WebHostEnvironment.EnvironmentName == "Production")
         //{
-            await Console.Out.WriteAppInfoAsync("Seed starting...\n");
+        await Console.Out.WriteAppInfoAsync("Seed starting...\n");
 
-            await app.ResetDataAsync();
+        await app.ResetDataAsync();
 
-            await Console.Out.WriteAppInfoAsync("Database seed successfully completed.");
+        await Console.Out.WriteAppInfoAsync("Database seed successfully completed.");
         //}
     }
 }

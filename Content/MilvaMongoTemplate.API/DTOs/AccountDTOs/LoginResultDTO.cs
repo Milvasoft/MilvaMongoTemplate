@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using MilvaMongoTemplate.API.Helpers.Attributes.ValidationAttributes;
-using Milvasoft.Helpers.Identity.Concrete;
-using System.Collections.Generic;
+using Milvasoft.Identity.Abstract;
+using Milvasoft.Identity.Concrete;
 
 namespace MilvaMongoTemplate.API.DTOs.AccountDTOs;
 

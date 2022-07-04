@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.Filters;
 using MilvaMongoTemplate.API.DTOs.AccountDTOs;
-using Milvasoft.Helpers.Attributes.ActionFilter;
-using System;
+using Milvasoft.Attributes.ActionFilter;
 
 namespace MilvaMongoTemplate.API.Helpers.Attributes.ActionFilters;
 

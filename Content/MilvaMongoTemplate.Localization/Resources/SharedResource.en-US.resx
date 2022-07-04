@@ -273,8 +273,8 @@
   <data name="LocalizedEmail" xml:space="preserve">
     <value>Email</value>
   </data>
-  <data name="LocalizedName" xml:space="preserve">
-    <value>Name</value>
+  <data name="LocalizedNameSurname" xml:space="preserve">
+    <value>Name-Surname</value>
   </data>
   <data name="LocalizedPassword" xml:space="preserve">
     <value>Password</value>
@@ -390,7 +390,7 @@
   <data name="SuccessfullyLoginMessage" xml:space="preserve">
     <value>Successfully logged in.</value>
   </data>
-  <data name="SuccessfullyLoguotMessage" xml:space="preserve">
+  <data name="SuccessfullyLogoutMessage" xml:space="preserve">
     <value>Successfully logged out.</value>
   </data>
   <data name="SuccessfullyOperationMessage" xml:space="preserve">
@@ -572,5 +572,86 @@
   </data>
   <data name="WrongPhoneNumberVerificationCode" xml:space="preserve">
     <value>Your verification code is wrong.</value>
+  </data>
+  <data name="AtLeastSelectOneRole" xml:space="preserve">
+    <value>You should select at least 1 role.</value>
+  </data>
+  <data name="CannotDeleteAppUser" xml:space="preserve">
+    <value>You cannot delete app user.</value>
+  </data>
+  <data name="CannotDeleteDefaultAdminUser" xml:space="preserve">
+    <value>You cannot delete default admin user.</value>
+  </data>
+  <data name="EmailChangeMailBodyButtonText" xml:space="preserve">
+    <value>Change My Email</value>
+  </data>
+  <data name="EmailChangeMailBodyDesciption" xml:space="preserve">
+    <value>You can reach the page where you can change the email by clicking the button below. If you can't view button click &lt;a href="~ButtonLink"&gt;here.&lt;/a&gt; If you have received an error in the email change process please contact, lütfen &lt;a href="{0}" target="_blank"&gt;technical team &lt;/a&gt;.</value>
+  </data>
+  <data name="EmailChangeMailBodyResendText" xml:space="preserve">
+    <value>If you have not made such a request, we recommend that you change your password.</value>
+  </data>
+  <data name="EmailChangeMailBodyTitle" xml:space="preserve">
+    <value>Email Change</value>
+  </data>
+  <data name="EmailChangeMailTitle" xml:space="preserve">
+    <value>MilvaMongoTemplate Email Change</value>
+  </data>
+  <data name="InvalidOperation" xml:space="preserve">
+    <value>You are trying to perform an invalid operation.</value>
+  </data>
+  <data name="PasswordResetMailBodyButtonText" xml:space="preserve">
+    <value>Reset My Password</value>
+  </data>
+  <data name="PasswordResetMailBodyDesciption" xml:space="preserve">
+    <value>You can reach the page where you can reset the password by clicking the button below. If you can't view button click &lt;a href="~ButtonLink"&gt;here.&lt;/a&gt; If you have received an error in the password reset process please contact &lt;a href="{0}" target="_blank"&gt;technical team &lt;/a&gt;.</value>
+  </data>
+  <data name="PasswordResetMailBodyResendText" xml:space="preserve">
+    <value>If you have not made such a request, we recommend that you change your password. </value>
+  </data>
+  <data name="PasswordResetMailBodyTitle" xml:space="preserve">
+    <value>Password Reset</value>
+  </data>
+  <data name="PasswordResetMailTitle" xml:space="preserve">
+    <value>MilvaMongoTemplate Password Reset</value>
+  </data>
+  <data name="PhoneNumberExists" xml:space="preserve">
+    <value>This phone number is already in use. Please enter another phone number.</value>
+  </data>
+  <data name="PleaseEnterUsername" xml:space="preserve">
+    <value>Please enter your username.</value>
+  </data>
+  <data name="TokenExpired" xml:space="preserve">
+    <value>Your session has timed out, please login again.</value>
+  </data>
+  <data name="UserHaventEmail" xml:space="preserve">
+    <value>Since there is no e-mail address defined for your account, you cannot perform account transactions.</value>
+  </data>
+  <data name="UsernameOrEmailExists" xml:space="preserve">
+    <value>A user with this username or email already exists.</value>
+  </data>
+  <data name="UserNotExitsWithEmail" xml:space="preserve">
+    <value>No user found with this e-mail address.</value>
+  </data>
+  <data name="VerificationMailBodyButtonText" xml:space="preserve">
+    <value>Verify Email</value>
+  </data>
+  <data name="VerificationMailBodyDescription" xml:space="preserve">
+    <value>You can verify your e-mail by clicking the button below. If you can't view button click &lt;a href="~ButtonLink"&gt;here.&lt;/a&gt; If you have received an error in the verification process, please contact &lt;a href="{0}"&gt; technical team &lt;/a&gt;. </value>
+  </data>
+  <data name="VerificationMailBodyResendText" xml:space="preserve">
+    <value>If you are not a member of &lt;a href="{0}"&gt; MilvaMongoTemplate &lt;/a&gt;, ignore this email. </value>
+  </data>
+  <data name="VerificationMailBodyTitle" xml:space="preserve">
+    <value>Verify Your Email Address</value>
+  </data>
+  <data name="VerificationMailBodyWelcomeText" xml:space="preserve">
+    <value>Welcome to MilvaMongoTemplate</value>
+  </data>
+  <data name="VerificationMailTitle" xml:space="preserve">
+    <value>MilvaMongoTemplate Email Verification</value>
+  </data>
+  <data name="LoggedOutPleaseRelogin" xml:space="preserve">
+    <value>Please log in again.</value>
   </data>
 </root>

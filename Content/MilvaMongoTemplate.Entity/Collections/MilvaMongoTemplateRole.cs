@@ -1,9 +1,9 @@
-﻿using AspNetCore.Identity.Mongo.Model;
-using MilvaMongoTemplate.Entity.Utils;
-using Milvasoft.Helpers.DataAccess.EfCore.Abstract.Entity;
-using Milvasoft.Helpers.DataAccess.MongoDB.Utils;
+﻿using MilvaMongoTemplate.Entity.Utils;
+using Milvasoft.Core.EntityBase.Concrete;
+using Milvasoft.DataAccess.MongoDB.Utils.Attributes;
 using MongoDB.Bson;
 using System;
+using System.Linq.Expressions;
 
 namespace MilvaMongoTemplate.Entity.Collections;
 
@@ -11,16 +11,32 @@ namespace MilvaMongoTemplate.Entity.Collections;
 /// Roles of app.
 /// </summary>
 [BsonCollection(CollectionNames.MilvaMongoTemplateRoles)]
-public class MilvaMongoTemplateRole : MongoRole<ObjectId>, IAuditable<ObjectId>
+public class MilvaMongoTemplateRole : FullAuditableEntityWithCustomUser<MilvaMongoTemplateUser, ObjectId, ObjectId>
 {
     /// <summary>
-    /// Last modification date of entity.
+    /// Name of role.
     /// </summary>
-    public DateTime? LastModificationDate { get; set; }
+    public string Name { get; set; }
 
     /// <summary>
-    /// Creation date of entity.
+    /// Normalized name of role.
     /// </summary>
-    public DateTime CreationDate { get => Id.CreationTime; set { } }
+    public string NormalizedName { get; set; }
+
+    #region Projections
+
+    /// <summary>
+    /// Projection for methods.
+    /// </summary>
+    public static Expression<Func<MilvaMongoTemplateRole, MilvaMongoTemplateRole>> NameProjection
+    {
+        get => r => new MilvaMongoTemplateRole
+        {
+            Id = r.Id,
+            Name = r.Name
+        };
+    }
+
+    #endregion
 
 }

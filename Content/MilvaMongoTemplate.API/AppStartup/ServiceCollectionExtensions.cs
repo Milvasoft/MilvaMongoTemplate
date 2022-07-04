@@ -1,48 +1,32 @@
-﻿using AspNetCore.Identity.Mongo;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Localization;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using MilvaMongoTemplate.API.Helpers;
-using MilvaMongoTemplate.API.Helpers.Constants;
-using MilvaMongoTemplate.API.Helpers.Models;
 using MilvaMongoTemplate.API.Helpers.Swagger;
 using MilvaMongoTemplate.API.Services.Abstract;
 using MilvaMongoTemplate.API.Services.Concrete;
-using MilvaMongoTemplate.Data.Utils;
-using MilvaMongoTemplate.Entity.Collections;
-using MilvaMongoTemplate.Entity.Utils;
-using MilvaMongoTemplate.Localization;
-using Milvasoft.Helpers;
-using Milvasoft.Helpers.Caching;
-using Milvasoft.Helpers.DataAccess.MongoDB.Abstract;
-using Milvasoft.Helpers.DataAccess.MongoDB.Concrete;
-using Milvasoft.Helpers.DataAccess.MongoDB.Utils;
-using Milvasoft.Helpers.DependencyInjection;
-using Milvasoft.Helpers.Encryption.Concrete;
-using Milvasoft.Helpers.FileOperations;
-using Milvasoft.Helpers.FileOperations.Abstract;
-using Milvasoft.Helpers.FileOperations.Concrete;
-using Milvasoft.Helpers.Identity.Abstract;
-using Milvasoft.Helpers.Identity.Concrete;
-using Milvasoft.Helpers.Mail;
-using Milvasoft.Helpers.Models.Response;
-using Milvasoft.Helpers.Utils;
-using MongoDB.Bson;
+using Milvasoft.Caching.Redis;
+using Milvasoft.Core.Abstractions;
+using Milvasoft.DataAccess.MongoDB.Utils;
+using Milvasoft.DataAccess.MongoDB.Utils.Settings;
+using Milvasoft.Encryption.Abstract;
+using Milvasoft.Encryption.Concrete;
+using Milvasoft.FileOperations;
+using Milvasoft.FileOperations.Abstract;
+using Milvasoft.FileOperations.Concrete;
+using Milvasoft.Identity.Abstract;
+using Milvasoft.Identity.Builder;
+using Milvasoft.Identity.Concrete;
+using Milvasoft.Identity.Concrete.Options;
+using Milvasoft.Mail;
 using Newtonsoft.Json;
-using System;
-using System.IdentityModel.Tokens.Jwt;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace MilvaMongoTemplate.API.AppStartup;
 
@@ -102,37 +86,23 @@ public static class ServiceCollectionExtensions
     /// <param name="services"></param>
     public static void AddIdentity(this IServiceCollection services)
     {
-        Action<IdentityOptions> identityOptions = setupAction =>
+        static void identityOptions(MilvaIdentityOptions setupAction)
         {
             //Kullanıcı locklama süresi
-            setupAction.Lockout.DefaultLockoutTimeSpan = new TimeSpan(0, 10, 0);
-            setupAction.Lockout.MaxFailedAccessAttempts = 5;
-            setupAction.User.RequireUniqueEmail = true;
+            setupAction.Lockout.DefaultLockoutTimeSpan = new TimeSpan(3, 1, 0);//buradaki 3 saaat ekleme veri tabanı saati yanlış olduğundan dolayı // 1 ise 1 dakka kitleniyor
+            setupAction.Lockout.MaxFailedAccessAttempts = 5;//Başarısız deneme sayısı
+            setupAction.User.RequireUniqueEmail = false;
             setupAction.Password.RequireDigit = false;
             setupAction.Password.RequiredLength = 1;
             setupAction.Password.RequireLowercase = false;
             setupAction.Password.RequireNonAlphanumeric = false;
             setupAction.Password.RequireUppercase = false;
-            setupAction.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._";
-            //setupAction.Stores.ProtectPersonalData = true;
-            //setupAction.Stores.MaxLengthForKeys = 128;
-        };
+            setupAction.User.AllowedUserNameCharacters = "abcçdefghiıjklmnoöpqrsştuüvwxyzABCÇDEFGHIİJKLMNOÖPQRSŞTUÜVWXYZ0123456789-._";
+        }
 
-        var mongoSettings = services.BuildServiceProvider().GetRequiredService<IMongoDbSettings>();
-
-        services.AddIdentityMongoDbProvider<MilvaMongoTemplateUser, MilvaMongoTemplateRole, ObjectId>(identityOptions,
-                                                                        mongo =>
-                                                                        {
-                                                                            mongo.ConnectionString = $"{mongoSettings.ConnectionString}/{mongoSettings.DatabaseName}";
-                                                                            mongo.UsersCollection = CollectionNames.MilvaMongoTemplateUsers;
-                                                                            mongo.RolesCollection = CollectionNames.MilvaMongoTemplateRoles;
-                                                                        })
-                .AddUserValidator<MilvaUserValidation<MilvaMongoTemplateUser, ObjectId, IStringLocalizer<SharedResource>>>()
-                .AddErrorDescriber<MilvaIdentityDescriber<IStringLocalizer<SharedResource>>>()
-                .AddUserManager<MilvaMongoTemplateUserManager>()
-                .AddRoles<MilvaMongoTemplateRole>()
-                .AddDefaultTokenProviders()
-                /*.AddPersonalDataProtection<LookupProtector, KeyRing>()*/;
+        services.AddMilvaIdentity<MilvaMongoTemplateUser, ObjectId>()
+                .WithOptions(identityOptions)
+                .WithUserManager<MilvaUserManager<MilvaMongoTemplateUser, ObjectId>>();
     }
 
     /// <summary>
@@ -142,8 +112,6 @@ public static class ServiceCollectionExtensions
     public static void AddJwtBearer(this IServiceCollection services)
     {
         var tokenManagement = GlobalConstant.Configurations.Tokens.First(i => i.Key == StringKey.Public);
-
-        var localizer = services.BuildServiceProvider().GetRequiredService<IStringLocalizer<SharedResource>>();
 
         services.AddSingleton<ITokenManagement>(tokenManagement);
 
@@ -155,83 +123,23 @@ public static class ServiceCollectionExtensions
             ValidIssuer = string.Empty,
             ValidateAudience = false,
             ValidAudience = string.Empty,
-            ValidateLifetime = true
+            ValidateLifetime = false,
+            RequireExpirationTime = false
         };
 
         services.AddSingleton(tokenValidationParams);
+
+        services.AddAuthorization();
 
         services.AddAuthentication(opt =>
         {
             opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
             opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-        }).AddJwtBearer(opt =>
+        }).AddJwtBearer(jwtOpt =>
         {
-            IStringLocalizer<SharedResource> GetLocalizerInstance(HttpContext httpContext)
-            {
-                return httpContext.RequestServices.GetRequiredService<IStringLocalizer<SharedResource>>();
-            }
-
-            Task ReturnResponse(HttpContext httpContext, string localizerKey, int statusCode)
-            {
-                if (!httpContext.Response.HasStarted)
-                {
-                    var localizer = GetLocalizerInstance(httpContext);
-
-                    ExceptionResponse validationResponse = new()
-                    {
-                        Message = localizer[localizerKey],
-                        Success = false,
-                        StatusCode = statusCode
-                    };
-
-                    httpContext.Response.ContentType = "application/json";
-                    httpContext.Response.StatusCode = MilvaStatusCodes.Status200OK;
-                    return httpContext.Response.WriteAsync(JsonConvert.SerializeObject(validationResponse));
-                }
-                return Task.CompletedTask;
-            }
-
-            opt.Events = new JwtBearerEvents()
-            {
-                //Token içinde name kontrol etme
-                OnTokenValidated = (context) =>
-            {
-                if (string.IsNullOrEmpty(context.Principal.Identity.Name) || context.SecurityToken is not JwtSecurityToken accessToken)
-                {
-                    var localizer = GetLocalizerInstance(context.HttpContext);
-
-                    context.Fail(localizer["Unauthorized"]);
-                    return ReturnResponse(context.HttpContext, "Unauthorized", MilvaStatusCodes.Status401Unauthorized);
-                }
-
-                return Task.CompletedTask;
-            },
-                OnForbidden = context =>
-                {
-                    return ReturnResponse(context.HttpContext, "Forbidden", MilvaStatusCodes.Status403Forbidden);
-                },
-                OnChallenge = context =>
-                {
-                    // Skip the default logic.
-                    context.HandleResponse();
-
-                    return ReturnResponse(context.HttpContext, "Unauthorized", MilvaStatusCodes.Status401Unauthorized);
-                },
-                OnAuthenticationFailed = context =>
-                {
-                    string localizerKey = "Unauthorized";
-
-                    if (context.Exception.GetType() == typeof(SecurityTokenExpiredException))
-                        localizerKey = "TokenExpired";
-
-                    return ReturnResponse(context.HttpContext, localizerKey, MilvaStatusCodes.Status401Unauthorized);
-                }
-            };
-
-
-            opt.RequireHttpsMetadata = false;
-            opt.SaveToken = true;
-            opt.TokenValidationParameters = tokenValidationParams;
+            jwtOpt.RequireHttpsMetadata = false;
+            jwtOpt.SaveToken = true;
+            jwtOpt.TokenValidationParameters = tokenValidationParams;
         });
     }
 
@@ -248,6 +156,7 @@ public static class ServiceCollectionExtensions
         services.AddTransient(typeof(Lazy<>), typeof(MilvaLazy<>));
         services.AddHttpClient();
         services.AddHttpContextAccessor();
+        services.AddSingleton<IMilvaResource, SharedResource>();
 
         GlobalConstant.MainMail = GlobalConstant.Configurations.Mails.First(i => i.Key == StringKey.MilvaTemplateMail);
 
@@ -257,15 +166,7 @@ public static class ServiceCollectionExtensions
                                                                     GlobalConstant.MainMail.SmtpHost,
                                                                     true));
 
-        services.AddScoped((_) => new MilvaEncryptionProvider(GlobalConstant.MilvaMongoTemplateKey));
-
-
-
-        #region Repositories
-
-        services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
-
-        #endregion
+        services.AddScoped<IMilvaEncryptionProvider>((_) => new MilvaEncryptionProvider(GlobalConstant.MilvaMongoTemplateKey));
 
         #region Services
 
@@ -284,10 +185,23 @@ public static class ServiceCollectionExtensions
     /// <param name="jsonOperations"></param>
     public static void ConfigureDatabase(this IServiceCollection services, IJsonOperations jsonOperations)
     {
-        var mongoSettings = jsonOperations.GetCryptedContentAsync<MongoDbSettings>(Path.Combine(GlobalConstant.JsonFilesPath,
-                                                                                   $"connectionstring.{Startup.WebHostEnvironment.EnvironmentName}.json")).Result;
+        var mongoSettings = jsonOperations.GetCryptedContentAsync<MongoDbSettings>($"connectionstring.{Startup.WebHostEnvironment.EnvironmentName}.json").Result;
 
-        services.AddSingleton<IMongoDbSettings>(mongoSettings);
+        services.AddMilvaMongoHelper(opt =>
+        {
+            opt.AddTenantIdSupport = true;
+            opt.MongoClientSettings = new MongoClientSettings
+            {
+                MinConnectionPoolSize = 400,
+                MaxConnectionPoolSize = 600,
+                Server = new MongoServerAddress(Startup.WebHostEnvironment.EnvironmentName == "Production" ? "mongodb" : "localhost")
+            };
+            opt.DatabaseName = mongoSettings.DatabaseName;
+            opt.EncryptionKey = GlobalConstant.MilvaMongoTemplateKey;
+            opt.UseUtcForDateTimes = true;
+        });
+
+        services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
     }
 
     /// <summary>

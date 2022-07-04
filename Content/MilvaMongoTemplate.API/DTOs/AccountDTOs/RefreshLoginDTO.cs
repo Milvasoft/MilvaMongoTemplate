@@ -3,21 +3,21 @@
 namespace MilvaMongoTemplate.API.DTOs.AccountDTOs;
 
 /// <summary>
-/// Login and sign up processes are happens with this dto.
+/// The model to be used when refresh login operation.
 /// </summary>
-public class LoginDTO
+public class RefreshLoginDTO
 {
     /// <summary>
-    /// UserName of user.
+    /// Refresh token which user have.
     /// </summary>
-    [MValidateString(3, 20)]
-    public string UserName { get; set; }
+    [MValidateString(500)]
+    public string RefreshToken { get; set; }
 
     /// <summary>
-    /// Password of user.
+    /// Old valid token which user have.
     /// </summary>
-    [MValidateString(5, 75)]
-    public string Password { get; set; }
+    [MValidateString(500)]
+    public string OldToken { get; set; }
 
     /// <summary>
     /// The mobile phone mac address.

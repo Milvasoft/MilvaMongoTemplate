@@ -1,8 +1,5 @@
 ﻿using MilvaMongoTemplate.API.Helpers.Attributes.ValidationAttributes;
-using MilvaMongoTemplate.Localization;
-using Milvasoft.Helpers.Attributes.Validation;
-using MongoDB.Bson;
-using System.Collections.Generic;
+using Milvasoft.Attributes.Validation;
 
 namespace MilvaMongoTemplate.API.DTOs.AccountDTOs;
 
@@ -21,13 +18,7 @@ public class MilvaMongoTemplateUserCreateDTO : DocumentBaseDTO
     /// Name of to be created user by admin.
     /// </summary>
     [MValidateString(3, 25)]
-    public string Name { get; set; }
-
-    /// <summary>
-    /// Surname of to be created user by admin.
-    /// </summary>
-    [MValidateString(3, 25)]
-    public string Surname { get; set; }
+    public string NameSurname { get; set; }
 
     /// <summary>
     /// Email of to be created user by admin.

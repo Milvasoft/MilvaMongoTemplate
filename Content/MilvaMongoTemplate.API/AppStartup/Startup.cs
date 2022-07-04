@@ -1,17 +1,12 @@
 ﻿#region Using Directives
-using Fody;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Localization;
-using MilvaMongoTemplate.API.Helpers.Constants;
-using MilvaMongoTemplate.API.Helpers.Extensions;
 using MilvaMongoTemplate.API.Helpers.Models;
 using MilvaMongoTemplate.API.Middlewares;
-using MilvaMongoTemplate.Localization;
-using Milvasoft.Helpers.Middlewares;
-using System;
+using Milvasoft.Middlewares;
 using System.IO;
 #endregion
 
@@ -26,7 +21,8 @@ namespace MilvaMongoTemplate.API.AppStartup;
     - Change the running port on IIS of the api in launchsetting.json.
     - Check the sample controller and service. (Account)
     - Check Migrations folder and add your necessary methods into classes.
-    - Decrypt conncetionstring.*.json files and change connection string.
+    - Decrypt connectionstring.*.json files and change connection string.
+    - Decrypt configurations.json file and change api configurations.
     - Enter mailsender password in ServiceCollectionExtensions.cs.
     - Change encryption keys.
     - Lastly and hardest, remove this comment block :)

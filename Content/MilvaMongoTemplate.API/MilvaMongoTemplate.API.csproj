@@ -12,16 +12,21 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Fody" Version="6.6.0" PrivateAssets="All" />
+		<PackageReference Include="Fody" Version="6.6.3" PrivateAssets="All" />
 		<PackageReference Include="ConfigureAwait.Fody" Version="3.3.1" PrivateAssets="All" />
-		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.2" />
-		<PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.2" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.6" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.6" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />
-		<PackageReference Include="Microsoft.Extensions.Localization" Version="6.0.2" />
-		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.14.0" />
+		<PackageReference Include="Microsoft.Extensions.Localization" Version="6.0.6" />
+		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.16.1" />
+		<PackageReference Include="Milvasoft.Attributes" Version="1.0.0" />
+		<PackageReference Include="Milvasoft.Caching.Redis" Version="1.0.0" />
+		<PackageReference Include="Milvasoft.FileOperations" Version="1.0.0" />
+		<PackageReference Include="Milvasoft.Mail" Version="1.0.0" />
+		<PackageReference Include="Milvasoft.Middlewares" Version="1.0.0" />
 		<PackageReference Include="Serilog.AspNetCore" Version="5.0.0" />
 		<PackageReference Include="Serilog.Sinks.Seq" Version="5.1.1" />
-		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.3.1" />
 		<PackageReference Include="System.Management" Version="6.0.0" />
 	</ItemGroup>
 

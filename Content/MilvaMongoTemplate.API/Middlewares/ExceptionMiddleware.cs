@@ -1,24 +1,11 @@
-﻿using Fody;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
-using MilvaMongoTemplate.API.Helpers.Constants;
-using MilvaMongoTemplate.API.Helpers.Extensions;
-using MilvaMongoTemplate.Localization;
-using Milvasoft.Helpers;
-using Milvasoft.Helpers.DependencyInjection;
-using Milvasoft.Helpers.Exceptions;
-using Milvasoft.Helpers.Extensions;
-using Milvasoft.Helpers.Mail;
-using Milvasoft.Helpers.Models.Response;
-using Milvasoft.Helpers.Utils;
+using Milvasoft.Core.Abstractions;
+using Milvasoft.Core.Utils.Models.Response;
+using Milvasoft.Mail;
 using Newtonsoft.Json;
 using Serilog;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using ResourceKey = MilvaMongoTemplate.Localization.Resources.SharedResource;
 
 namespace MilvaMongoTemplate.API.Middlewares;
 
@@ -55,7 +42,9 @@ public class ExceptionMiddleware
         {
             context.Request.EnableBuffering();
 
-            await _next.Invoke(context);
+            //Continue processing
+            if (_next != null)
+                await _next.Invoke(context);
         }
         catch (Exception ex)
         {
@@ -155,7 +144,7 @@ public class ExceptionMiddleware
 
             var stackTraceFirstLine = await sr.ReadLineAsync();
 
-            await mailSender.MilvaSendMailAsync("errors@yours.com", "Unhandled Exception From MilvaTemplate", $"{path}|{ex.Message}|{stackTraceFirstLine}");
+            await mailSender.MilvaSendMailAsync("errors@yours.com", "Unhandled Exception From MilvaMongoTemplate", $"{path}|{ex.Message}|{stackTraceFirstLine}");
         }
     }
 }

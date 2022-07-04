@@ -9,6 +9,11 @@
             Class that performs database reset process.
             </summary>
         </member>
+        <member name="F:MilvaMongoTemplate.Data.Utils.DataSeed.AdminUserName">
+            <summary>
+            Default admin user name.
+            </summary>
+        </member>
         <member name="M:MilvaMongoTemplate.Data.Utils.DataSeed.ResetDataAsync(Microsoft.AspNetCore.Builder.IApplicationBuilder)">
             <summary>
             Resets all data in the database.
@@ -30,13 +35,13 @@
             <param name="entities"></param>
             <returns></returns>
         </member>
-        <member name="M:MilvaMongoTemplate.Data.Utils.DataSeed.InitializeRolesAsync(Microsoft.AspNetCore.Identity.RoleManager{MilvaMongoTemplate.Entity.Collections.MilvaMongoTemplateRole})">
+        <member name="M:MilvaMongoTemplate.Data.Utils.DataSeed.InitializeRolesAsync">
             <summary>
             Initializes <see cref="T:MilvaMongoTemplate.Entity.Collections.MilvaMongoTemplateRole"/> to database.
             </summary>
             <returns></returns>
         </member>
-        <member name="M:MilvaMongoTemplate.Data.Utils.DataSeed.InitializeUsersAsync(MilvaMongoTemplate.Data.Utils.MilvaMongoTemplateUserManager)">
+        <member name="M:MilvaMongoTemplate.Data.Utils.DataSeed.InitializeUsersAsync(Milvasoft.Identity.Abstract.IMilvaUserManager{MilvaMongoTemplate.Entity.Collections.MilvaMongoTemplateUser,MongoDB.Bson.ObjectId})">
             <summary>
             Initializes <see cref="T:MilvaMongoTemplate.Entity.Collections.MilvaMongoTemplateUser"/> to database.
             </summary>
@@ -46,13 +51,6 @@
             <summary>
             Configured indexes.
             </summary>
-            <returns></returns>
-        </member>
-        <member name="M:MilvaMongoTemplate.Data.Utils.DataSeed.ToObjectId(System.Int32)">
-            <summary>
-            Converts <paramref name="value"/>'s type to <see cref="T:MongoDB.Bson.ObjectId"/>
-            </summary>
-            <param name="value"></param>
             <returns></returns>
         </member>
         <member name="T:MilvaMongoTemplate.Data.Utils.MilvaMongoTemplateUserManager">

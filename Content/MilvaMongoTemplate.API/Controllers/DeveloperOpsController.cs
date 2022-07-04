@@ -1,17 +1,11 @@
-﻿using Fody;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using MilvaMongoTemplate.API.DTOs.AccountDTOs;
-using MilvaMongoTemplate.API.Helpers.Constants;
 using MilvaMongoTemplate.API.Services.Abstract;
 using MilvaMongoTemplate.Data.Utils;
-using Milvasoft.Helpers.Exceptions;
-using Milvasoft.Helpers.Extensions;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace MilvaMongoTemplate.API.Controllers;
 

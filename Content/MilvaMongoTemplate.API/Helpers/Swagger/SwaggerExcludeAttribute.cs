@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace MilvaMongoTemplate.API.Helpers.Swagger;
+﻿namespace MilvaMongoTemplate.API.Helpers.Swagger;
 
 /// <summary>
 /// Excludes property from swagger documentation.

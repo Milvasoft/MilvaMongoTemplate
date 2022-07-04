@@ -1,6 +1,5 @@
 ﻿using MilvaMongoTemplate.API.Helpers.Attributes.ValidationAttributes;
-using MilvaMongoTemplate.Localization;
-using Milvasoft.Helpers.Attributes.Validation;
+using Milvasoft.Attributes.Validation;
 
 namespace MilvaMongoTemplate.API.DTOs.AccountDTOs;
 

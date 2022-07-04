@@ -1,10 +1,8 @@
 ﻿using Microsoft.OpenApi.Models;
 using MilvaMongoTemplate.API.AppStartup;
 using MilvaMongoTemplate.API.Helpers.Attributes.ValidationAttributes;
-using Milvasoft.Helpers.Attributes.Validation;
-using Milvasoft.Helpers.Utils;
+using Milvasoft.Attributes.Validation;
 using Swashbuckle.AspNetCore.SwaggerGen;
-using System;
 using System.Reflection;
 
 namespace MilvaMongoTemplate.API.Helpers.Swagger;

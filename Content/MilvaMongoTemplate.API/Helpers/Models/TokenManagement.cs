@@ -1,6 +1,5 @@
 ﻿using MilvaMongoTemplate.API.Helpers.Attributes.ValidationAttributes;
-using Milvasoft.Helpers.Identity.Abstract;
-using Newtonsoft.Json;
+using Milvasoft.Identity.Abstract;
 
 namespace MilvaMongoTemplate.API.Helpers.Models;
 

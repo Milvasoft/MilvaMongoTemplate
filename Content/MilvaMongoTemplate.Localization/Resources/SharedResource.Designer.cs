@@ -19,7 +19,7 @@ namespace MilvaMongoTemplate.Localization.Resources {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class SharedResource {
@@ -169,6 +169,33 @@ namespace MilvaMongoTemplate.Localization.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to En az 1 adet rol seçmelisiniz..
+        /// </summary>
+        public static string AtLeastSelectOneRole {
+            get {
+                return ResourceManager.GetString("AtLeastSelectOneRole", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You cannot delete app user..
+        /// </summary>
+        public static string CannotDeleteAppUser {
+            get {
+                return ResourceManager.GetString("CannotDeleteAppUser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You cannot delete default admin user..
+        /// </summary>
+        public static string CannotDeleteDefaultAdminUser {
+            get {
+                return ResourceManager.GetString("CannotDeleteDefaultAdminUser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0} bulunamadı..
         /// </summary>
         public static string CannotFoundMessage {
@@ -232,11 +259,56 @@ namespace MilvaMongoTemplate.Localization.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Emailimi Değiştir.
+        /// </summary>
+        public static string EmailChangeMailBodyButtonText {
+            get {
+                return ResourceManager.GetString("EmailChangeMailBodyButtonText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Aşağıdaki butona tıklayarak email değişikliği işlemini gerçekleştirebileceğiniz sayfaya ulaşabilirsiniz. Butonu görüntüleyemiyorsanız &lt;a href=&quot;~ButtonLink&quot;&gt;buraya&lt;/a&gt; tıklayınız. Email değişiklik işleminde hata aldıysanız, lütfen &lt;a href=&quot;{0}&quot; target=&quot;_blank&quot;&gt;teknik ekip &lt;/a&gt; ile iletişime geçiniz. .
+        /// </summary>
+        public static string EmailChangeMailBodyDesciption {
+            get {
+                return ResourceManager.GetString("EmailChangeMailBodyDesciption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Böyle bir istekte bulunmadıysanız, şifrenizi yenilemenizi öneririz. .
+        /// </summary>
+        public static string EmailChangeMailBodyResendText {
+            get {
+                return ResourceManager.GetString("EmailChangeMailBodyResendText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Email Değişikliği.
+        /// </summary>
+        public static string EmailChangeMailBodyTitle {
+            get {
+                return ResourceManager.GetString("EmailChangeMailBodyTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to E-posta adresi değişikliği maili başarıyla gönderildi..
         /// </summary>
         public static string EmailChangeMailSent {
             get {
                 return ResourceManager.GetString("EmailChangeMailSent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to MilvaMongoTemplate Email Değişikliği.
+        /// </summary>
+        public static string EmailChangeMailTitle {
+            get {
+                return ResourceManager.GetString("EmailChangeMailTitle", resourceCulture);
             }
         }
         
@@ -583,6 +655,15 @@ namespace MilvaMongoTemplate.Localization.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Geçersiz bir işlem yapmaya çalışıyorsunuz..
+        /// </summary>
+        public static string InvalidOperation {
+            get {
+                return ResourceManager.GetString("InvalidOperation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Seçilen sipariş tipi ile uyuşan herhangi bir sipariş tipi bulunamadı..
         /// </summary>
         public static string InvalidOrderType {
@@ -664,11 +745,11 @@ namespace MilvaMongoTemplate.Localization.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to İsim.
+        ///   Looks up a localized string similar to Ad-Soyad.
         /// </summary>
-        public static string LocalizedName {
+        public static string LocalizedNameSurname {
             get {
-                return ResourceManager.GetString("LocalizedName", resourceCulture);
+                return ResourceManager.GetString("LocalizedNameSurname", resourceCulture);
             }
         }
         
@@ -732,6 +813,15 @@ namespace MilvaMongoTemplate.Localization.Resources {
         public static string LoggedInOtherInstitution {
             get {
                 return ResourceManager.GetString("LoggedInOtherInstitution", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sistemden çıkış yapılmış lütfen tekrar giriş yapınız..
+        /// </summary>
+        public static string LoggedOutPleaseRelogin {
+            get {
+                return ResourceManager.GetString("LoggedOutPleaseRelogin", resourceCulture);
             }
         }
         
@@ -853,11 +943,56 @@ namespace MilvaMongoTemplate.Localization.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Şifremi Sıfırla.
+        /// </summary>
+        public static string PasswordResetMailBodyButtonText {
+            get {
+                return ResourceManager.GetString("PasswordResetMailBodyButtonText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Aşağıdaki butona tıklayarak şifre sıfırlama işlemini gerçekleştirebileceğiniz sayfaya ulaşabilirsiniz. Butonu görüntüleyemiyorsanız &lt;a href=&quot;~ButtonLink&quot;&gt;buraya&lt;/a&gt; tıklayınız. Şifre sıfırlama işleminde hata alırsanız, lütfen &lt;a href=&quot;{0}&quot; target=&quot;_blank&quot;&gt;teknik ekip &lt;/a&gt; ile iletişime geçiniz..
+        /// </summary>
+        public static string PasswordResetMailBodyDesciption {
+            get {
+                return ResourceManager.GetString("PasswordResetMailBodyDesciption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Böyle bir istekte bulunmadıysanız, şifrenizi değiştirmenizi öneririz. .
+        /// </summary>
+        public static string PasswordResetMailBodyResendText {
+            get {
+                return ResourceManager.GetString("PasswordResetMailBodyResendText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Şifre Sıfırlama.
+        /// </summary>
+        public static string PasswordResetMailBodyTitle {
+            get {
+                return ResourceManager.GetString("PasswordResetMailBodyTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Şifre sıfırlama maili başarıyla gönderildi.
         /// </summary>
         public static string PasswordResetMailSent {
             get {
                 return ResourceManager.GetString("PasswordResetMailSent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to MilvaMongoTemplate Şifre Sıfırlama.
+        /// </summary>
+        public static string PasswordResetMailTitle {
+            get {
+                return ResourceManager.GetString("PasswordResetMailTitle", resourceCulture);
             }
         }
         
@@ -889,6 +1024,15 @@ namespace MilvaMongoTemplate.Localization.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Bu telefon numarası zaten kullanımda. Lütfen başka bir telefon numarası giriniz..
+        /// </summary>
+        public static string PhoneNumberExists {
+            get {
+                return ResourceManager.GetString("PhoneNumberExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Telefon numarası doğrulama mesajı başarıyla gönderildi..
         /// </summary>
         public static string PhoneNumberVerificationMessageSent {
@@ -912,6 +1056,15 @@ namespace MilvaMongoTemplate.Localization.Resources {
         public static string PleaseEnterAValidValue {
             get {
                 return ResourceManager.GetString("PleaseEnterAValidValue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Lütfen kullanıcı adınızı giriniz..
+        /// </summary>
+        public static string PleaseEnterUsername {
+            get {
+                return ResourceManager.GetString("PleaseEnterUsername", resourceCulture);
             }
         }
         
@@ -1152,9 +1305,9 @@ namespace MilvaMongoTemplate.Localization.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Başarıyla çıkış yapıldı..
         /// </summary>
-        public static string SuccessfullyLoguotMessage {
+        public static string SuccessfullyLogoutMessage {
             get {
-                return ResourceManager.GetString("SuccessfullyLoguotMessage", resourceCulture);
+                return ResourceManager.GetString("SuccessfullyLogoutMessage", resourceCulture);
             }
         }
         
@@ -1182,6 +1335,15 @@ namespace MilvaMongoTemplate.Localization.Resources {
         public static string TokenCouldNotBeGenerated {
             get {
                 return ResourceManager.GetString("TokenCouldNotBeGenerated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Oturumunuz zaman aşımına uğradı lütfen tekrar giriş yapınız..
+        /// </summary>
+        public static string TokenExpired {
+            get {
+                return ResourceManager.GetString("TokenExpired", resourceCulture);
             }
         }
         
@@ -1249,6 +1411,33 @@ namespace MilvaMongoTemplate.Localization.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Hesabınıza tanımlı email adresi bulunmadığı için hesap işlemlerini gerçekleştiremezsiniz..
+        /// </summary>
+        public static string UserHaventEmail {
+            get {
+                return ResourceManager.GetString("UserHaventEmail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bu kullanıcı adına veya email adresine sahip bir kullanıcı zaten var..
+        /// </summary>
+        public static string UsernameOrEmailExists {
+            get {
+                return ResourceManager.GetString("UsernameOrEmailExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bu mail adresine sahip bir kullanıcı bulunamadı..
+        /// </summary>
+        public static string UserNotExitsWithEmail {
+            get {
+                return ResourceManager.GetString("UserNotExitsWithEmail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Rol bulunamadı..
         /// </summary>
         public static string UserRoleAddNotFoundException {
@@ -1308,6 +1497,60 @@ namespace MilvaMongoTemplate.Localization.Resources {
         public static string ValidationIdPropertyError {
             get {
                 return ResourceManager.GetString("ValidationIdPropertyError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Emaili Doğrula.
+        /// </summary>
+        public static string VerificationMailBodyButtonText {
+            get {
+                return ResourceManager.GetString("VerificationMailBodyButtonText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Aşağıdaki butona tıklayarak email doğrulamanızı gerçekleştirebilirsiniz. Butonu görüntüleyemiyorsanız &lt;a href=&quot;~ButtonLink&quot;&gt;buraya&lt;/a&gt; tıklayınız. Doğrulama işleminde hata alırsanız, lütfen &lt;a href=&quot;{0}&quot; target=&quot;_blank&quot;&gt;teknik ekip &lt;/a&gt; ile iletişime geçiniz. .
+        /// </summary>
+        public static string VerificationMailBodyDescription {
+            get {
+                return ResourceManager.GetString("VerificationMailBodyDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;a href=&quot;{0}&quot;&gt;MilvaMongoTemplate&apos;e &lt;/a&gt;, üye olmadıysanız bu maili dikkate almayınız..
+        /// </summary>
+        public static string VerificationMailBodyResendText {
+            get {
+                return ResourceManager.GetString("VerificationMailBodyResendText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Email Adresinizi Doğrulayın.
+        /// </summary>
+        public static string VerificationMailBodyTitle {
+            get {
+                return ResourceManager.GetString("VerificationMailBodyTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to MilvaMongoTemplate&apos;e Hoşgeldiniz !.
+        /// </summary>
+        public static string VerificationMailBodyWelcomeText {
+            get {
+                return ResourceManager.GetString("VerificationMailBodyWelcomeText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to MilvaMongoTemplate Email Doğrulaması.
+        /// </summary>
+        public static string VerificationMailTitle {
+            get {
+                return ResourceManager.GetString("VerificationMailTitle", resourceCulture);
             }
         }
         
